@@ -7,6 +7,7 @@ class ProjectFonts{
     fontWeight: FontWeight.w400,
     fontSize: 24.0,
     color: ProjectPallette.neutral2,
+    letterSpacing: 0.18
   );
 
   static TextStyle headline2 = TextStyle(
@@ -14,6 +15,7 @@ class ProjectFonts{
     fontWeight: FontWeight.w500,
     fontSize: 20.0,
     color: ProjectPallette.neutral2,
+    letterSpacing: 0.15
   );
 
   static TextStyle subtitle1 = TextStyle(
@@ -21,6 +23,7 @@ class ProjectFonts{
     fontWeight: FontWeight.w400,
     fontSize: 16.0,
     color: ProjectPallette.neutral2,
+    letterSpacing: 0.15
   );
 
   static TextStyle body1 = TextStyle(
@@ -28,6 +31,7 @@ class ProjectFonts{
     fontWeight: FontWeight.w400,
     fontSize: 14.0,
     color: ProjectPallette.neutral2,
+    letterSpacing: 0.25
   );
 
   static TextStyle body2 = TextStyle(
@@ -35,6 +39,7 @@ class ProjectFonts{
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
     color: ProjectPallette.neutral2,
+    letterSpacing: 0.4
   );
 
   static TextStyle button = TextStyle(
@@ -42,6 +47,7 @@ class ProjectFonts{
     fontWeight: FontWeight.w500,
     fontSize: 14.0,
     color: ProjectPallette.neutral2,
+    letterSpacing: 0.1
   );
 
   static TextStyle caption = TextStyle(
@@ -49,6 +55,7 @@ class ProjectFonts{
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
     color: ProjectPallette.neutral2,
+    letterSpacing: 0.4
   );
 
   static TextStyle overline = TextStyle(
@@ -57,6 +64,6 @@ class ProjectFonts{
     fontSize: 10.0,
     color: ProjectPallette.neutral2,
     letterSpacing: 1.5,
-    height: 1.6
+    // height: 1.6
   );
 }
