@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'widgets/tokens/fonts.dart';
+import 'widgets/tokens/colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -105,8 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
+            Text(
               'You have pushed the button this many times:',
+              style: ProjectFonts.headline2,
             ),
             Text(
               '$_counter',

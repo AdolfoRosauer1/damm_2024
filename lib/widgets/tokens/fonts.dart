@@ -1,7 +1,16 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+
 import 'colors.dart';
 
-class ProjectFonts{
+class ProjectFonts extends TextStyle{
+
+  ProjectFonts.headline01(Color color):
+    super(fontFamily: 'Roboto',
+        fontWeight: FontWeight.w400,
+        fontSize: 24.0,
+        color: ProjectPallette.neutral2,
+        letterSpacing: 0.18);
+
   static TextStyle headline1 = TextStyle(
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w400,
