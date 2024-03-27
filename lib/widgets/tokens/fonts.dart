@@ -8,14 +8,14 @@ class ProjectFonts extends TextStyle{
     super(fontFamily: 'Roboto',
         fontWeight: FontWeight.w400,
         fontSize: 24.0,
-        color: ProjectPallette.neutral2,
+        color: ProjectPalette.neutral2,
         letterSpacing: 0.18);
 
   static TextStyle headline1 = TextStyle(
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w400,
     fontSize: 24.0,
-    color: ProjectPallette.neutral2,
+    color: ProjectPalette.neutral2,
     letterSpacing: 0.18
   );
 
@@ -23,7 +23,7 @@ class ProjectFonts extends TextStyle{
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w500,
     fontSize: 20.0,
-    color: ProjectPallette.neutral2,
+    color: ProjectPalette.neutral2,
     letterSpacing: 0.15
   );
 
@@ -31,7 +31,7 @@ class ProjectFonts extends TextStyle{
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w400,
     fontSize: 16.0,
-    color: ProjectPallette.neutral2,
+    color: ProjectPalette.neutral2,
     letterSpacing: 0.15
   );
 
@@ -39,7 +39,7 @@ class ProjectFonts extends TextStyle{
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w400,
     fontSize: 14.0,
-    color: ProjectPallette.neutral2,
+    color: ProjectPalette.neutral2,
     letterSpacing: 0.25
   );
 
@@ -47,7 +47,7 @@ class ProjectFonts extends TextStyle{
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
-    color: ProjectPallette.neutral2,
+    color: ProjectPalette.neutral2,
     letterSpacing: 0.4
   );
 
@@ -55,7 +55,7 @@ class ProjectFonts extends TextStyle{
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w500,
     fontSize: 14.0,
-    color: ProjectPallette.neutral2,
+    color: ProjectPalette.neutral2,
     letterSpacing: 0.1
   );
 
@@ -63,7 +63,7 @@ class ProjectFonts extends TextStyle{
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w400,
     fontSize: 12.0,
-    color: ProjectPallette.neutral2,
+    color: ProjectPalette.neutral2,
     letterSpacing: 0.4
   );
 
@@ -71,7 +71,7 @@ class ProjectFonts extends TextStyle{
     fontFamily: 'Roboto',
     fontWeight: FontWeight.w500,
     fontSize: 10.0,
-    color: ProjectPallette.neutral2,
+    color: ProjectPalette.neutral2,
     letterSpacing: 1.5,
     // height: 1.6
   );

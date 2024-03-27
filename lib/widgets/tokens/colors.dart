@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ProjectPallette{
+class ProjectPalette{
 
-  ProjectPallette._();
+  ProjectPalette._();
 
   static Color neutral1 = const Color(0xFFFFFFFF);
   static Color neutral2 = const Color(0xFF191919);
