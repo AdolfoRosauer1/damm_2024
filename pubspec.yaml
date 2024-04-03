@@ -60,6 +60,7 @@ flutter:
   assets:
     - lib/widgets/atoms/logo_cuadrado.png
     - lib/widgets/atoms/logo_rectangular.png
+    - lib/resources/voluntary_card.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
