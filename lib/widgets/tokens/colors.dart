@@ -4,8 +4,8 @@ class ProjectPalette{
 
   ProjectPalette._();
 
-  static Color neutral1 = const Color(0xFFFFFFFF);
-  static Color neutral2 = const Color(0xFF191919);
+  static const neutral1 = const Color(0xFFFFFFFF);
+  static const neutral2 = const Color(0xFF191919);
   static const neutral3 = Color(0xFFFAFAFA);
   static const neutral4 = Color(0xFFe0e0e0);
   static const neutral5 = Color(0xFF9e9e9e);

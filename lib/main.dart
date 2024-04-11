@@ -1,5 +1,7 @@
 import 'package:damm_2024/widgets/atoms/icons.dart';
+import 'package:damm_2024/widgets/cells/cards/news_card.dart';
 import 'package:damm_2024/widgets/cells/cards/volunteering_card.dart';
+import 'package:damm_2024/widgets/molecules/components/buttons/register_cta_button.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
@@ -48,14 +50,44 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pantalla de Debug'),
+    return MaterialApp(
+      theme: ThemeData(
+        tabBarTheme: TabBarTheme(
+          overlayColor: MaterialStateProperty.all(ProjectPalette.neutral2.withOpacity(0.1)),
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator: const BoxDecoration(
+            border: Border(bottom: BorderSide(width: 3.0, color:ProjectPalette.neutral1)),
+            color: ProjectPalette.secondary6
+          ),
+          labelColor: ProjectPalette.neutral1,
+          unselectedLabelColor: ProjectPalette.neutral4,
+        ),
       ),
-      body: VolunteeringCard()
-
-  
-    
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: ProjectPalette.secondary5,
+            title: Image.asset('lib/widgets/atoms/logo_rectangular.png'),
+            bottom: const TabBar(
+           //   dividerColor: ProjectPalette.neutral3,
+            //  dividerHeight: 30,
+              tabs: [
+                Tab(text: 'Postularse'),
+                Tab(text: 'Mi perfil'),
+                Tab(text: 'Novedades'),
+              ],
+            ),
+          ),
+          body: const TabBarView(
+            children: [
+              Center(child: Text('Contenido de Postularse')),
+              Center(child: Text('Contenido de Mi Perfil')),
+              Center(child: Text('Contenido de Novedades')),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
