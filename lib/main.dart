@@ -1,7 +1,9 @@
+import 'package:damm_2024/models/volunteer.dart';
+import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/news_card.dart';
 import 'package:damm_2024/widgets/cells/cards/volunteering_card.dart';
-import 'package:damm_2024/widgets/molecules/components/buttons/register_cta_button.dart';
+import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
@@ -79,10 +81,20 @@ class MyHomePage extends StatelessWidget {
               ],
             ),
           ),
-          body: const TabBarView(
+          body: TabBarView(
             children: [
               Center(child: Text('Contenido de Postularse')),
-              Center(child: Text('Contenido de Mi Perfil')),
+              ProfileScreen(volunteer: 
+                Volunteer(
+                  firstName: 'Juan',
+                  lastName: 'Perez',
+                  profileImageURL: 'https://s3-alpha-sig.figma.com/img/113f/a25a/235312cc53dcd4c8780648145d59e3c2?Expires=1713744000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=P7~GspZy9w~6SVCZ46rykZx1vy8LmL02Qgb9uYkF0xmXvaox4jycbD9TYotWVsyCfwZTmtOgShzz5KWFOgTgeX-fjJBBgnWonGmTmBMFdpAPPNDLvZSbyt3ZlfEv7FjZPr-Lr-Hm2UpcChqFA4iThql1IDJQn88cPT2P46S-oyF~3N4JN-jsm8xFC-ZBqmHZFIxtwJ7hXP2ggV5gcNiF3CDW~kpRPaV8le8yTD2-6SCpgaw1smhXoeSUkstVXe231pLc4HWH0QqMIIKtUw2GL~jEmQzVuXPhluD-jon22xVW5nsl4Tk8vnlS-U63vMeydvMJj9EuxYTu3-dfxoYMRw__',
+                  email: 'email@email.com',
+                  phoneNumber: '+5491165863216',
+                  dateOfBirth: DateTime.now(),
+                  gender: 'Masculino',
+                )
+              ),
               Center(child: Text('Contenido de Novedades')),
             ],
           ),
