@@ -5,7 +5,7 @@ class Volunteer {
   final String email;
   final String gender;
   final String profileImageURL;
-  final DateTime dateOfBirth;
+  final DateTime? dateOfBirth;
   final String phoneNumber;
 
   Volunteer({
@@ -17,4 +17,9 @@ class Volunteer {
     required this.dateOfBirth,
     required this.phoneNumber,
   });
+
+  bool hasCompletedProfile() {
+    return gender.isNotEmpty && phoneNumber.isNotEmpty && dateOfBirth!=null
+        && profileImageURL.isNotEmpty;
+  }
 }

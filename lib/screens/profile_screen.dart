@@ -1,7 +1,9 @@
-//TODO contectar con riverpod y statemanagement
+//TODO conectar con riverpod y statemanagement
 import 'package:damm_2024/models/volunteer.dart';
+import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
+import 'package:damm_2024/widgets/molecules/buttons/short_button.dart';
 import 'package:damm_2024/widgets/molecules/components/profile_picture.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
@@ -25,8 +27,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      SingleChildScrollView(
+    if (!widget.volunteer.hasCompletedProfile()){
+      return Column(
+        children: [
+          const SizedBox(height: 147.5,),
+          ProjectIcons.profilePicture,
+          const SizedBox(height: 16,),
+          Text(
+            'VOLUNTARIO',
+            style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6)
+          ),
+          const SizedBox(height: 8,),
+          Text(
+            '${widget.volunteer.firstName} ${widget.volunteer.lastName}',
+            style: ProjectFonts.subtitle1
+          ),
+          const SizedBox(height: 8,),
+          Text(
+            '¡Completá tu perfil para tener\n acceso a mejores oportunidades!',
+            style: ProjectFonts.body1.copyWith(color: ProjectPalette.neutral6),
+            textAlign: TextAlign.center,       
+          ),
+          //TODO CONSULTAR POR ESTAS ALTURAS
+          SizedBox(height: 92,),
+          ShortButton(onPressed: () => {}, buttonText:  'Completar', activated: true,icon:
+            Icon(ProjectIcons.addFilledEnabled.icon, color: ProjectPalette.neutral1),)
+        ],
+      );
+    }else{
+      return SingleChildScrollView(
         child: Column(
           children: [
             Padding(
@@ -56,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: InformationCard(
                 title: 'Información Personal',
                 label1: 'FECHA DE NACIMIENTO',
-                content1: dateFormat.format(widget.volunteer.dateOfBirth),
+                content1: dateFormat.format(widget.volunteer.dateOfBirth!),
                 label2: 'GÉNERO',
                 content2: widget.volunteer.gender),
             ),
@@ -81,7 +110,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             )
           ],
-        ),
+        )
+      
       );
     }
+
+  }
 }
