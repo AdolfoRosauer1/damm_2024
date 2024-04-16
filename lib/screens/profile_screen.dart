@@ -2,32 +2,34 @@
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
+import 'package:damm_2024/widgets/cells/cards/profile_picture_card.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/molecules/buttons/short_button.dart';
 import 'package:damm_2024/widgets/molecules/components/profile_picture.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:damm_2024/providers/volunteer_provider.dart';
+class ProfileScreen extends ConsumerStatefulWidget {
 
-class ProfileScreen extends StatefulWidget {
-  final Volunteer volunteer;
-
-  const ProfileScreen({super.key, required this.volunteer});
+  const ProfileScreen({super.key});
   
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return _ProfileScreenState();
   }
 
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final dateFormat = DateFormat('dd/MM/yyyy');
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.volunteer.hasCompletedProfile()){
+    final volunteer = ref.watch(volunteerProvider);
+    if (!volunteer.hasCompletedProfile()){
       return Column(
         children: [
           const SizedBox(height: 147.5,),
@@ -39,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 8,),
           Text(
-            '${widget.volunteer.firstName} ${widget.volunteer.lastName}',
+            '${volunteer.firstName} ${volunteer.lastName}',
             style: ProjectFonts.subtitle1
           ),
           const SizedBox(height: 8,),
@@ -61,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 32),
               child: ProfilePicture(
-                imageUrl: widget.volunteer.profileImageURL,
+                imageUrl: volunteer.profileImageURL,
                 size: ProfilePictureSize.large,
               ),
             ),
@@ -72,12 +74,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 2),
             Text(
-              '${widget.volunteer.firstName} ${widget.volunteer.lastName}',
+              '${volunteer.firstName} ${volunteer.lastName}',
               style: ProjectFonts.subtitle1
             ), 
             const SizedBox(height: 2),
             Text(
-              widget.volunteer.email,
+              volunteer.email,
               style: ProjectFonts.body1
             ),
             Padding(
@@ -85,18 +87,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: InformationCard(
                 title: 'Información Personal',
                 label1: 'FECHA DE NACIMIENTO',
-                content1: dateFormat.format(widget.volunteer.dateOfBirth!),
+                content1: dateFormat.format(volunteer.dateOfBirth!),
                 label2: 'GÉNERO',
-                content2: widget.volunteer.gender),
+                content2: volunteer.gender),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 32,horizontal: 16),
               child: InformationCard(
                 title: 'Datos de contacto',
                 label1: 'TELÉFONO',
-                content1: widget.volunteer.phoneNumber,
+                content1: volunteer.phoneNumber,
                 label2: 'E-MAIL',
-                content2: widget.volunteer.email),
+                content2: volunteer.email),
             ),
             Container(
               margin: const EdgeInsets.fromLTRB(26,0,26,46),

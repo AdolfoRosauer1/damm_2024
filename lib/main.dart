@@ -7,12 +7,13 @@ import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'widgets/tokens/fonts.dart';
 import 'widgets/tokens/colors.dart';
 
 void main() {
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,21 +25,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -84,17 +70,7 @@ class MyHomePage extends StatelessWidget {
           body: TabBarView(
             children: [
               Center(child: Text('Contenido de Postularse')),
-              ProfileScreen(volunteer: 
-                Volunteer(
-                  firstName: 'Juan',
-                  lastName: 'Perez',
-                  profileImageURL: 'https://s3-alpha-sig.figma.com/img/113f/a25a/235312cc53dcd4c8780648145d59e3c2?Expires=1713744000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=P7~GspZy9w~6SVCZ46rykZx1vy8LmL02Qgb9uYkF0xmXvaox4jycbD9TYotWVsyCfwZTmtOgShzz5KWFOgTgeX-fjJBBgnWonGmTmBMFdpAPPNDLvZSbyt3ZlfEv7FjZPr-Lr-Hm2UpcChqFA4iThql1IDJQn88cPT2P46S-oyF~3N4JN-jsm8xFC-ZBqmHZFIxtwJ7hXP2ggV5gcNiF3CDW~kpRPaV8le8yTD2-6SCpgaw1smhXoeSUkstVXe231pLc4HWH0QqMIIKtUw2GL~jEmQzVuXPhluD-jon22xVW5nsl4Tk8vnlS-U63vMeydvMJj9EuxYTu3-dfxoYMRw__',
-                  email: 'email@email.com',
-                  phoneNumber: '+5491165863216',
-                  dateOfBirth: DateTime.now(),
-                  gender: 'Masculino',
-                )
-              ),
+              ProfileScreen(),
               Center(child: Text('Contenido de Novedades')),
             ],
           ),
