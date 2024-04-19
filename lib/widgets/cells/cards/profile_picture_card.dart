@@ -27,7 +27,7 @@ class ProfilePictureCard extends StatelessWidget{
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 16),
+                padding: const EdgeInsets.fromLTRB(16,14,0,14),
                 child: Text(
                   'Foto de perfil',
                   style: ProjectFonts.subtitle1,

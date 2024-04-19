@@ -3,6 +3,7 @@ import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
 import 'package:damm_2024/widgets/cells/cards/profile_picture_card.dart';
+import 'package:damm_2024/widgets/cells/forms/personal_data_form.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/molecules/buttons/short_button.dart';
 import 'package:damm_2024/widgets/molecules/components/profile_picture.dart';
@@ -30,31 +31,36 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final volunteer = ref.watch(volunteerProvider);
     if (!volunteer.hasCompletedProfile()){
-      return Column(
-        children: [
-          const SizedBox(height: 147.5,),
-          ProjectIcons.profilePicture,
-          const SizedBox(height: 16,),
-          Text(
-            'VOLUNTARIO',
-            style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6)
-          ),
-          const SizedBox(height: 8,),
-          Text(
-            '${volunteer.firstName} ${volunteer.lastName}',
-            style: ProjectFonts.subtitle1
-          ),
-          const SizedBox(height: 8,),
-          Text(
-            '¡Completá tu perfil para tener\n acceso a mejores oportunidades!',
-            style: ProjectFonts.body1.copyWith(color: ProjectPalette.neutral6),
-            textAlign: TextAlign.center,       
-          ),
-          //TODO CONSULTAR POR ESTAS ALTURAS
-          SizedBox(height: 92,),
-          ShortButton(onPressed: () => {}, buttonText:  'Completar', activated: true,icon:
-            Icon(ProjectIcons.addFilledEnabled.icon, color: ProjectPalette.neutral1),)
-        ],
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 147.5,),
+            ProjectIcons.profilePicture,
+            const SizedBox(height: 16,),
+            Text(
+              'VOLUNTARIO',
+              style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6)
+            ),
+            const SizedBox(height: 8,),
+            Text(
+              '${volunteer.firstName} ${volunteer.lastName}',
+              style: ProjectFonts.subtitle1
+            ),
+            const SizedBox(height: 8,),
+            Text(
+              '¡Completá tu perfil para tener\n acceso a mejores oportunidades!',
+              style: ProjectFonts.body1.copyWith(color: ProjectPalette.neutral6),
+              textAlign: TextAlign.center,       
+            ),
+            const SizedBox(height: 147.5,),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 80),
+              child: ShortButton(onPressed: () => {}, buttonText:  'Completar', activated: true,icon:
+                Icon(ProjectIcons.addFilledEnabled.icon, color: ProjectPalette.neutral1),),
+            ),
+            PersonalDataForm()
+          ],
+        ),
       );
     }else{
       return SingleChildScrollView(
@@ -99,7 +105,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 content1: volunteer.phoneNumber,
                 label2: 'E-MAIL',
                 content2: volunteer.email),
-            ),
+            ),  
             Container(
               margin: const EdgeInsets.fromLTRB(26,0,26,46),
               child: Column(
@@ -110,7 +116,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   CtaButton(enabled: true, onPressed: () => {}, filled: false, actionStr: 'Cerrar sesión', textColor: ProjectPalette.error),
                 ],
               ),
-            )
+            ),
           ],
         )
       
