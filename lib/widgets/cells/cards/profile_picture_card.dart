@@ -7,17 +7,17 @@ import 'package:flutter/material.dart';
 class ProfilePictureCard extends StatelessWidget{
   final String? imageUrl;
   
-  const ProfilePictureCard({super.key, this.imageUrl});
+  const ProfilePictureCard({super.key, required this.imageUrl});
 
   _getButtonText(){
-    if (imageUrl == null){
+    if (imageUrl == null || imageUrl!.isEmpty){
       return 'Subir foto';
     }
     return 'Cambiar foto';
   }
   @override
   Widget build(BuildContext context) {
-    if (imageUrl == null){
+    if (imageUrl == null || imageUrl!.isEmpty){
       return Container(
         decoration: BoxDecoration(
           color: ProjectPalette.secondary2,
