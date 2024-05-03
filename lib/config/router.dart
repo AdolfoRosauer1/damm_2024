@@ -1,8 +1,8 @@
+import 'package:damm_2024/screens/apply_screen.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/screens/tabs.dart';
 import 'package:damm_2024/screens/welcome_screen.dart';
 import 'package:damm_2024/widgets/cells/forms/personal_data_form.dart';
-import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -55,12 +55,11 @@ class CustomNavigationHelper {
             navigatorKey: applyTabNavigatorKey,
             routes: [
               GoRoute(
-                path: "/apply",
+                path: ApplyScreen.route,
+                parentNavigatorKey: applyTabNavigatorKey,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const Center(
-                      child: Text('Contenido de Postularse'),
-                    ),
+                    child: const ApplyScreen(),
                     state: state,
                   );
                 },

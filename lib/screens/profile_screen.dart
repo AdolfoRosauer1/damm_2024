@@ -11,9 +11,11 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 class ProfileScreen extends ConsumerStatefulWidget {
+  static const route = "/profileScreen";
 
   const ProfileScreen({super.key});
   
@@ -55,10 +57,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 147.5,),
             Padding(
               padding: const EdgeInsets.only(bottom: 80),
-              child: ShortButton(onPressed: () => {}, buttonText:  'Completar', activated: true,icon:
-                Icon(ProjectIcons.addFilledEnabled.icon, color: ProjectPalette.neutral1),),
+              child: ShortButton(
+                onPressed: () => {
+                  context.go(PersonalDataForm.route)
+                },
+                buttonText:  'Completar', 
+                activated: true,
+                icon: Icon(ProjectIcons.addFilledEnabled.icon, color: ProjectPalette.neutral1),),
             ),
-            PersonalDataForm()
           ],
         ),
       );
@@ -95,7 +101,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 label1: 'FECHA DE NACIMIENTO',
                 content1: dateFormat.format(volunteer.dateOfBirth!),
                 label2: 'GÉNERO',
-                content2: volunteer.gender),
+                content2: _gettGenderLabel(volunteer.gender)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 32,horizontal: 16),
@@ -111,7 +117,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CtaButton(enabled: true, onPressed: () => {}, filled: true, actionStr: 'Editar perfil'),
+                  CtaButton(
+                    enabled: true, 
+                    onPressed: () => {
+                      context.go(PersonalDataForm.route)
+                    }, 
+                    filled: true, 
+                    actionStr: 'Editar perfil'
+                  ),
                   const SizedBox(height: 8,),
                   CtaButton(enabled: true, onPressed: () => {}, filled: false, actionStr: 'Cerrar sesión', textColor: ProjectPalette.error),
                 ],
@@ -123,5 +136,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       );
     }
 
+  }
+  
+  _gettGenderLabel(String gender) {
+    switch (gender){
+      case "male":
+        return 'Hombre';
+      case "female":
+        return 'Mujer';
+      case "nonBinary":
+        return 'No binario';
+      default:
+        return '';
+    }
   }
 }
