@@ -1,18 +1,12 @@
-import 'package:damm_2024/models/volunteer.dart';
-import 'package:damm_2024/screens/profile_screen.dart';
-import 'package:damm_2024/widgets/atoms/icons.dart';
-import 'package:damm_2024/widgets/cells/cards/news_card.dart';
-import 'package:damm_2024/widgets/cells/cards/volunteering_card.dart';
-import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
-import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
-import 'package:damm_2024/widgets/tokens/fonts.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'widgets/tokens/fonts.dart';
 import 'widgets/tokens/colors.dart';
+import 'package:damm_2024/config/router.dart';
 
 void main() {
 
+  CustomNavigationHelper.instance;
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -22,24 +16,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return MaterialApp.router(
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
         tabBarTheme: TabBarTheme(
           overlayColor: MaterialStateProperty.all(ProjectPalette.neutral2.withOpacity(0.1)),
           indicatorSize: TabBarIndicatorSize.tab,
@@ -51,31 +30,8 @@ class MyHomePage extends StatelessWidget {
           unselectedLabelColor: ProjectPalette.neutral4,
         ),
       ),
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: ProjectPalette.secondary5,
-            title: Image.asset('lib/widgets/atoms/logo_rectangular.png'),
-            bottom: const TabBar(
-           //   dividerColor: ProjectPalette.neutral3,
-            //  dividerHeight: 30,
-              tabs: [
-                Tab(text: 'Postularse'),
-                Tab(text: 'Mi perfil'),
-                Tab(text: 'Novedades'),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              Center(child: Text('Contenido de Postularse')),
-              ProfileScreen(),
-              Center(child: Text('Contenido de Novedades')),
-            ],
-          ),
-        ),
-      ),
+      routerConfig: CustomNavigationHelper.router
     );
   }
 }
+

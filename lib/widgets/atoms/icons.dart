@@ -8,6 +8,10 @@ class ProjectIcons{
   static Icon visibilityFilledDisabled = const Icon(Icons.visibility, color: ProjectPalette.neutral4);
   static Icon visibilityFilledActivated = const Icon(Icons.visibility, color: ProjectPalette.primary1);
 
+  static Icon closeFilledEnabled = const Icon(Icons.close, color: ProjectPalette.neutral6);
+  static Icon closeFilledDisabled = const Icon(Icons.close, color: ProjectPalette.neutral4);
+  static Icon closeFilledActivated = const Icon(Icons.close, color: ProjectPalette.primary1);
+  
   static Icon visibilityOutlinedEnabled = const Icon(Icons.visibility_outlined, color: ProjectPalette.neutral6);
   static Icon visibilityOutlinedDisabled = const Icon(Icons.visibility_outlined, color: ProjectPalette.neutral4);
   static Icon visibilityOutlinedActivated = const Icon(Icons.visibility_outlined, color: ProjectPalette.primary1);
