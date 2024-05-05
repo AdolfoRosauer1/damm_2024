@@ -1,4 +1,6 @@
 import 'package:damm_2024/screens/apply_screen.dart';
+import 'package:damm_2024/screens/news_details_screen.dart';
+import 'package:damm_2024/screens/news_screen.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/screens/tabs.dart';
 import 'package:damm_2024/screens/welcome_screen.dart';
@@ -86,15 +88,26 @@ class CustomNavigationHelper {
             navigatorKey: newsTabNavigatorKey,
             routes: [
               GoRoute(
-                path: "/news",
+                path: NewsScreen.route,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: const Center(
-                      child: Text('Contenido de Novedades'),
-                    ),
+                    child: const NewsScreen(),
                     state: state,
                   );
                 },
+                routes: [
+                  GoRoute(
+                    parentNavigatorKey: parentNavigatorKey,
+                    path: NewsDetailsScreen.route,
+                    pageBuilder: (context, state) {
+                      return getPage(
+                        child: NewsDetailsScreen(id:int.parse(state.pathParameters['id']!)),
+                        state: state,
+                      );
+                    },
+
+                  )
+                ]
               ),
 
             ],

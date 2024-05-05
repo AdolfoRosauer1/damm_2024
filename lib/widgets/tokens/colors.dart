@@ -21,6 +21,8 @@ class ProjectPalette{
   static const secondary4 = Color(0xFF6cb6f3);
   static const secondary5 = Color(0xFF2c98f0);
   static const secondary6 = Color(0xFF0d47a1);
+  
+  static const appBar = Color(0xFF4AA9F5);
 
   static const error = Color(0xFFb3261e);
 
