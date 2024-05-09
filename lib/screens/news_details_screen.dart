@@ -4,10 +4,7 @@ import 'package:damm_2024/services/news_service.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 class NewsDetailsScreen extends StatefulWidget {
   const NewsDetailsScreen({super.key, required this.id});

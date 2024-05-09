@@ -45,17 +45,19 @@ class ApplyScreen extends StatelessWidget{
             const SizedBox(height: 24,),
             Expanded(
               child: ListView.separated(
+                padding: const EdgeInsets.all(5),
                 separatorBuilder: (_,__) => const SizedBox(height: 24,),
                 itemCount: 10,
                 itemBuilder: (context, index) {
                   return const VolunteeringCard();
                 },
-              ),
+              ), 
+         
             ),
             const SizedBox(height: 11,)
         
         
-        
+
           ],
         ),
       ),

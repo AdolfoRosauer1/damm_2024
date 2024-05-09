@@ -59,7 +59,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               padding: const EdgeInsets.only(bottom: 80),
               child: ShortButton(
                 onPressed: () => {
-                  context.go(PersonalDataForm.route)
+                  context.go(PersonalDataForm.completeRoute)
                 },
                 buttonText:  'Completar', 
                 activated: true,
@@ -120,7 +120,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   CtaButton(
                     enabled: true, 
                     onPressed: () => {
-                      context.go(PersonalDataForm.route)
+                      context.go(PersonalDataForm.completeRoute)
                     }, 
                     filled: true, 
                     actionStr: 'Editar perfil'

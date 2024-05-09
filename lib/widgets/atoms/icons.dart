@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../tokens/colors.dart';
 
 class ProjectIcons{
-  //TODO iconos en 2 tonos, no se como ponerlos. También el de la foto de perfil.
   //El size default ya es 24px
   static Icon visibilityFilledEnabled = const Icon(Icons.visibility, color: ProjectPalette.neutral6);
   static Icon visibilityFilledDisabled = const Icon(Icons.visibility, color: ProjectPalette.neutral4);

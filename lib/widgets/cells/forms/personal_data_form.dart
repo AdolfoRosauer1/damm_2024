@@ -17,7 +17,8 @@ import 'package:intl/intl.dart';
 class PersonalDataForm extends ConsumerWidget {
   const PersonalDataForm({super.key});
   
-  static const route = "/editProfile";
+  static const route = "editProfile";
+  static const completeRoute = "${ProfileScreen.route}/$route";
 
 
   @override
@@ -37,11 +38,8 @@ class PersonalDataForm extends ConsumerWidget {
           iconTheme: const IconThemeData(color: ProjectPalette.neutral6),
           leading:IconButton(
             onPressed: () => {
-              //TODO preguntar
-             // CustomNavigationHelper.parentNavigatorKey.currentState!.pop()
-              context.go(ProfileScreen.route)
+              CustomNavigationHelper.parentNavigatorKey.currentState!.pop()
               
-
             }, 
             icon: ProjectIcons.closeFilledEnabled),
         ),
@@ -117,9 +115,12 @@ class PersonalDataForm extends ConsumerWidget {
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 8)
+                            
                           ),
                           name: 'gender',
                           orientation: OptionsOrientation.vertical,
+                          wrapRunSpacing: 0,
+                          
                           //TODO fix el espacio entre las opciones
                           options: [
                             FormBuilderFieldOption(value: 'male', child: Text('Hombre',style: ProjectFonts.body1.copyWith(color: Color(0xFF000000)))),

@@ -73,13 +73,24 @@ class CustomNavigationHelper {
             routes: [
               GoRoute(
                 path: ProfileScreen.route,
-                parentNavigatorKey: profileTabNavigatorKey,
                 pageBuilder: (context, state) {
                   return getPage(
                     child: const ProfileScreen(),
                     state: state,
                   );
                 },
+                routes: [
+                  GoRoute(
+                    parentNavigatorKey: parentNavigatorKey,
+                    path: PersonalDataForm.route,
+                    pageBuilder: (context, state) {
+                      return getPage(
+                        child: const PersonalDataForm(),
+                        state: state,
+                      );
+                    },
+                  )
+                ]
               ),
              
             ],
@@ -128,16 +139,7 @@ class CustomNavigationHelper {
         },
       ),
 
-      GoRoute(
-        parentNavigatorKey: parentNavigatorKey,
-        path: PersonalDataForm.route,
-        pageBuilder: (context, state) {
-          return getPage(
-            child: const PersonalDataForm(),
-            state: state,
-          );
-        },
-      )
+
  
 
     ];
