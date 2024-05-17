@@ -4,6 +4,7 @@ class ProjectPalette{
 
   ProjectPalette._();
 
+  static const black = Color(0xFF000000);
   static const neutral1 = Color(0xFFFFFFFF);
   static const neutral2 = Color(0xFF191919);
   static const neutral3 = Color(0xFFFAFAFA);

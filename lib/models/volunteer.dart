@@ -1,9 +1,11 @@
 
+import 'package:damm_2024/models/gender.dart';
+
 class Volunteer {
   final String firstName;
   final String lastName;
   final String email;
-  final String gender;
+  final Gender? gender;
   final String profileImageURL;
   final DateTime? dateOfBirth;
   final String phoneNumber;
@@ -19,7 +21,9 @@ class Volunteer {
   });
 
   bool hasCompletedProfile() {
-    return gender.isNotEmpty && phoneNumber.isNotEmpty && dateOfBirth!=null
+    print( gender != null && phoneNumber.isNotEmpty && dateOfBirth!=null
+        && profileImageURL.isNotEmpty);
+    return gender!= null && phoneNumber.isNotEmpty && dateOfBirth!=null
         && profileImageURL.isNotEmpty;
   }
 }

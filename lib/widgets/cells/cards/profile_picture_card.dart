@@ -3,17 +3,26 @@ import 'package:damm_2024/widgets/molecules/components/profile_picture.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePictureCard extends StatelessWidget{
   final String? imageUrl;
-  
-  const ProfilePictureCard({super.key, required this.imageUrl});
+  final FormFieldState field;
+  const ProfilePictureCard({super.key, required this.imageUrl, required this.field});
 
   _getButtonText(){
     if (imageUrl == null || imageUrl!.isEmpty){
       return 'Subir foto';
     }
     return 'Cambiar foto';
+  }
+  Future<void> _pickImage() async {
+    print("SLEECCION IMAGEN");
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      field.didChange(pickedImage.path);
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -36,9 +45,10 @@ class ProfilePictureCard extends StatelessWidget{
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8,8,16,8),
-              child: ShortButton(onPressed: ()=>{},
-              small: true,
-               buttonText: _getButtonText(),
+              child: ShortButton(
+                onPressed: ()=>_pickImage(),
+                small: true,
+                buttonText: _getButtonText(),
                 activated: true),
             )
           ],
@@ -64,7 +74,7 @@ class ProfilePictureCard extends StatelessWidget{
                   ),
                   SizedBox(height: 8),
                   ShortButton(
-                    onPressed: () => {},
+                    onPressed: () => _pickImage(),
                     small: true,
                     buttonText: _getButtonText(),
                     activated: true,

@@ -1,4 +1,5 @@
 //TODO conectar con riverpod y statemanagement
+import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
@@ -101,7 +102,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 label1: 'FECHA DE NACIMIENTO',
                 content1: dateFormat.format(volunteer.dateOfBirth!),
                 label2: 'GÉNERO',
-                content2: _gettGenderLabel(volunteer.gender)),
+                content2: (volunteer.gender!.value)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 32,horizontal: 16),
@@ -138,16 +139,5 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   }
   
-  _gettGenderLabel(String gender) {
-    switch (gender){
-      case "male":
-        return 'Hombre';
-      case "female":
-        return 'Mujer';
-      case "nonBinary":
-        return 'No binario';
-      default:
-        return '';
-    }
-  }
+  
 }

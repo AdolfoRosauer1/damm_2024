@@ -1,7 +1,9 @@
 import 'package:damm_2024/config/router.dart';
+import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
+import 'package:damm_2024/widgets/cells/cards/input_card.dart';
 import 'package:damm_2024/widgets/cells/cards/profile_picture_card.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
@@ -88,55 +90,25 @@ class PersonalDataForm extends ConsumerWidget {
                   decoration: const BoxDecoration(
                     color: ProjectPalette.neutral3
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: ProjectPalette.secondary2,
-                          borderRadius: BorderRadius.circular(4)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16,8,0,8),
-                          child: Text(
-                            'Información de perfil',
-                            style: ProjectFonts.subtitle1,
-                          ),
-                        ),
-                      ),
-                      Theme(
-                        data: Theme.of(context).copyWith(
-                          radioTheme: Theme.of(context).radioTheme.copyWith(
-                            fillColor: MaterialStateProperty.all(ProjectPalette.primary1),
-                          ),                  
-                        ),
-                        child: FormBuilderRadioGroup(
-                          initialValue: volunteer.gender,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(left: 8)
-                            
-                          ),
-                          name: 'gender',
-                          orientation: OptionsOrientation.vertical,
-                          wrapRunSpacing: 0,
-                          
-                          //TODO fix el espacio entre las opciones
-                          options: [
-                            FormBuilderFieldOption(value: 'male', child: Text('Hombre',style: ProjectFonts.body1.copyWith(color: Color(0xFF000000)))),
-                            FormBuilderFieldOption(value: 'female', child: Text('Mujer',style: ProjectFonts.body1.copyWith(color: Color(0xFF000000)))),
-                            FormBuilderFieldOption(value: 'nonBinary', child: Text('No binario',style: ProjectFonts.body1.copyWith(color: Color(0xFF000000)))),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: FormBuilderField(
+                    name: 'gender',
+                    initialValue: volunteer.gender?.value,
+                    builder: (FormFieldState<dynamic> field){
+                      return InputCard(title: 'Información de perfil',
+                        labels: Gender.values.map((e) => e.value).toList(),
+                        state: field
+
+                      );
+                    }
+                  )
+                  //  ],
+               //   ),
                 ),
                 const SizedBox(height: 24,),
                 FormBuilderField(
                   name: 'profilePicture',
                   builder: (FormFieldState<dynamic> field){
-                    return ProfilePictureCard(imageUrl: volunteer.profileImageURL,);
+                    return ProfilePictureCard(imageUrl: volunteer.profileImageURL,field: field,);
                   }
                 ),
                 const SizedBox(height: 32,),
@@ -191,7 +163,16 @@ class PersonalDataForm extends ConsumerWidget {
                 const SizedBox(height: 32,),
                 CtaButton(
                   enabled: true,
-                  onPressed: ()=>{},
+                  onPressed: () {
+                    if (formKey.currentState?.saveAndValidate() ?? false) {
+                      // Formulario validado y guardado
+                      final formData = formKey.currentState?.value;
+                      print('Form Data: $formData');
+                    } else {
+                      // Manejar errores de validación
+                      print('Validation failed');
+                    }
+                  },                 
                   filled: true,
                   actionStr: 'Guardar datos'
                 ),
@@ -206,4 +187,34 @@ class PersonalDataForm extends ConsumerWidget {
       ),
     );
   }
+}
+
+
+
+Widget _buildRadioOption(FormFieldState<dynamic> field, String value, String label) {
+  return Theme(
+    data: Theme.of(field.context).copyWith(
+      radioTheme: Theme.of(field.context).radioTheme.copyWith(
+        fillColor: MaterialStateProperty.all(ProjectPalette.primary1),
+      ),
+    ),
+    child: Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Radio<String>(
+            value: value,
+            groupValue: field.value,
+            onChanged: (val) {
+              field.didChange(val);
+            },
+          ),
+        ),
+        Text(label,style: ProjectFonts.body1.copyWith(
+          color: ProjectPalette.black
+          ),
+        ),
+      ],
+    ),
+  );
 }
