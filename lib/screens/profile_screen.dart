@@ -5,6 +5,7 @@ import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
 import 'package:damm_2024/widgets/cells/cards/profile_picture_card.dart';
 import 'package:damm_2024/widgets/cells/forms/personal_data_form.dart';
+import 'package:damm_2024/widgets/cells/modals/session_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/molecules/buttons/short_button.dart';
 import 'package:damm_2024/widgets/molecules/components/profile_picture.dart';
@@ -127,7 +128,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     actionStr: 'Editar perfil'
                   ),
                   const SizedBox(height: 8,),
-                  CtaButton(enabled: true, onPressed: () => {}, filled: false, actionStr: 'Cerrar sesión', textColor: ProjectPalette.error),
+                  CtaButton(enabled: true, onPressed: () => {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const SessionModal();
+                      }
+                    )
+                  }, filled: false, actionStr: 'Cerrar sesión', textColor: ProjectPalette.error),
                 ],
               ),
             ),
