@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "958761820636",
+    "project_id": "damm-dc6d1",
+    "storage_bucket": "damm-dc6d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958761820636:android:77b5ac2f69080de7cc2f19",
+        "android_client_info": {
+          "package_name": "itba.edu.ar.damm_2024"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOMtVP-5vlZ8s1SZLIsg7ZBNTkeiWe1r0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
