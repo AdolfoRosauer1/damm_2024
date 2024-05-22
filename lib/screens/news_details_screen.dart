@@ -8,22 +8,22 @@ import 'package:flutter/material.dart';
 
 class NewsDetailsScreen extends StatefulWidget {
   const NewsDetailsScreen({super.key, required this.id});
+
   final int id;
 
   static const route = ":id";
-  static String routeFromId (int id) => "${NewsScreen.route}/$id";
+
+  static String routeFromId(int id) => "${NewsScreen.route}/$id";
+
   @override
   State<StatefulWidget> createState() {
     return _NewsDetailsScreenState();
   }
-
-
 }
 
 class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
-
   late NewsService _newsService;
-  
+
   @override
   void initState() {
     super.initState();
@@ -32,72 +32,83 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     News news = _newsService.getNewsById(widget.id);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: ProjectPalette.neutral1),
-        centerTitle: true,
-        backgroundColor: ProjectPalette.appBar,
-        title: Text('Novedades',
-          style: ProjectFonts.subtitle1.copyWith(color:ProjectPalette.neutral1,),
-              )
-    ),
+          iconTheme: const IconThemeData(color: ProjectPalette.neutral1),
+          centerTitle: true,
+          backgroundColor: ProjectPalette.appBar,
+          title: Text(
+            'Novedades',
+            style: ProjectFonts.subtitle1.copyWith(
+              color: ProjectPalette.neutral1,
+            ),
+          )),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16,24,16,32),
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                news.media,
-                style: ProjectFonts.overline.copyWith(
-                  color: ProjectPalette.neutral6,
-                )
+              Text(news.media,
+                  style: ProjectFonts.overline.copyWith(
+                    color: ProjectPalette.neutral6,
+                  )),
+              Text(news.title, style: ProjectFonts.headline2),
+              const SizedBox(
+                height: 16,
               ),
-              Text(
-                news.title,
-                style: ProjectFonts.headline2
-              ),
-              const SizedBox(height: 16,),
               SizedBox(
                 height: 160,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.network(news.imageUrl,fit: BoxFit.cover,)
-                ),
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.network(
+                      news.imageUrl,
+                      fit: BoxFit.cover,
+                      // Error builder para utilzar una imagen stock para fallback
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'lib/resources/news_card.png',
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )),
               ),
-              const SizedBox(height: 16,),
+              const SizedBox(
+                height: 16,
+              ),
               Text(
                 news.description,
-                style: ProjectFonts.subtitle1.copyWith(
-                  color: ProjectPalette.secondary6
-                ),
+                style: ProjectFonts.subtitle1
+                    .copyWith(color: ProjectPalette.secondary6),
               ),
-              const SizedBox(height: 16,),
-              Text(news.body!,
-                  style: ProjectFonts.body1,
+              const SizedBox(
+                height: 16,
               ),
-              const SizedBox(height: 16,),
+              Text(
+                news.body!,
+                style: ProjectFonts.body1,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
               Align(
                 alignment: Alignment.center,
-                child: Text('Comparte esta nota', style:
-                  ProjectFonts.headline2
-                ),
+                child:
+                    Text('Comparte esta nota', style: ProjectFonts.headline2),
               ),
-              const SizedBox(height: 16,),
+              const SizedBox(
+                height: 16,
+              ),
               CtaButton(
-                enabled: true,
-                onPressed: () => {
-                  print('Compartir ${news.title}')
-                }, 
-                filled: true, 
-                actionStr: 'Compartir')
+                  enabled: true,
+                  onPressed: () => {print('Compartir ${news.title}')},
+                  filled: true,
+                  actionStr: 'Compartir')
             ],
           ),
         ),
       ),
     );
-    
   }
 }

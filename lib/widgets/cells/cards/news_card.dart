@@ -1,15 +1,14 @@
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class NewsCard extends StatelessWidget {
   final String media;
   final String imageUrl;
   final String title;
   final String description;
+
   const NewsCard(
       {super.key,
       required this.media,
@@ -21,10 +20,9 @@ class NewsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2),
-        boxShadow: ProjectShadows.shadow2,
-        color: ProjectPalette.neutral1
-      ),
+          borderRadius: BorderRadius.circular(2),
+          boxShadow: ProjectShadows.shadow2,
+          color: ProjectPalette.neutral1),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -33,6 +31,14 @@ class NewsCard extends StatelessWidget {
               imageUrl,
               width: 118,
               fit: BoxFit.cover,
+              // Error builder para utilzar una imagen stock para fallback
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'lib/resources/news_card.png',
+                  width: 118,
+                  fit: BoxFit.cover,
+                );
+              },
             ),
             Expanded(
               child: Padding(
@@ -56,13 +62,12 @@ class NewsCard extends StatelessWidget {
                         Text(
                           description,
                           style: ProjectFonts.body2.copyWith(
-                            color: ProjectPalette.neutral6,),
+                            color: ProjectPalette.neutral6,
+                          ),
                         ),
-                       
                       ],
                     ),
-                      const SizedBox(height: 8),
-
+                    const SizedBox(height: 8),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: TextButton(
