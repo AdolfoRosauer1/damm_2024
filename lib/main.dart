@@ -1,11 +1,16 @@
 
+import 'package:damm_2024/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'widgets/tokens/colors.dart';
 import 'package:damm_2024/config/router.dart';
 
-void main() {
-
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   CustomNavigationHelper.instance;
   runApp(const ProviderScope(child: MyApp()));
 }
