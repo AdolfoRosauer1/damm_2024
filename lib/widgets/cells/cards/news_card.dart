@@ -4,6 +4,7 @@ import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
 
 class NewsCard extends StatelessWidget {
+  final VoidCallback onPressed;
   final String media;
   final String imageUrl;
   final String title;
@@ -14,7 +15,8 @@ class NewsCard extends StatelessWidget {
       required this.media,
       required this.imageUrl,
       required this.title,
-      required this.description});
+      required this.description,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +73,7 @@ class NewsCard extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomRight,
                       child: TextButton(
-                        onPressed: () {
-                          print('Ver más');
-                        },
+                        onPressed: onPressed,
                         style: TextButton.styleFrom(
                           textStyle: ProjectFonts.button,
                           foregroundColor: ProjectPalette.primary1,

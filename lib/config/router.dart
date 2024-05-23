@@ -4,6 +4,7 @@ import 'package:damm_2024/screens/news_details_screen.dart';
 import 'package:damm_2024/screens/news_screen.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/screens/tabs.dart';
+import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/screens/welcome_screen.dart';
 import 'package:damm_2024/widgets/cells/forms/login_form.dart';
 import 'package:damm_2024/widgets/cells/forms/personal_data_form.dart';
@@ -57,9 +58,23 @@ class CustomNavigationHelper {
               GoRoute(
                 path: ApplyScreen.route,
                 parentNavigatorKey: applyTabNavigatorKey,
+                routes: [
+                  GoRoute(
+                    path: VolunteerDetailsScreen.route,
+                    parentNavigatorKey: parentNavigatorKey,
+                    pageBuilder: (context, state) {
+                      return getPage(
+                        child: VolunteerDetailsScreen(id:int.parse(state.pathParameters['id']!)),
+                        state: state,
+                      );
+                    },
+
+
+                  )
+                ],
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const ApplyScreen(),
+                    child:  ApplyScreen(),
                     state: state,
                   );
                 },

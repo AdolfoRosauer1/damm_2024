@@ -1,18 +1,26 @@
+import 'package:damm_2024/models/volunteer_details.dart';
+import 'package:damm_2024/screens/volunteer_details_screen.dart';
+import 'package:damm_2024/services/volunteer_details_service.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/volunteering_card.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 //TODO ver pq no se está aplicando bien la sombras en las cards
 class ApplyScreen extends StatelessWidget{
   static const route = "/apply";
+  late VolunteerDetailsService _volunteerDetailsService;
 
-  const ApplyScreen({Key? key}) : super(key: key);
+  ApplyScreen({super.key}){
+    _volunteerDetailsService = VolunteerDetailsService();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<VolunteerDetails> volunteerDetails = _volunteerDetailsService.getVolunteers();
     return Container(
       decoration:const  BoxDecoration(
         color: ProjectPalette.secondary1,
@@ -45,11 +53,16 @@ class ApplyScreen extends StatelessWidget{
             const SizedBox(height: 24,),
             Expanded(
               child: ListView.separated(
-                padding: const EdgeInsets.all(5),
                 separatorBuilder: (_,__) => const SizedBox(height: 24,),
-                itemCount: 10,
+                itemCount: volunteerDetails.length,
                 itemBuilder: (context, index) {
-                  return const VolunteeringCard();
+                  return VolunteeringCard(
+                    onPressed: () => {context.go(VolunteerDetailsScreen.routeFromId(volunteerDetails[index].id))},
+                    type: volunteerDetails[index].type,
+                    title: volunteerDetails[index].title,
+                    vacancies: volunteerDetails[index].vacancies,
+                    imageUrl: volunteerDetails[index].imagePath
+                  );
                 },
               ), 
          

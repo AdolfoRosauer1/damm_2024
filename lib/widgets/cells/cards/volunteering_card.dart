@@ -1,3 +1,4 @@
+import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
@@ -7,8 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class VolunteeringCard extends StatelessWidget {
-  const VolunteeringCard({super.key});
+  const VolunteeringCard({
+    super.key, 
+    required this.onPressed,
+    required this.type,
+    required this.title,
+    required this.vacancies,
+    required this.imageUrl});
 
+  final VoidCallback onPressed;
+  final String type;
+  final String title;
+  final String imageUrl;
+  final int vacancies;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,10 +36,13 @@ class VolunteeringCard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Image.network(
-                      'https://s3-alpha-sig.figma.com/img/6160/48a8/56fafc1f797d16aeaaa7f76477bdc239?Expires=1716768000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=jdrvFgOC34oAZ1wJYPZ1lShMsGd9mZqnf3je9v1az2Q2sqMLmN2IwvEvVihoptzRHfIU6Q5ulzY0OjLo~1tJbfzAhM7PiMZ60VtM8Y5oLJ4hBcRd0Kv84r59rtY2J2iPa8cMu3XfA57yuBICHCA2AyCF4Qz-1Nq1fc~UuoJvmQjsQLDwxrUMBuY6GKdKDfXRVIXYy-osBKsf0PXU-zC1EF4enrE3bo4Uvz7GOK2dpLhPkknRVWxbkci2dtQghal2Qu6JJzaOp8KNZHZ~CV5k-REDiHn7QjyTEMVhPZNpeLraEZrm-tBnWGGLkcq-TKSjk6wLWUBjIO2INX0w3Yxq1Q__',
-                      height: 138,
-                      fit: BoxFit.fitWidth,
+                    child: InkWell(
+                      onTap: onPressed,
+                      child: Image.network(
+                        imageUrl,
+                        height: 138,
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
                 ],
@@ -39,12 +54,12 @@ class VolunteeringCard extends StatelessWidget {
                 children: [
                   const SizedBox(height: 8,),
                   Text(
-                    'ACCIÓN SOCIAL',
+                    type.toUpperCase(),
                     style: ProjectFonts.overline
                         .copyWith(color: ProjectPalette.neutral6),
                   ),
                   Text(
-                    'Un Techo para mi País',
+                    title,
                     style: ProjectFonts.subtitle1
                         .copyWith(color: ProjectPalette.neutral2),
                   ),
@@ -52,7 +67,7 @@ class VolunteeringCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const VacanciesChip(vacancies: 20, enabled: true),
+                      VacanciesChip(vacancies: vacancies, enabled: true),
                       Row(
                         children: [
                           ProjectIcons.favoriteOutlinedActivated,

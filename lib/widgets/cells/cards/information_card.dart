@@ -48,14 +48,16 @@ class InformationCard extends StatelessWidget{
                   style: ProjectFonts.body1,
                 ),
                 const SizedBox(height: 8,),
-                Text(
-                  label2 ,
-                  style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6),
-                ),
-                Text(
-                  content2,
-                   style: ProjectFonts.body1,
-                ),
+                if (label2.isNotEmpty && content2.isNotEmpty) ... [
+                  Text(
+                    label2 ,
+                    style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6),
+                  ),
+                  Text(
+                    content2,
+                    style: ProjectFonts.body1,
+                  ),
+                ]
               ],
             ),
           )
