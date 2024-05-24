@@ -64,17 +64,16 @@ class CustomNavigationHelper {
                     parentNavigatorKey: parentNavigatorKey,
                     pageBuilder: (context, state) {
                       return getPage(
-                        child: VolunteerDetailsScreen(id:int.parse(state.pathParameters['id']!)),
+                        child: VolunteerDetailsScreen(
+                            id: int.parse(state.pathParameters['id']!)),
                         state: state,
                       );
                     },
-
-
                   )
                 ],
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child:  ApplyScreen(),
+                    child: ApplyScreen(),
                     state: state,
                   );
                 },

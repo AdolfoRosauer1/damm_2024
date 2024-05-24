@@ -1,4 +1,4 @@
-import 'package:damm_2024/providers/volunteer_provider.dart';
+import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
@@ -15,7 +15,7 @@ class RegisterForm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final volunteer = ref.watch(volunteerProvider);
+    final authProvider = ref.watch(firebaseAuthProvider);
     final formKey = GlobalKey<FormBuilderState>();
 
     return Theme(
@@ -129,7 +129,27 @@ class RegisterForm extends ConsumerWidget {
                           vertical: 8.0, horizontal: 12.0),
                       child: CtaButton(
                           enabled: true,
-                          onPressed: () => context.go('/apply'),
+                          onPressed: () async {
+                            if (formKey.currentState?.saveAndValidate() ??
+                                false) {
+                              final formValues = formKey.currentState?.value;
+                              final email = formValues?['email'];
+                              final password = formValues?['password'];
+                              final name = formValues?['name'];
+                              final lastName = formValues?['lastname'];
+                              try {
+                                await authProvider.signOut();
+                                await authProvider.registerUser(
+                                    email, password, name, lastName);
+                                print(authProvider.currentUser);
+                                context.go('/apply');
+                              } catch (e) {
+                                print(e);
+                              }
+                            } else {
+                              print("Validation failed");
+                            }
+                          },
                           filled: true,
                           actionStr: 'Registrarse'),
                     ),
