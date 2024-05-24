@@ -27,28 +27,47 @@ class _NewsScreenState extends State<NewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<News> news = _newsService.getNews();
     return Container(
-        decoration: const BoxDecoration(
-          color: ProjectPalette.secondary1,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-          child: ListView.separated(
-            itemBuilder: (context, index) => ListTile(
-              onTap: () =>
-                  context.go(NewsDetailsScreen.routeFromId(news[index].id)),
-              title: NewsCard(
-                media: news[index].media,
-                imageUrl: news[index].imageUrl,
-                title: news[index].title,
-                description: news[index].description,
-                onPressed: () => {},
-              ),
-            ),
-            separatorBuilder: (_, __) => const SizedBox(height: 24),
-            itemCount: news.length,
-          ),
-        ));
+      decoration: const BoxDecoration(
+        color: ProjectPalette.secondary1,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32,horizontal: 16),
+        child: FutureBuilder<List<News>>(
+          future: _newsService.getNews(),
+          builder: (context,snapshot){
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              print(snapshot.error);
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('Sin noticas disponibles'));
+            }
+
+            List<News> news = snapshot.data!;
+            return ListView.separated(
+              itemBuilder: (context, index) => 
+                NewsCard(
+                  media: news[index].media,
+                  imageUrl: news[index].imageUrl,
+                  title: news[index].title,
+                  description: news[index].description,
+                  onPressed: () => {
+                    context.go(NewsDetailsScreen.routeFromId(news[index].id))
+                  },
+                ),
+              
+              separatorBuilder: (_, __) => const SizedBox(height: 24), 
+              itemCount: news.length,
+              
+            );
+          }
+        )
+      
+          
+      ),
+    );
+  
   }
 }

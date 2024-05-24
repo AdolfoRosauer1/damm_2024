@@ -1,10 +1,10 @@
-class News{
-  final int id;
+class News {
+  final String id;
   final String title;
   final String description;
   final String imageUrl;
   final String media;
-  final String? body;
+  final String body;
 
   News({
     required this.id,
@@ -12,8 +12,17 @@ class News{
     required this.description,
     required this.imageUrl,
     required this.media,
-    this.body
+    required this.body,
   });
 
-
+  factory News.fromJson(Map<String, dynamic> json) {
+    return News(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      imageUrl: json['imageUrl'] as String, 
+      media: json['media'] as String,
+      body: json['body'] as String,
+    );
+  }
 }

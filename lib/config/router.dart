@@ -123,7 +123,7 @@ class CustomNavigationHelper {
                       pageBuilder: (context, state) {
                         return getPage(
                           child: NewsDetailsScreen(
-                              id: int.parse(state.pathParameters['id']!)),
+                              id: (state.pathParameters['id']!)),
                           state: state,
                         );
                       },
