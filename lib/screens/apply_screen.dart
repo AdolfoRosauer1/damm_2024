@@ -20,7 +20,6 @@ class ApplyScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    List<VolunteerDetails> volunteerDetails = _volunteerDetailsService.getVolunteers();
     return Container(
       decoration:const  BoxDecoration(
         color: ProjectPalette.secondary1,
@@ -52,22 +51,37 @@ class ApplyScreen extends StatelessWidget{
             Text('Voluntariados', style: ProjectFonts.headline1),
             const SizedBox(height: 24,),
             Expanded(
-              child: ListView.separated(
-                separatorBuilder: (_,__) => const SizedBox(height: 24,),
-                itemCount: volunteerDetails.length,
-                itemBuilder: (context, index) {
-                  return VolunteeringCard(
-                    onPressed: () => {context.go(VolunteerDetailsScreen.routeFromId(volunteerDetails[index].id))},
-                    type: volunteerDetails[index].type,
-                    title: volunteerDetails[index].title,
-                    vacancies: volunteerDetails[index].vacancies,
-                    imageUrl: volunteerDetails[index].imagePath
-                  );
+              child: FutureBuilder<List<VolunteerDetails>>(
+                future: _volunteerDetailsService.getVolunteers(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Errorr: ${snapshot.error}'));
+                  } else if (snapshot.hasData) {
+                    List<VolunteerDetails> volunteerDetails = snapshot.data!;
+                    return ListView.separated(
+                      separatorBuilder: (_, __) => const SizedBox(height: 24),
+                      itemCount: volunteerDetails.length,
+                      itemBuilder: (context, index) {
+                        return VolunteeringCard(
+                          onPressed: () => {
+                            context.go(VolunteerDetailsScreen.routeFromId(volunteerDetails[index].id))
+                          },
+                          type: volunteerDetails[index].type,
+                          title: volunteerDetails[index].title,
+                          vacancies: volunteerDetails[index].vacancies,
+                          imageUrl: volunteerDetails[index].imageUrl,
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(child: Text('Sin datos disponibles'));
+                  }
                 },
-              ), 
-         
+              ),
             ),
-            const SizedBox(height: 11,)
+            const SizedBox(height: 11),
         
         
 

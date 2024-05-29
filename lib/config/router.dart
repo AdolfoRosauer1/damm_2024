@@ -69,7 +69,7 @@ class CustomNavigationHelper {
                     pageBuilder: (context, state) {
                       return getPage(
                         child: VolunteerDetailsScreen(
-                            id: int.parse(state.pathParameters['id']!)),
+                            id: (state.pathParameters['id']!)),
                         state: state,
                       );
                     },
