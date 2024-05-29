@@ -56,8 +56,16 @@ class AuthRepository {
 
 @Riverpod(keepAlive: true)
 AuthRepository firebaseAuth(FirebaseAuthRef ref) {
-  return AuthRepository(FirebaseAuth.instance);
+  var auth = AuthRepository(FirebaseAuth.instance);
+  auth.signInWithEmailAndPassword("adolfo@prueba.com", "123456");
+  var user = auth.currentUser;
+  print('current user: $user');
+  return auth;
 }
+
+final authStateProvider = StreamProvider<User?>((ref) {
+  return ref.watch(firebaseAuthProvider).authStateChanges();
+});
 
 // @Riverpod(keepAlive: true)
 // AuthRepository authRepository(AuthRepositoryRef ref) {

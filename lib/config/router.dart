@@ -1,3 +1,4 @@
+import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:damm_2024/screens/access_screen.dart';
 import 'package:damm_2024/screens/apply_screen.dart';
 import 'package:damm_2024/screens/news_details_screen.dart';
@@ -10,6 +11,7 @@ import 'package:damm_2024/widgets/cells/forms/login_form.dart';
 import 'package:damm_2024/widgets/cells/forms/personal_data_form.dart';
 import 'package:damm_2024/widgets/cells/forms/register_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomNavigationHelper {
@@ -42,6 +44,8 @@ class CustomNavigationHelper {
   }
 
   CustomNavigationHelper._internal() {
+    final authProvider = firebaseAuthProvider;
+
     final routes = [
       GoRoute(path: "/", builder: (_, __) => const WelcomeScreen()),
       GoRoute(
@@ -148,10 +152,21 @@ class CustomNavigationHelper {
     ];
 
     router = GoRouter(
-      navigatorKey: parentNavigatorKey,
-      routes: routes,
-      initialLocation: "/access",
-    );
+        navigatorKey: parentNavigatorKey,
+        routes: routes,
+        initialLocation: "/access",
+        redirect: (context, state) {
+          final container = ProviderContainer();
+          final authState = container.read(authProvider).currentUser;
+          print('authState = $authState');
+
+          if (authState == null) {
+            print('No redirection');
+            return null;
+          }
+          print('redirect');
+          return '/apply';
+        });
   }
 
   static Page getPage({
