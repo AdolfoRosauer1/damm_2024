@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';
@@ -57,15 +58,32 @@ class AuthRepository {
 @Riverpod(keepAlive: true)
 AuthRepository firebaseAuth(FirebaseAuthRef ref) {
   var auth = AuthRepository(FirebaseAuth.instance);
-  auth.signInWithEmailAndPassword("adolfo@prueba.com", "123456");
-  var user = auth.currentUser;
-  print('current user: $user');
+  // auth.signInWithEmailAndPassword("adolfo@prueba.com", "123456");
+  // var user = auth.currentUser;
+  // print('current user: $user');
   return auth;
 }
 
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.watch(firebaseAuthProvider).authStateChanges();
 });
+
+// Initialize all providers for bootstrap
+Future<void> initializeProviders(ProviderContainer container) async {
+  // initialize Firebase
+  final authProvider = container.read(firebaseAuthProvider);
+  final authUser = authProvider.currentUser;
+
+  // Restore connection if needed
+  if (authUser != null) {
+    try {
+      // renew token if needed
+      await authUser.getIdToken(true);
+    } catch (e) {
+      print(e);
+    }
+  }
+}
 
 // @Riverpod(keepAlive: true)
 // AuthRepository authRepository(AuthRepositoryRef ref) {
@@ -76,3 +94,5 @@ final authStateProvider = StreamProvider<User?>((ref) {
 // Stream<User?> authStateChanges(AuthStateChangesRef ref) {
 //   return ref.watch(authRepositoryProvider).authStateChanges();
 // }
+
+//final firebaseAuthClient = ref.read(firebaseAuthProvider); final User? firebaseAuthUser = firebaseAuthClient.currentUser; logger.d("Trying to restore Firebase session"); if (firebaseAuthUser != null) { /// Restore firebase user session try { /// Returns the current token if it has not expired. Otherwise, this will /// restore the token and return a new one. await firebaseAuthUser.getIdToken(true);
