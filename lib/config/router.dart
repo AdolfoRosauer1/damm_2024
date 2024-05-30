@@ -154,18 +154,18 @@ class CustomNavigationHelper {
     router = GoRouter(
         navigatorKey: parentNavigatorKey,
         routes: routes,
-        initialLocation: "/access",
+        initialLocation: "/apply",
         redirect: (context, state) {
           final container = ProviderContainer();
           final authState = container.read(authProvider).currentUser;
           print('authState = $authState');
 
           if (authState == null) {
-            print('No redirection');
-            return null;
+            print('Not authenticated');
+            return '/access';
           }
-          print('redirect');
-          return '/apply';
+          // print('n');
+          return null;
         });
   }
 
