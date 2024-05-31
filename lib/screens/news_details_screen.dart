@@ -117,7 +117,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     ),
                     CtaButton(
                       enabled: true,
-                      onPressed: () => {print('Compartir ${news.title}')},
+                      onPressed: () => _newsService.shareNews(news),
                       filled: true,
                       actionStr: 'Compartir',
                     ),

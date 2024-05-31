@@ -1,10 +1,34 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/news.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class NewsService{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
+
+void shareNews(News news) async {
+  try {
+    final http.Response response = await http.get(Uri.parse(news.imageUrl));
+    final Directory tempDir = await getTemporaryDirectory();
+    final File file = File('${tempDir.path}/${news.id}.png');
+    await file.writeAsBytes(response.bodyBytes);
+    final XFile xfile = XFile(file.path);
+
+    await Share.shareXFiles(
+      [xfile],
+      text: news.description,
+    );
+  } catch (e) {
+    print('Error sharing news: $e');
+  }
+}
 
   Future<News?> getNewsById(String id) async {
     try {

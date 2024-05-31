@@ -55,6 +55,9 @@ dependencies:
 
   # SplashScreen
   flutter_native_splash: ^2.4.0
+  share_plus: ^9.0.0
+  http: ^1.2.1
+  path_provider: ^2.1.3
 
 dev_dependencies:
   flutter_test:
@@ -70,7 +73,6 @@ dev_dependencies:
   build_runner: ^2.4.9
   custom_lint: ^0.6.4
   riverpod_lint: ^2.3.10
-  flutter_localization_gen: ^0.1.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -82,11 +84,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
   assets:
     - lib/widgets/atoms/logo_cuadrado.png
     - lib/widgets/atoms/logo_rectangular.png
     - lib/resources/voluntary_card.png
     - lib/resources/news_card.png
+    - lib/resources/echeverria3560.jpeg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
