@@ -5,9 +5,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 //import 'package:flutter_localization/flutter_localization.dart';
-
 import 'widgets/tokens/colors.dart';
 
 void main() async {
@@ -47,6 +45,14 @@ class MyApp extends StatelessWidget {
           Locale('en'), 
           Locale('es'), 
         ],
+        localeResolutionCallback: (locale, supportedLocales) {
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale?.languageCode) {
+              return supportedLocale;
+            }
+          }
+          return supportedLocales.first;
+        },
         theme: ThemeData(
           useMaterial3: true,
           tabBarTheme: TabBarTheme(
