@@ -22,6 +22,7 @@ class LoginForm extends ConsumerWidget {
       data: ThemeData(
           appBarTheme: const AppBarTheme(color: ProjectPalette.neutral1)),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: FormBuilder(

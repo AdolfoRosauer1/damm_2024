@@ -102,7 +102,7 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: InkWell(
                       onTap: () {
-                        openMap(volunteerDetails.location.latitude, volunteerDetails.location.longitude);
+                        _service.openLocationInMap(volunteerDetails.location);
                       },
                       child: InformationCard(
                         title: 'Ubicación',

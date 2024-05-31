@@ -36,6 +36,7 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin{
       length: 3,
       
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
 
           backgroundColor: ProjectPalette.secondary5,

@@ -11,12 +11,14 @@ class VolunteeringCard extends StatelessWidget {
   const VolunteeringCard({
     super.key, 
     required this.onPressed,
+    required this.onPressedLocation,
     required this.type,
     required this.title,
     required this.vacancies,
     required this.imageUrl});
 
   final VoidCallback onPressed;
+  final VoidCallback onPressedLocation;
   final String type;
   final String title;
   final String imageUrl;
@@ -74,7 +76,10 @@ class VolunteeringCard extends StatelessWidget {
                           const SizedBox(
                             width: 16,
                           ),
-                          ProjectIcons.locationFilledActivated,
+                          InkWell(
+                            onTap: onPressedLocation,
+                            child: ProjectIcons.locationFilledActivated
+                          ),
                         ],
                       ),
                     ],
