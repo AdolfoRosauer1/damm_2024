@@ -10,6 +10,8 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; //Si no funciona comentar y hacer flutter run, ahi debería andar
+
 
 class VolunteerDetailsScreen extends StatefulWidget {
   const VolunteerDetailsScreen({super.key, required this.id});
@@ -121,7 +123,7 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Requisitos', style: ProjectFonts.subtitle1),
+                    child: Text(AppLocalizations.of(context)!.requirements, style: ProjectFonts.subtitle1),
                   ),
                   const SizedBox(height: 8),
                   Padding(

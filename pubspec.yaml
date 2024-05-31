@@ -36,7 +36,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  intl: ^0.19.0
+  intl: any
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
   flutter_form_builder: ^9.2.1
@@ -90,7 +90,7 @@ flutter:
     - lib/widgets/atoms/logo_rectangular.png
     - lib/resources/voluntary_card.png
     - lib/resources/news_card.png
-    - lib/resources/echeverria3560.jpeg
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
