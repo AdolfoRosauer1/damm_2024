@@ -85,6 +85,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   generate: true
+  #l10n:
+    #arb-dir: lib/l10n
+    #template-arb-file: app_en.arb
+    #output-localization-file: app_localizations.dart
   assets:
     - lib/widgets/atoms/logo_cuadrado.png
     - lib/widgets/atoms/logo_rectangular.png
