@@ -16,6 +16,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
+
 class ProfileScreen extends ConsumerStatefulWidget {
   static const route = "/profileScreen";
 
@@ -42,7 +46,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ProjectIcons.profilePicture,
             const SizedBox(height: 16,),
             Text(
-              'VOLUNTARIO',
+              AppLocalizations.of(context)!.volunteer,
               style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6)
             ),
             const SizedBox(height: 8,),
@@ -52,7 +56,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             const SizedBox(height: 8,),
             Text(
-              '¡Completá tu perfil para tener\n acceso a mejores oportunidades!',
+              AppLocalizations.of(context)!.completeProfile,
               style: ProjectFonts.body1.copyWith(color: ProjectPalette.neutral6),
               textAlign: TextAlign.center,       
             ),
@@ -63,7 +67,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 onPressed: () => {
                   context.go(PersonalDataForm.completeRoute)
                 },
-                buttonText:  'Completar', 
+                buttonText:  AppLocalizations.of(context)!.complete,
                 activated: true,
                 icon: Icon(ProjectIcons.addFilledEnabled.icon, color: ProjectPalette.neutral1),),
             ),
@@ -83,7 +87,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'VOLUNTARIO',
+              AppLocalizations.of(context)!.volunteer,
               style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6)
             ),
             const SizedBox(height: 2),
@@ -99,17 +103,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
               child: InformationCard(
-                title: 'Información Personal',
-                label1: 'FECHA DE NACIMIENTO',
+                title: AppLocalizations.of(context)!.personalInformation,
+                label1: AppLocalizations.of(context)!.birthDate,
                 content1: dateFormat.format(volunteer.dateOfBirth!),
-                label2: 'GÉNERO',
+                label2: AppLocalizations.of(context)!.gender,
                 content2: (volunteer.gender!.value)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 32,horizontal: 16),
               child: InformationCard(
-                title: 'Datos de contacto',
-                label1: 'TELÉFONO',
+                title: AppLocalizations.of(context)!.contactInformation,
+                label1: AppLocalizations.of(context)!.phone,
                 content1: volunteer.phoneNumber,
                 label2: 'E-MAIL',
                 content2: volunteer.email),
@@ -125,7 +129,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       context.go(PersonalDataForm.completeRoute)
                     }, 
                     filled: true, 
-                    actionStr: 'Editar perfil'
+                    actionStr: AppLocalizations.of(context)!.editProfile,
                   ),
                   const SizedBox(height: 8,),
                   CtaButton(enabled: true, onPressed: () => {
@@ -135,7 +139,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         return const SessionModal();
                       }
                     )
-                  }, filled: false, actionStr: 'Cerrar sesión', textColor: ProjectPalette.error),
+                  }, filled: false, actionStr: AppLocalizations.of(context)!.logout, textColor: ProjectPalette.error),
                 ],
               ),
             ),
