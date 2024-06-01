@@ -5,7 +5,13 @@
   "login": "Iniciar Sesión",
   "register": "Registrarse"
 
+  "search": "Buscar",
+  "volunteerings": "Voluntariados",
   "error": "Error",
+  "noVolunteers": "Actualmente no hay voluntariados vigentes. Pronto se irán incorporando nuevos.",
+  "noVolunteersSearch": "No hay voluntariados vigentes para tu búsqueda",
+  "noData": "Sin datos disponibles"
+
   "about_activity": "Sobre la actividad",
   "location": "Ubicación",
   "address": "DIRECCIÓN",
