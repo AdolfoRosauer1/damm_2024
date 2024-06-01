@@ -1,5 +1,10 @@
 {
   "@@locale": "es",
+
+  "quote": "“El esfuerzo desinteresado para llevar alegría a los demás será el comienzo de una vida más feliz para nosotros.”",
+  "login": "Iniciar Sesión",
+  "register": "Registrarse"
+
   "error": "Error",
   "about_activity": "Sobre la actividad",
   "location": "Ubicación",
