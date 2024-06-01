@@ -1,12 +1,12 @@
 {
-  "volunteerTitle": "Volunteer Title",
-  "mission": "Mission",
-  "activityDetails": "Activity Details",
+  "@@locale": "en",
+  "error": "Error",
+  "about_activity": "About the activity",
   "location": "Location",
-  "address": "Address",
+  "address": "ADDRESS",
+  "participate_in_volunteer": "Participate in the volunteer",
   "requirements": "Requirements",
-  "createdDate": "Created Date",
-  "vacanciesAvailable": "Vacancies Available",
-  "apply": "Apply",
-  "cost": "Cost"
+  "availability": "Availability",
+  "apply_now": "Apply Now",
+  "no_data": "No data"
 }
