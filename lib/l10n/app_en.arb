@@ -5,7 +5,13 @@
   "login": "Login",
   "register": "Register"
 
+  "search": "Search",
+  "volunteerings": "Volunteerings",
   "error": "Error",
+  "noVolunteers": "There are currently no active volunteer opportunities. New ones will be added soon.",
+  "noVolunteersSearch": "No active volunteer opportunities for your search",
+  "noData": "No data available"
+
   "about_activity": "About the activity",
   "location": "Location",
   "address": "ADDRESS",
