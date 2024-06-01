@@ -3,19 +3,21 @@
 
   "quote": "“El esfuerzo desinteresado para llevar alegría a los demás será el comienzo de una vida más feliz para nosotros.”",
   "login": "Iniciar Sesión",
-  "register": "Registrarse"
+  "register": "Registrarse",
 
   "search": "Buscar",
   "volunteerings": "Voluntariados",
   "error": "Error",
   "noVolunteers": "Actualmente no hay voluntariados vigentes. Pronto se irán incorporando nuevos.",
   "noVolunteersSearch": "No hay voluntariados vigentes para tu búsqueda",
-  "noData": "Sin datos disponibles"
+  "noData": "Sin datos disponibles",
 
   "news": "Novedades",
   "newsNotFound": "No se encontró la noticia",
   "shareThisNote": "Comparte esta nota",
-  "share": "Compartir"
+  "share": "Compartir",
+
+  "noNewsAvailable": "Sin noticias disponibles",
 
   "about_activity": "Sobre la actividad",
   "location": "Ubicación",
