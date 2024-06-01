@@ -1,5 +1,10 @@
 {
   "@@locale": "en",
+
+  "quote": "“The selfless effort to bring cheer to others will be the beginning of a happier life for ourselves.”",
+  "login": "Login",
+  "register": "Register"
+
   "error": "Error",
   "about_activity": "About the activity",
   "location": "Location",
