@@ -2,6 +2,7 @@
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Tabs extends StatefulWidget {
   const Tabs({
@@ -51,9 +52,9 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin{
             },
             controller: _tabController,
             tabs: const [
-              Tab(text: 'Postularse'),
-              Tab(text: 'Mi perfil'),
-              Tab(text: 'Novedades'),
+              Tab(text: AppLocalizations.of(context)!.apply),
+              Tab(text: AppLocalizations.of(context)!.profile),
+              Tab(text: AppLocalizations.of(context)!.news),
             ],
           )
         ),
