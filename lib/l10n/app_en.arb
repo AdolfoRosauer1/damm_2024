@@ -12,6 +12,11 @@
   "noVolunteersSearch": "No active volunteer opportunities for your search",
   "noData": "No data available"
 
+  "news": "News",
+  "newsNotFound": "News not found",
+  "shareThisNote": "Share this note",
+  "share": "Share"
+
   "about_activity": "About the activity",
   "location": "Location",
   "address": "ADDRESS",
