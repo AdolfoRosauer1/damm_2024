@@ -61,7 +61,7 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             VolunteerDetails volunteerDetails = snapshot.data!;
             return SingleChildScrollView(
@@ -92,7 +92,7 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                   const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Sobre la actividad', style: ProjectFonts.headline2),
+                    child: Text(AppLocalizations.of(context)!.about_activity, style: ProjectFonts.headline2),
                   ),
                   const SizedBox(height: 8),
                   Padding(
@@ -107,8 +107,8 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                         _service.openLocationInMap(volunteerDetails.location);
                       },
                       child: InformationCard(
-                        title: 'Ubicación',
-                        label1: 'DIRECCIÓN',
+                        title: AppLocalizations.of(context)!.location,
+                        label1: AppLocalizations.of(context)!.address,
                         content1: volunteerDetails.address,
                         label2: '',
                         content2: '',
@@ -118,7 +118,7 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                   const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Participar del voluntariado', style: ProjectFonts.headline2),
+                    child: Text(AppLocalizations.of(context)!.participate_in_volunteer, style: ProjectFonts.headline2),
                   ),
                   const SizedBox(height: 8),
                   Padding(
@@ -138,7 +138,7 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Disponibilidad', style: ProjectFonts.subtitle1),
+                    child: Text(AppLocalizations.of(context)!.availability, style: ProjectFonts.subtitle1),
                   ),
                   const SizedBox(height: 8),
                   Padding(
@@ -172,7 +172,7 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                         );
                       },
                       filled: true,
-                      actionStr: 'Postularme',
+                      actionStr: AppLocalizations.of(context)!.apply_now,
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -180,7 +180,7 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
               ),
             );
           } else {
-            return const Center(child: Text('Sin datos'));
+            return Center(child: Text(AppLocalizations.of(context)!.no_data));
           }
         },
       ),
