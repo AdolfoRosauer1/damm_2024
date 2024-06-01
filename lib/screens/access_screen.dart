@@ -24,7 +24,7 @@ class AccessScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                     child: Text(
-                      '“El esfuerzo desinteresado para llevar alegría a los demás será el comienzo de una vida más feliz para nosotros”',
+                      AppLocalizations.of(context)!.quote,
                       style: ProjectFonts.subtitle1,
                       textAlign: TextAlign.center,
                     ),
@@ -42,7 +42,7 @@ class AccessScreen extends StatelessWidget {
                   enabled: true,
                   onPressed: () => context.go('/login'),
                   filled: true,
-                  actionStr: 'Iniciar Sesión',
+                  actionStr: AppLocalizations.of(context)!.login,
                 ),
               ),
               Padding(
@@ -52,7 +52,7 @@ class AccessScreen extends StatelessWidget {
                   enabled: true,
                   onPressed: () => context.go('/register'),
                   filled: false,
-                  actionStr: 'Registrarse',
+                  actionStr: AppLocalizations.of(context)!.register,
                 ),
               ),
               const SizedBox(
