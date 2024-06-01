@@ -62,7 +62,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                 onChanged: (_) => loadVolunteers(),
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  hintText: 'Buscar',
+                  hintText: AppLocalizations.of(context)!.search,
                   hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral6),
                   prefixIcon: _searchController.text.isEmpty 
                       ? ProjectIcons.searchFilledEnabled 
@@ -80,7 +80,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            Text('Voluntariados', style: ProjectFonts.headline1),
+            Text(AppLocalizations.of(context)!.volunteerings, style: ProjectFonts.headline1),
             Expanded(
               child: FutureBuilder<bool>(
                 future: _areVolunteersAvailable,
@@ -88,14 +88,14 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   if (availabilitySnapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (availabilitySnapshot.hasError) {
-                    return Center(child: Text('Error: ${availabilitySnapshot.error}'));
+                    return Center(child: Text('${AppLocalizations.of(context)!.error}: ${availabilitySnapshot.error}'));
                   } else if (availabilitySnapshot.hasData && !availabilitySnapshot.data!) {
                     return const Column(
                       children: [
                         SizedBox(height: 16),
                         NoVolunteersCard(
                           size: NoVolunteersCardSize.small,
-                          message: 'Actualmente no hay voluntariados vigentes. Pronto se irán ircorporando nuevos',
+                          message: AppLocalizations.of(context)!.noVolunteers,
                         ),
                       ],
                     );
@@ -106,7 +106,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(child: CircularProgressIndicator());
                         } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
+                          return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
                         } else if (snapshot.hasData) {
                           List<VolunteerDetails> volunteerDetails = snapshot.data!;
                           if (volunteerDetails.isEmpty) {
@@ -115,7 +115,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                                   SizedBox(height: 16),
                                   NoVolunteersCard(
                                   size: NoVolunteersCardSize.medium,
-                                  message: 'No hay voluntariados vigentes para tu búsqueda',
+                                  message: AppLocalizations.of(context)!.noVolunteersSearch,
                                 ),
                               ]
                             );
@@ -140,7 +140,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                             },
                           );
                         } else {
-                          return const Center(child: Text('Sin datos disponibles'));
+                          return Center(child: Text(AppLocalizations.of(context)!.noData));
                         }
                       },
                     );
