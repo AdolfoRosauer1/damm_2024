@@ -5,6 +5,7 @@ import 'package:damm_2024/widgets/cells/cards/news_card.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -40,9 +41,9 @@ class _NewsScreenState extends State<NewsScreen> {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               print(snapshot.error);
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('Sin noticas disponibles'));
+              return const Center(child: Text(AppLocalizations.of(context)!.noNewsAvailable));
             }
 
             List<News> news = snapshot.data!;
