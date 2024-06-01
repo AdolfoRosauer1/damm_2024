@@ -12,6 +12,11 @@
   "noVolunteersSearch": "No hay voluntariados vigentes para tu búsqueda",
   "noData": "Sin datos disponibles"
 
+  "news": "Novedades",
+  "newsNotFound": "No se encontró la noticia",
+  "shareThisNote": "Comparte esta nota",
+  "share": "Compartir"
+
   "about_activity": "Sobre la actividad",
   "location": "Ubicación",
   "address": "DIRECCIÓN",
