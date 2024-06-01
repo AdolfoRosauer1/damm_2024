@@ -2,9 +2,11 @@ import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget{
   const WelcomeScreen({super.key});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,13 +16,17 @@ class WelcomeScreen extends StatelessWidget{
           children: [
             Image.asset('lib/widgets/atoms/logo_cuadrado.png'),
             const SizedBox(height: 30),
-            Text('¡Bienvenido!', style:ProjectFonts.headline1),
+            Text(
+              AppLocalizations.of(context)!.welcome, 
+              style:ProjectFonts.headline1
+            ),
             const SizedBox(height: 48),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 0),
-              child: Text('Nunca subestimes tu habilidad para mejorar la vida de alguien.'
-              , style: ProjectFonts.subtitle1,
-              textAlign: TextAlign.center,
+              child: Text(
+                AppLocalizations.of(context)!.welcomeMessage,
+                style: ProjectFonts.subtitle1,
+                textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 146),
@@ -33,7 +39,7 @@ class WelcomeScreen extends StatelessWidget{
                       enabled: true,
                       onPressed: () => context.go('/apply'), 
                       filled: true, 
-                      actionStr: 'Comenzar'),
+                      actionStr: AppLocalizations.of(context)!.start,
                   ),
                 ),
               ],
