@@ -38,7 +38,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
         centerTitle: true,
         backgroundColor: ProjectPalette.appBar,
         title: const Text(
-          'Novedades',
+          AppLocalizations.of(context)!.news,
           style: TextStyle(
             color: ProjectPalette.neutral1,
           ),
@@ -50,10 +50,10 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data == null) {
             //TODO Redirigir para atras?
-            return const Center(child: Text('No se encontró la noticia'));
+            return Center(child: Text(AppLocalizations.of(context)!.newsNotFound));
           } else {
             News news = snapshot.data!;
             return SingleChildScrollView(
@@ -109,7 +109,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     ),
                     Align(
                       alignment: Alignment.center,
-                      child: Text('Comparte esta nota',
+                      child: Text(AppLocalizations.of(context)!.shareThisNote,
                           style: ProjectFonts.headline2),
                     ),
                     const SizedBox(
@@ -119,7 +119,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                       enabled: true,
                       onPressed: () => _newsService.shareNews(news),
                       filled: true,
-                      actionStr: 'Compartir',
+                      actionStr: AppLocalizations.of(context)!.share,
                     ),
                   ],
                 ),
