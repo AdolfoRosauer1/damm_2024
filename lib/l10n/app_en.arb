@@ -40,5 +40,8 @@
   "requirements": "Requirements",
   "availability": "Availability",
   "apply_now": "Apply Now",
-  "no_data": "No data"
+  "no_data": "No data",
+
+  "welcome": "Welcome!",
+  "welcomeMessage": "Never underestimate your ability to improve someone's life."
 }
