@@ -1,12 +1,12 @@
 {
-  "volunteerTitle": "Título del Voluntariado",
-  "mission": "Misión",
-  "activityDetails": "Detalles de la Actividad",
+  "@@locale": "es",
+  "error": "Error",
+  "about_activity": "Sobre la actividad",
   "location": "Ubicación",
-  "address": "Dirección",
+  "address": "DIRECCIÓN",
+  "participate_in_volunteer": "Participar del voluntariado",
   "requirements": "Requisitos",
-  "createdDate": "Fecha de Creación",
-  "vacanciesAvailable": "Vacantes Disponibles",
-  "apply": "Postularse",
-  "cost": "Costo"
+  "availability": "Disponibilidad",
+  "apply_now": "Postularme",
+  "no_data": "Sin datos"
 }
