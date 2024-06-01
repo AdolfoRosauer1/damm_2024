@@ -19,6 +19,17 @@
 
   "noNewsAvailable": "Sin noticias disponibles",
 
+  "volunteer": "VOLUNTARIO",
+  "completeProfile": "¡Completá tu perfil para tener acceso a mejores oportunidades!",
+  "complete": "Completar",
+  "personalInformation": "Información Personal",
+  "birthDate": "FECHA DE NACIMIENTO",
+  "gender": "GÉNERO",
+  "contactInformation": "Datos de contacto",
+  "phone": "TELÉFONO",
+  "editProfile": "Editar perfil",
+  "logout": "Cerrar sesión",
+
   "about_activity": "Sobre la actividad",
   "location": "Ubicación",
   "address": "DIRECCIÓN",
