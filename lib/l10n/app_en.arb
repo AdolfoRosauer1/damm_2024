@@ -19,6 +19,17 @@
 
   "noNewsAvailable": "No news available",
 
+  "volunteer": "VOLUNTEER",
+  "completeProfile": "Complete your profile to have access to better opportunities!",
+  "complete": "Complete",
+  "personalInformation": "Personal Information",
+  "birthDate": "DATE OF BIRTH",
+  "gender": "GENDER",
+  "contactInformation": "Contact Information",
+  "phone": "PHONE",
+  "editProfile": "Edit Profile",
+  "logout": "Logout",
+
   "about_activity": "About the activity",
   "location": "Location",
   "address": "ADDRESS",
