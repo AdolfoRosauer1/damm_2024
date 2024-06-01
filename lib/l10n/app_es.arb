@@ -40,5 +40,8 @@
   "requirements": "Requisitos",
   "availability": "Disponibilidad",
   "apply_now": "Postularme",
-  "no_data": "Sin datos"
+  "no_data": "Sin datos",
+
+  "welcome": "¡Bienvenido!",
+  "welcomeMessage": "Nunca subestimes tu habilidad para mejorar la vida de alguien."
 }
