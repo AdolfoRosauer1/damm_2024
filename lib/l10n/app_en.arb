@@ -3,19 +3,21 @@
 
   "quote": "“The selfless effort to bring cheer to others will be the beginning of a happier life for ourselves.”",
   "login": "Login",
-  "register": "Register"
+  "register": "Register",
 
   "search": "Search",
   "volunteerings": "Volunteerings",
   "error": "Error",
   "noVolunteers": "There are currently no active volunteer opportunities. New ones will be added soon.",
   "noVolunteersSearch": "No active volunteer opportunities for your search",
-  "noData": "No data available"
+  "noData": "No data available",
 
   "news": "News",
   "newsNotFound": "News not found",
   "shareThisNote": "Share this note",
-  "share": "Share"
+  "share": "Share",
+
+  "noNewsAvailable": "No news available",
 
   "about_activity": "About the activity",
   "location": "Location",
