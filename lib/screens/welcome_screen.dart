@@ -40,6 +40,7 @@ class WelcomeScreen extends StatelessWidget{
                       onPressed: () => context.go('/apply'), 
                       filled: true, 
                       actionStr: AppLocalizations.of(context)!.start,
+                    ),
                   ),
                 ),
               ],

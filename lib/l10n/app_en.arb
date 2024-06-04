@@ -4,6 +4,7 @@
   "quote": "“The selfless effort to bring cheer to others will be the beginning of a happier life for ourselves.”",
   "login": "Login",
   "register": "Register",
+  "start": "Start",
 
   "search": "Search",
   "volunteerings": "Volunteerings",
@@ -43,5 +44,34 @@
   "no_data": "No data",
 
   "welcome": "Welcome!",
-  "welcomeMessage": "Never underestimate your ability to improve someone's life."
+  "welcomeMessage": "Never underestimate your ability to improve someone's life.",
+
+  "apply_confirmation": "You are about to apply for",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+
+  "logout_confirmation": "Are you sure you want to log out?",
+
+  "vacancies": "Vacancies",
+
+  "password": "Password",
+  "noAccount": "I don't have an account",
+
+  "profileData": "Profile Data",
+  "dateOfBirthMin": "Date of Birth",
+  "profileInformation": "Profile Information",
+  "contactText": "This data will be shared with the organization to contact you",
+  "phoneMin": "Phone",
+  "saveData": "Save Data",
+
+  "name": "Name",
+  "lastname": "Last Name",
+  "alreadyHaveAccount": "I already have an account",
+
+  "uploadPhoto": "Upload Photo",
+  "changePhoto": "Change Photo",
+  "profilePhoto": "Profile Photo",
+
+  "readMore": "Read More"
+  
 }

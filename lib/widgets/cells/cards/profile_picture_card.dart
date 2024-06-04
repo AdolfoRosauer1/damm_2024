@@ -4,6 +4,7 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfilePictureCard extends StatelessWidget{
   final String? imageUrl;
@@ -12,9 +13,9 @@ class ProfilePictureCard extends StatelessWidget{
 
   _getButtonText(){
     if (imageUrl == null || imageUrl!.isEmpty){
-      return 'Subir foto';
+      return 'Subir foto'; //return AppLocalizations.of(context)!.uploadPhoto; //TEXTO A CAMBIAR
     }
-    return 'Cambiar foto';
+      return 'Cambiar foto'; //return AppLocalizations.of(context)!.changePhoto; //TEXTO A CAMBIAR
   }
   Future<void> _pickImage() async {
     print("SLEECCION IMAGEN");
@@ -38,7 +39,7 @@ class ProfilePictureCard extends StatelessWidget{
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16,14,0,14),
                 child: Text(
-                  'Foto de perfil',
+                  AppLocalizations.of(context)!.profilePhoto, //TEXTO A CAMBIAR
                   style: ProjectFonts.subtitle1,
                 ),
               ),
@@ -69,7 +70,7 @@ class ProfilePictureCard extends StatelessWidget{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Foto de perfil',
+                    AppLocalizations.of(context)!.profilePhoto, //TEXTO A CAMBIAR
                     style: ProjectFonts.subtitle1,
                   ),
                   SizedBox(height: 8),

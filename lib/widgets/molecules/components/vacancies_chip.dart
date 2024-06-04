@@ -3,6 +3,7 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VacanciesChip extends StatelessWidget {
   final int vacancies;
@@ -21,7 +22,7 @@ class VacanciesChip extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 8),
             child: Text(
-              'Vacantes:',
+              AppLocalizations.of(context)!.vacancies, //TEXTO A CAMBIAR
               style: ProjectFonts.body2
             ),
           ),

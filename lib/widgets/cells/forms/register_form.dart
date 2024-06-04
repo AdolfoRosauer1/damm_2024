@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterForm extends ConsumerWidget {
   const RegisterForm({super.key});
@@ -45,7 +46,7 @@ class RegisterForm extends ConsumerWidget {
                                   color: ProjectPalette.neutral6),
                               borderRadius: BorderRadius.circular(4)),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          label: const Text('Nombre'),
+                          label: Text(AppLocalizations.of(context)!.name), //TEXTO A CAMBIAR
                           labelStyle: ProjectFonts.caption.copyWith(
                               color: ProjectPalette.neutral6,
                               backgroundColor: ProjectPalette.neutral3),
@@ -66,7 +67,7 @@ class RegisterForm extends ConsumerWidget {
                                   color: ProjectPalette.neutral6),
                               borderRadius: BorderRadius.circular(4)),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          label: const Text('Apellido'),
+                          label: Text(AppLocalizations.of(context)!.lastname), //TEXTO A CAMBIAR
                           labelStyle: ProjectFonts.caption.copyWith(
                               color: ProjectPalette.neutral6,
                               backgroundColor: ProjectPalette.neutral3),
@@ -110,7 +111,7 @@ class RegisterForm extends ConsumerWidget {
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           suffixIcon: ProjectIcons.visibilityOffFilledEnabled,
                           suffixIconColor: ProjectPalette.neutral6,
-                          label: const Text('Contraseña'),
+                          label: Text(AppLocalizations.of(context)!.password), //TEXTO A CAMBIAR
                           labelStyle: ProjectFonts.caption.copyWith(
                               color: ProjectPalette.neutral6,
                               backgroundColor: ProjectPalette.neutral3),
@@ -151,7 +152,7 @@ class RegisterForm extends ConsumerWidget {
                             }
                           },
                           filled: true,
-                          actionStr: 'Registrarse'),
+                          actionStr: AppLocalizations.of(context)!.register), //TEXTO A CAMBIAR
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -160,7 +161,7 @@ class RegisterForm extends ConsumerWidget {
                           enabled: true,
                           onPressed: () => context.go('/login'),
                           filled: false,
-                          actionStr: 'Ya tengo cuenta'),
+                          actionStr: AppLocalizations.of(context)!.alreadyHaveAccount), //TEXTO A CAMBIAR
                     ),
                   ],
                 ),

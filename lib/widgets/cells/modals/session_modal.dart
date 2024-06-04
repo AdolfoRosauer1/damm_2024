@@ -3,6 +3,8 @@ import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class SessionModal extends StatelessWidget {
   const SessionModal({super.key});
 
@@ -23,7 +25,7 @@ class SessionModal extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16,16,16,0),
               child: Text(
-                '¿Estás seguro que quieres cerrar sesión?',
+                AppLocalizations.of(context)!.logout_confirmation, //TEXTO A CAMBIAR
                 style: ProjectFonts.subtitle1
               ),
             ),
@@ -39,7 +41,7 @@ class SessionModal extends StatelessWidget {
                       textStyle: ProjectFonts.button,
                       foregroundColor: ProjectPalette.primary1,
                     ),
-                    child: const Text('Cancelar', ),
+                    child: Text(AppLocalizations.of(context)!.cancel), //TEXTO A CAMBIAR
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
@@ -47,7 +49,7 @@ class SessionModal extends StatelessWidget {
                       textStyle: ProjectFonts.button,
                       foregroundColor: ProjectPalette.primary1,
                     ),
-                    child: const Text('Cerrar sesión'),
+                    child: Text(AppLocalizations.of(context)!.logout), //TEXTO A CAMBIAR
                   ),
                 ],
               ),

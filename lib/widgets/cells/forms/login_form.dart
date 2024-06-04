@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginForm extends ConsumerWidget {
   const LoginForm({super.key});
@@ -69,7 +70,7 @@ class LoginForm extends ConsumerWidget {
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           suffixIcon: ProjectIcons.visibilityOffFilledEnabled,
                           suffixIconColor: ProjectPalette.neutral6,
-                          label: const Text('Contraseña'),
+                          label: Text(AppLocalizations.of(context)!.password), // TEXTO A CAMBIAR
                           labelStyle: ProjectFonts.caption.copyWith(
                               color: ProjectPalette.neutral6,
                               backgroundColor: ProjectPalette.neutral3),
@@ -111,7 +112,7 @@ class LoginForm extends ConsumerWidget {
                             }
                           },
                           filled: true,
-                          actionStr: 'Iniciar Sesión'),
+                          actionStr: AppLocalizations.of(context)!.login),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -120,7 +121,7 @@ class LoginForm extends ConsumerWidget {
                           enabled: true,
                           onPressed: () => context.go('/register'),
                           filled: false,
-                          actionStr: 'No tengo cuenta'),
+                          actionStr: AppLocalizations.of(context)!.noAccount),
                     ),
                   ],
                 ),

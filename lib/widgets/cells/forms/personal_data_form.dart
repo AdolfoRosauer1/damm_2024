@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonalDataForm extends ConsumerWidget {
   const PersonalDataForm({super.key});
@@ -54,7 +55,7 @@ class PersonalDataForm extends ConsumerWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Datos de perfil',
+                    AppLocalizations.of(context)!.profileData, //TEXTO A CAMBIAR
                     style: ProjectFonts.headline1,
                   ),
                 ),
@@ -69,7 +70,7 @@ class PersonalDataForm extends ConsumerWidget {
                     hintText: "DD/MM/YY",
                     hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5 ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Fecha de nacimiento',
+                    labelText: AppLocalizations.of(context)!.dateOfBirthMin, //TEXTO A CAMBIAR
                     
                     border: OutlineInputBorder(
                       borderSide: const BorderSide(color: ProjectPalette.neutral6),
@@ -91,7 +92,7 @@ class PersonalDataForm extends ConsumerWidget {
                     name: 'gender',
                     initialValue: volunteer.gender?.value,
                     builder: (FormFieldState<dynamic> field){
-                      return InputCard(title: 'Información de perfil',
+                      return InputCard(title: AppLocalizations.of(context)!.profileInformation, //TEXTO A CAMBIAR
                         labels: Gender.values.map((e) => e.value).toList(),
                         state: field
 
@@ -112,13 +113,13 @@ class PersonalDataForm extends ConsumerWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Datos de contacto',
+                    AppLocalizations.of(context)!.contactInformation, //TEXTO A CAMBIAR
                     style: ProjectFonts.headline1,
                   ),
                 ),
                 const SizedBox(height: 24,),
                 Text(
-                  'Estos datos serán compartidos con la organización para ponerse en contacto contigo',
+                  AppLocalizations.of(context)!.contactText, //TEXTO A CAMBIAR
                   style: ProjectFonts.subtitle1,
                 ),
                 const SizedBox(height: 24,),
@@ -132,7 +133,7 @@ class PersonalDataForm extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(4)
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    label: const Text('Teléfono'),
+                    label: Text(AppLocalizations.of(context)!.phoneMin), //TEXTO A CAMBIAR
                     labelStyle: ProjectFonts.caption.copyWith(color: ProjectPalette.neutral6, backgroundColor: ProjectPalette.neutral3 ),
                     hintText: 'Ej: +541178445459',
                     hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5 ),
@@ -171,7 +172,7 @@ class PersonalDataForm extends ConsumerWidget {
                     }
                   },                 
                   filled: true,
-                  actionStr: 'Guardar datos'
+                  actionStr: AppLocalizations.of(context)!.saveData //TEXTO A CAMBIAR
                 ),
                 const SizedBox(height: 32,)
               

@@ -3,9 +3,12 @@ import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ApplyConfirmationModal extends StatelessWidget {
   const ApplyConfirmationModal({super.key, required this.title});
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -21,7 +24,9 @@ class ApplyConfirmationModal extends StatelessWidget {
            mainAxisSize: MainAxisSize.min,
            crossAxisAlignment: CrossAxisAlignment.stretch,
            children: [
-              Text('Te estás por postular a', style: ProjectFonts.subtitle1.copyWith(
+              Text(
+                AppLocalizations.of(context)!.apply_confirmation,  //TEXTO A CAMBIAR
+                style: ProjectFonts.subtitle1.copyWith(
                 color: ProjectPalette.black
               )),
               Text(title,style:ProjectFonts.headline2),
@@ -34,7 +39,7 @@ class ApplyConfirmationModal extends StatelessWidget {
                       textStyle: ProjectFonts.button,
                       foregroundColor: ProjectPalette.primary1,
                     ),
-                    child: const Text('Cancelar', ),
+                    child: Text( AppLocalizations.of(context)!.cancel ), //cancel
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
@@ -42,7 +47,7 @@ class ApplyConfirmationModal extends StatelessWidget {
                       textStyle: ProjectFonts.button,
                       foregroundColor: ProjectPalette.primary1,
                     ),
-                    child: const Text('Confirmar'),
+                    child: Text( AppLocalizations.of(context)!.confirm ), //confirm
                   ),
                 ],
               ),

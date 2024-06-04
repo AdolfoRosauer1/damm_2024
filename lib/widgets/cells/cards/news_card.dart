@@ -2,6 +2,7 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsCard extends StatelessWidget {
   final VoidCallback onPressed;
@@ -78,7 +79,7 @@ class NewsCard extends StatelessWidget {
                           textStyle: ProjectFonts.button,
                           foregroundColor: ProjectPalette.primary1,
                         ),
-                        child: const Text('Leer Más'),
+                        child: Text(AppLocalizations.of(context)!.readMore), //TEXTO A CAMBIAR
                       ),
                     ),
                   ],
