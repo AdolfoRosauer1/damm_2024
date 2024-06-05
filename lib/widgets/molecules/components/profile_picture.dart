@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 enum ProfilePictureSize { small, large }
@@ -18,6 +20,13 @@ class ProfilePicture extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+    ImageProvider imageProvider;
+    if (imageUrl.startsWith('http') || imageUrl.startsWith('https')) {
+      imageProvider = NetworkImage(imageUrl);
+    } else {
+      imageProvider = FileImage(File(imageUrl));
+    }
+
     return Container(
       width: _getSize(),
       height: _getSize(),
@@ -25,8 +34,7 @@ class ProfilePicture extends StatelessWidget {
         shape: BoxShape.circle,
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(imageUrl), // Si la imagen está en la web
-          // image: AssetImage(imageUrl), // Si la imagen está en los assets
+          image: imageProvider,
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:damm_2024/config/router.dart';
 import 'package:damm_2024/models/gender.dart';
+import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
@@ -11,22 +12,56 @@ import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class PersonalDataForm extends ConsumerWidget {
-  const PersonalDataForm({super.key});
+class PersonalDataForm extends ConsumerStatefulWidget {
+  PersonalDataForm({super.key});
   
   static const route = "editProfile";
   static const completeRoute = "${ProfileScreen.route}/$route";
 
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final volunteer = ref.watch(volunteerProvider);
-    final formKey = GlobalKey<FormBuilderState>();
+  _PersonalDataFormState createState() => _PersonalDataFormState();
+}
 
-    
+class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
+
+  final formKey = GlobalKey<FormBuilderState>();
+  late ValueNotifier isFormValidNotifier; 
+  late Volunteer volunteer;
+
+  @override
+  void initState() {
+    super.initState();
+    volunteer = ref.read(volunteerProvider);
+    isFormValidNotifier = ValueNotifier(volunteer.hasCompletedProfile());
+
+  }
+
+  void onFormChanged() {
+    print("ON FORM CHANGEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
+    FocusScope.of(context).unfocus(); 
+    isFormValidNotifier.value = formKey.currentState!.validate(focusOnInvalid: false);
+    final errors = formKey.currentState?.errors;
+    if (errors != null) {
+        errors.forEach((key, value) {
+            print('Error en el campo $key: $value');
+        });
+    }
+  }
+
+  @override
+  void dispose() {
+    isFormValidNotifier.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+
+
     return Theme(
       data: ThemeData(
         appBarTheme: const AppBarTheme(
@@ -48,7 +83,6 @@ class PersonalDataForm extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: FormBuilder(
             key: formKey,
-            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -63,6 +97,7 @@ class PersonalDataForm extends ConsumerWidget {
                 FormBuilderDateTimePicker(
                   name: 'dateOfBirth',
                   initialValue: volunteer.dateOfBirth,
+                  validator: FormBuilderValidators.required(),
                   decoration: InputDecoration(
                     suffixIcon: ProjectIcons.calendarFilledActivated,
                     
@@ -91,6 +126,8 @@ class PersonalDataForm extends ConsumerWidget {
                   child: FormBuilderField(
                     name: 'gender',
                     initialValue: volunteer.gender?.value,
+                    
+                    validator: FormBuilderValidators.required(),
                     builder: (FormFieldState<dynamic> field){
                       return InputCard(title: AppLocalizations.of(context)!.profileInformation, //TEXTO A CAMBIAR
                         labels: Gender.values.map((e) => e.value).toList(),
@@ -105,6 +142,9 @@ class PersonalDataForm extends ConsumerWidget {
                 const SizedBox(height: 24,),
                 FormBuilderField(
                   name: 'profilePicture',
+                  onSaved: (_) => onFormChanged(), 
+
+                  validator: FormBuilderValidators.required(),
                   builder: (FormFieldState<dynamic> field){
                     return ProfilePictureCard(imageUrl: volunteer.profileImageURL,field: field,);
                   }
@@ -124,7 +164,13 @@ class PersonalDataForm extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24,),
                 FormBuilderTextField(
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.match(r'^\+\d{1,15}$')
+                  ]),
                   initialValue: volunteer.phoneNumber,
+                  
+                  onEditingComplete: onFormChanged,
                   name: 'phoneNumber',
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
@@ -143,7 +189,12 @@ class PersonalDataForm extends ConsumerWidget {
                 const SizedBox(height: 24,),
                 FormBuilderTextField(
                   initialValue: volunteer.email,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.email()
+                  ]),
                   name: 'email',
+                  onEditingComplete: onFormChanged,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -159,24 +210,33 @@ class PersonalDataForm extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 32,),
-                CtaButton(
-                  enabled: true,
-                  onPressed: () {
-                    if (formKey.currentState?.saveAndValidate() ?? false) {
-                      // Formulario validado y guardado
-                      final formData = formKey.currentState?.value;
-                      print('Form Data: $formData');
-                    } else {
-                      // Manejar errores de validación
-                      print('Validation failed');
-                    }
-                  },                 
-                  filled: true,
-                  actionStr: AppLocalizations.of(context)!.saveData //TEXTO A CAMBIAR
+                ValueListenableBuilder(
+                  valueListenable: isFormValidNotifier,
+                  builder: (context,valid,child){
+                    return CtaButton(
+                      enabled: valid,
+                      onPressed: () {
+                        if (!valid) {
+                          return;
+                        }
+                        
+                        if (formKey.currentState?.saveAndValidate() ?? false) {
+                          // Formulario validado y guardado
+                          final formData = formKey.currentState?.value;
+                          print('Form Data: $formData');
+                        } else {
+                          // Manejar errores de validación
+                          print('Validation failed');
+                        }
+                      },                 
+
+                      filled: true,
+                      actionStr: AppLocalizations.of(context)!.saveData
+                    );
+                  }
                 ),
                 const SizedBox(height: 32,)
-              
-                
+           
               ],
             ),
           ),

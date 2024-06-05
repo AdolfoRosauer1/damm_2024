@@ -38,9 +38,9 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
         iconTheme: const IconThemeData(color: ProjectPalette.neutral1),
         centerTitle: true,
         backgroundColor: ProjectPalette.appBar,
-        title: const Text(
+        title: Text(
           AppLocalizations.of(context)!.news,
-          style: TextStyle(
+          style: const TextStyle(
             color: ProjectPalette.neutral1,
           ),
         ),

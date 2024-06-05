@@ -51,7 +51,7 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin{
               setState(() {});
             },
             controller: _tabController,
-            tabs: const [
+            tabs: [
               Tab(text: AppLocalizations.of(context)!.apply),
               Tab(text: AppLocalizations.of(context)!.profile),
               Tab(text: AppLocalizations.of(context)!.news),

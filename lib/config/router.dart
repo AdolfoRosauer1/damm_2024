@@ -101,7 +101,7 @@ class CustomNavigationHelper {
                       path: PersonalDataForm.route,
                       pageBuilder: (context, state) {
                         return getPage(
-                          child: const PersonalDataForm(),
+                          child: PersonalDataForm(),
                           state: state,
                         );
                       },
@@ -154,7 +154,7 @@ class CustomNavigationHelper {
     router = GoRouter(
         navigatorKey: parentNavigatorKey,
         routes: routes,
-        initialLocation: "/apply",
+        initialLocation: "/",
         redirect: (context, state) {
           final container = ProviderContainer();
           final authState = container.read(authProvider).currentUser;

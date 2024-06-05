@@ -43,7 +43,7 @@ class _NewsScreenState extends State<NewsScreen> {
               print(snapshot.error);
               return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text(AppLocalizations.of(context)!.noNewsAvailable));
+              return Center(child: Text(AppLocalizations.of(context)!.noNewsAvailable));
             }
 
             List<News> news = snapshot.data!;

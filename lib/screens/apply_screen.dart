@@ -91,9 +91,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   } else if (availabilitySnapshot.hasError) {
                     return Center(child: Text('${AppLocalizations.of(context)!.error}: ${availabilitySnapshot.error}'));
                   } else if (availabilitySnapshot.hasData && !availabilitySnapshot.data!) {
-                    return const Column(
+                    return Column(
                       children: [
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         NoVolunteersCard(
                           size: NoVolunteersCardSize.small,
                           message: AppLocalizations.of(context)!.noVolunteers,
@@ -111,9 +111,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                         } else if (snapshot.hasData) {
                           List<VolunteerDetails> volunteerDetails = snapshot.data!;
                           if (volunteerDetails.isEmpty) {
-                            return const Column(
+                            return Column(
                               children: [
-                                  SizedBox(height: 16),
+                                  const SizedBox(height: 16),
                                   NoVolunteersCard(
                                   size: NoVolunteersCardSize.medium,
                                   message: AppLocalizations.of(context)!.noVolunteersSearch,
