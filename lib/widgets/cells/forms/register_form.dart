@@ -6,23 +6,57 @@ import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class RegisterForm extends ConsumerWidget {
+class RegisterForm extends ConsumerStatefulWidget {
   const RegisterForm({super.key});
 
   static const route = "/register";
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _RegisterFormState();
+  }
+
+}
+
+class _RegisterFormState extends ConsumerState<RegisterForm> {
+
+  final formKey = GlobalKey<FormBuilderState>();
+  final ValueNotifier formValid = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    formValid.dispose();
+    super.dispose();
+  }
+
+
+  void onFormChanged() {
+    print("ON FORM CHANGEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
+    FocusScope.of(context).unfocus(); 
+
+    formValid.value = formKey.currentState!.validate(focusOnInvalid: false);
+    final errors = formKey.currentState?.errors;
+    if (errors != null) {
+        errors.forEach((key, value) {
+            print('Error en el campo $key: $value');
+        });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final authProvider = ref.watch(firebaseAuthProvider);
-    final formKey = GlobalKey<FormBuilderState>();
 
     return Theme(
       data: ThemeData(
           appBarTheme: const AppBarTheme(color: ProjectPalette.neutral1)),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
+
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: FormBuilder(
@@ -39,6 +73,11 @@ class RegisterForm extends ConsumerWidget {
                       ),
                       FormBuilderTextField(
                         name: 'name',
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.match(r'^[a-zA-Z ]+$')
+                        ]),
+                        onEditingComplete: onFormChanged,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -60,6 +99,11 @@ class RegisterForm extends ConsumerWidget {
                       ),
                       FormBuilderTextField(
                         name: 'lastname',
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.match(r'^[a-zA-Z ]+$')
+                        ]),
+                        onEditingComplete: onFormChanged,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -80,6 +124,11 @@ class RegisterForm extends ConsumerWidget {
                         height: 24,
                       ),
                       FormBuilderTextField(
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.email()
+                        ]),
+                        onEditingComplete: onFormChanged,
                         name: 'email',
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
@@ -101,6 +150,11 @@ class RegisterForm extends ConsumerWidget {
                         height: 24,
                       ),
                       FormBuilderTextField(
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required()
+                        ]),
+                        onEditingComplete: onFormChanged,
+
                         name: 'password',
                         keyboardType: TextInputType.visiblePassword,
                         decoration: InputDecoration(
@@ -128,32 +182,42 @@ class RegisterForm extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 12.0),
-                      child: CtaButton(
-                          enabled: true,
-                          onPressed: () async {
-                            if (formKey.currentState?.saveAndValidate() ??
-                                false) {
-                              final formValues = formKey.currentState?.value;
-                              final email = formValues?['email'];
-                              final password = formValues?['password'];
-                              final name = formValues?['name'];
-                              final lastName = formValues?['lastname'];
-                              try {
-                                await authProvider.signOut();
-                                await authProvider.registerUser(
-                                    email, password, name, lastName);
-                                print(authProvider.currentUser);
-                                context.go('/apply');
-                              } catch (e) {
-                                print(e);
+                      child: ValueListenableBuilder(
+                        valueListenable: formValid,
+                        builder: (context, formValid, child) {
+                          return CtaButton(
+                            enabled: formValid,
+                            onPressed: () async {
+                              if (!formValid){
+                                return;
                               }
-                            } else {
-                              print("Validation failed");
-                            }
-                          },
-                          filled: true,
-                          actionStr: AppLocalizations.of(context)!.register), //TEXTO A CAMBIAR
-                    ),
+                              if (formKey.currentState?.saveAndValidate() ??
+                                  false) {
+                                final formValues = formKey.currentState?.value;
+                                final email = formValues?['email'];
+                                final password = formValues?['password'];
+                                final name = formValues?['name'];
+                                final lastName = formValues?['lastname'];
+                                try {
+                                  await authProvider.signOut();
+                                  await authProvider.registerUser(
+                                      email, password, name, lastName);
+                                  print(authProvider.currentUser);
+                                  context.go('/apply');
+                                } catch (e) {
+                                  print(e);
+                                }
+                              } else {
+                                print("Validation failed");
+                              }
+                            },
+                            filled: true,
+                            actionStr: AppLocalizations.of(context)!.register, //TEXTO A CAMBIAR
+                          );
+                        },
+                      )
+                       
+                   ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 12.0),
