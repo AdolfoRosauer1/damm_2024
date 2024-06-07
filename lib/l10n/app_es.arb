@@ -72,5 +72,10 @@
   "changePhoto": "Cambiar foto",
   "profilePhoto": "Foto de perfil",
 
-  "readMore": "Leer Más"
+  "readMore": "Leer Más",
+
+  "error_noUser" : "No existe usuario con esas credenciales",
+  "error_generic" : "Ocurrió un error. Intenta de nuevo más tarde"
+
+
 }

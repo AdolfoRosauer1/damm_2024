@@ -1,6 +1,8 @@
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -44,7 +46,9 @@ class SessionModal extends StatelessWidget {
                     child: Text(AppLocalizations.of(context)!.cancel), //TEXTO A CAMBIAR
                   ),
                   TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => {
+                      //TODO
+                    },
                     style: TextButton.styleFrom(
                       textStyle: ProjectFonts.button,
                       foregroundColor: ProjectPalette.primary1,

@@ -21,7 +21,7 @@ class AuthRepository {
       return result.user;
     } catch (e) {
       print(e.toString());
-      return null;
+      rethrow;
     }
   }
 
