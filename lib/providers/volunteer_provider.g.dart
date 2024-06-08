@@ -36,7 +36,7 @@ final firebaseStorageProvider = Provider<FirebaseStorage>.internal(
 );
 
 typedef FirebaseStorageRef = ProviderRef<FirebaseStorage>;
-String _$profileRepositoryHash() => r'd8d96cb97db0c026fbcfa56e65c39ca7c265e894';
+String _$profileRepositoryHash() => r'8b4158ec48f73c3bac2c4c4541a80a32225b5e22';
 
 /// See also [profileRepository].
 @ProviderFor(profileRepository)
@@ -51,7 +51,7 @@ final profileRepositoryProvider = Provider<ProfileRepository>.internal(
 );
 
 typedef ProfileRepositoryRef = ProviderRef<ProfileRepository>;
-String _$profileControllerHash() => r'6fa7e38ad8c6d6ff2e8b27f906fb5805f3c9f2a1';
+String _$profileControllerHash() => r'8c905cfc46053d95d62909ca102b42321d389b05';
 
 /// See also [profileController].
 @ProviderFor(profileController)
@@ -66,7 +66,22 @@ final profileControllerProvider = Provider<ProfileController>.internal(
 );
 
 typedef ProfileControllerRef = ProviderRef<ProfileController>;
-String _$currentUserHash() => r'5e3cc4d02ea38d8f22626490d21f9922fe3c5f84';
+String _$storageDataSourceHash() => r'e7e6e7aa8d4b60c1d27f68f65c74efe41f4c3342';
+
+/// See also [storageDataSource].
+@ProviderFor(storageDataSource)
+final storageDataSourceProvider = Provider<StorageDataSource>.internal(
+  storageDataSource,
+  name: r'storageDataSourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$storageDataSourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef StorageDataSourceRef = ProviderRef<StorageDataSource>;
+String _$currentUserHash() => r'f9dd8787ce4df7ef14ee30610b505ea247332a86';
 
 /// See also [CurrentUser].
 @ProviderFor(CurrentUser)

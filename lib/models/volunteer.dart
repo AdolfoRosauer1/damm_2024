@@ -8,16 +8,17 @@ class Volunteer {
   final String profileImageURL;
   final DateTime? dateOfBirth;
   final String phoneNumber;
+  final String uid;
 
-  Volunteer({
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.gender,
-    required this.profileImageURL,
-    required this.dateOfBirth,
-    required this.phoneNumber,
-  });
+  Volunteer(
+      {required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.gender,
+      required this.profileImageURL,
+      required this.dateOfBirth,
+      required this.phoneNumber,
+      required this.uid});
 
   bool hasCompletedProfile() {
     print(
@@ -30,12 +31,14 @@ class Volunteer {
 
   factory Volunteer.fromJson(Map<String, dynamic> data) {
     return Volunteer(
-        firstName: data['firstName'] as String,
-        lastName: data['lastName'] as String,
-        email: data['email'] as String,
-        gender: genderFromString(data['gender']),
-        profileImageURL: data['profileImageURL'] as String,
-        dateOfBirth: data['dateOfBirth'] as DateTime?,
-        phoneNumber: data['phoneNumber'] as String);
+      firstName: data['firstName'] as String,
+      lastName: data['lastName'] as String,
+      email: data['email'] as String,
+      gender: genderFromString(data['gender']),
+      profileImageURL: data['profileImageURL'] as String,
+      dateOfBirth: data['dateOfBirth'] as DateTime?,
+      phoneNumber: data['phoneNumber'] as String,
+      uid: data['uid'] as String,
+    );
   }
 }

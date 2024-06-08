@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
@@ -15,14 +17,14 @@ class CurrentUser extends _$CurrentUser {
   @override
   Volunteer build() {
     return Volunteer(
-      firstName: '',
-      lastName: '',
-      email: '',
-      gender: null,
-      profileImageURL: '',
-      dateOfBirth: null,
-      phoneNumber: '',
-    );
+        firstName: '',
+        lastName: '',
+        email: '',
+        gender: null,
+        profileImageURL: '',
+        dateOfBirth: null,
+        phoneNumber: '',
+        uid: '');
   }
 
   void set(Volunteer data) {
@@ -42,10 +44,8 @@ FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
 
 @Riverpod(keepAlive: true)
 ProfileRepository profileRepository(ProfileRepositoryRef ref) {
-  return ProfileRepository(
-    ref.watch(firebaseFirestoreProvider),
-    ref.watch(firebaseStorageProvider),
-  );
+  return ProfileRepository(ref.watch(firebaseFirestoreProvider),
+      ref.watch(firebaseStorageProvider), ref.watch(storageDataSourceProvider));
 }
 
 @Riverpod(keepAlive: true)
@@ -54,6 +54,12 @@ ProfileController profileController(ProfileControllerRef ref) {
       ref.watch(profileRepositoryProvider),
       ref.watch(currentUserProvider.notifier),
       ref.watch(authRepositoryProvider).currentUser);
+}
+
+@Riverpod(keepAlive: true)
+StorageDataSource storageDataSource(StorageDataSourceRef ref) {
+  return StorageDataSource(ref.watch(firebaseStorageProvider),
+      ref.watch(firebaseAuthProvider).currentUser);
 }
 
 class ProfileController {
@@ -86,11 +92,41 @@ class ProfileController {
   }
 }
 
+class StorageDataSource {
+  final FirebaseStorage _storage;
+  final User? _user;
+
+  StorageDataSource(this._storage, this._user);
+
+  // Upload PFP to FirestoreStorage. Returns URL
+  Future<String?> uploadPFP(String filePath) async {
+    print('Uploading PFP!');
+    if (_user != null) {
+      final rootRef = _storage.ref();
+      String uid = _user.uid;
+      final imageRef = rootRef.child('pfps/$uid');
+
+      File file = File(filePath);
+
+      try {
+        await imageRef.putFile(file);
+        print('PFP uploaded correctly!');
+        return imageRef.getDownloadURL();
+      } catch (e) {
+        print('Error uploading PFP: $e');
+        return null;
+      }
+    }
+    return null;
+  }
+}
+
 class ProfileRepository {
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
+  final StorageDataSource _storageDataSource;
 
-  ProfileRepository(this._firestore, this._storage);
+  ProfileRepository(this._firestore, this._storage, this._storageDataSource);
 
   Future<Volunteer?> createVolunteer(
       User user, Map<String, dynamic> data) async {
@@ -111,6 +147,9 @@ class ProfileRepository {
         mutableData['firstName'] = nameParts[0];
         mutableData['lastName'] = '';
       }
+      mutableData['profileImageURL'] =
+          await _storageDataSource.uploadPFP(mutableData['profileImageURL']);
+      mutableData['uid'] = user.uid;
       await _firestore
           .collection('volunteer')
           .doc(user.uid)
