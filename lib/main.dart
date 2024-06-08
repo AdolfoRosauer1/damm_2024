@@ -1,11 +1,14 @@
 import 'package:damm_2024/bootstrap.dart';
 import 'package:damm_2024/config/router.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
+import 'package:go_router/go_router.dart';
 //import 'package:flutter_localization/flutter_localization.dart';
 import 'widgets/tokens/colors.dart';
 
@@ -18,6 +21,86 @@ void main() async {
 
   // initialize
   await bootstrap();
+
+  await FirebaseMessaging.instance.requestPermission(
+  alert: true,
+  announcement: false,
+  badge: true,
+  carPlay: false,
+  criticalAlert: false,
+  provisional: false, 
+  sound: true,
+);
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true, // Required to display a heads up notification
+    badge: true,
+    sound: false,
+  );
+
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description: 'This channel is used for important notifications.', // description
+  importance: Importance.max,
+  );
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+  
+  flutterLocalNotificationsPlugin.initialize(
+    const InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    ),
+    onDidReceiveNotificationResponse: (details) {
+      print('Notification received');
+      print(details.payload);
+      if(details.payload != null){
+        CustomNavigationHelper.parentNavigatorKey.currentState?.context.go(details.payload!);
+      }
+    },
+  );
+
+  await flutterLocalNotificationsPlugin
+    .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+    ?.createNotificationChannel(channel);
+
+  FirebaseMessaging.instance.getToken().then((onValue) async {
+    print('Token: $onValue');
+  });  
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+
+    // If `onMessage` is triggered with a notification, construct our own
+    // local notification to show to users using the created channel.
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          payload: message.data['deep_link'],
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription:  channel.description,
+              icon: android.smallIcon,
+              // other properties...
+            ),
+          ));
+    }
+
+  });
+
 
   // router
   CustomNavigationHelper.instance;
