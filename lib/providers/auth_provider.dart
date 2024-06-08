@@ -4,6 +4,21 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';
 
+@Riverpod(keepAlive: true)
+AuthRepository authRepository(AuthRepositoryRef ref) {
+  return AuthRepository(ref.watch(firebaseAuthProvider));
+}
+
+@Riverpod(keepAlive: true)
+FirebaseAuth firebaseAuth(FirebaseAuthRef ref) {
+  return FirebaseAuth.instance;
+}
+
+@Riverpod(keepAlive: true)
+AuthController authController(AuthControllerRef ref) {
+  return AuthController(ref.watch(authRepositoryProvider));
+}
+
 class AuthRepository {
   final FirebaseAuth _auth;
 
@@ -55,13 +70,23 @@ class AuthRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
-AuthRepository firebaseAuth(FirebaseAuthRef ref) {
-  var auth = AuthRepository(FirebaseAuth.instance);
-  // auth.signInWithEmailAndPassword("adolfo@prueba.com", "123456");
-  // var user = auth.currentUser;
-  // print('current user: $user');
-  return auth;
+class AuthController {
+  AuthRepository _authRepo;
+  AuthController(this._authRepo);
+
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
+    return _authRepo.signInWithEmailAndPassword(email, password);
+  }
+
+  Future<User?> registerUser(
+      String email, String password, String name, String lastName) async {
+    return _authRepo.registerUser(email, password, name, lastName);
+  }
+
+  Future<void> signOut() async {
+    return _authRepo.signOut();
+  }
 }
 
 final authStateProvider = StreamProvider<User?>((ref) {
@@ -74,25 +99,15 @@ Future<void> initializeProviders(ProviderContainer container) async {
   final authProvider = container.read(firebaseAuthProvider);
   final authUser = authProvider.currentUser;
 
+  print('Initializing the authStateProvider: $authUser');
   // Restore connection if needed
   if (authUser != null) {
     try {
       // renew token if needed
       await authUser.getIdToken(true);
     } catch (e) {
-      print(e);
+      print('Error getting the refresh Token: $e');
     }
   }
+  print('Initialized authStateProvider');
 }
-
-// @Riverpod(keepAlive: true)
-// AuthRepository authRepository(AuthRepositoryRef ref) {
-//   return AuthRepository(ref.watch(firebaseAuthProvider));
-// }
-
-// @riverpod
-// Stream<User?> authStateChanges(AuthStateChangesRef ref) {
-//   return ref.watch(authRepositoryProvider).authStateChanges();
-// }
-
-//final firebaseAuthClient = ref.read(firebaseAuthProvider); final User? firebaseAuthUser = firebaseAuthClient.currentUser; logger.d("Trying to restore Firebase session"); if (firebaseAuthUser != null) { /// Restore firebase user session try { /// Returns the current token if it has not expired. Otherwise, this will /// restore the token and return a new one. await firebaseAuthUser.getIdToken(true);

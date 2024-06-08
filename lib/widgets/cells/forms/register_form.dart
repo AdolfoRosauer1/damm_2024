@@ -5,10 +5,10 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
   const RegisterForm({super.key});
@@ -19,11 +19,9 @@ class RegisterForm extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() {
     return _RegisterFormState();
   }
-
 }
 
 class _RegisterFormState extends ConsumerState<RegisterForm> {
-
   final formKey = GlobalKey<FormBuilderState>();
   final ValueNotifier formValid = ValueNotifier<bool>(false);
 
@@ -33,30 +31,28 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     super.dispose();
   }
 
-
   void onFormChanged() {
     print("ON FORM CHANGEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
-    FocusScope.of(context).unfocus(); 
+    FocusScope.of(context).unfocus();
 
     formValid.value = formKey.currentState!.validate(focusOnInvalid: false);
     final errors = formKey.currentState?.errors;
     if (errors != null) {
-        errors.forEach((key, value) {
-            print('Error en el campo $key: $value');
-        });
+      errors.forEach((key, value) {
+        print('Error en el campo $key: $value');
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = ref.watch(firebaseAuthProvider);
+    final authController = ref.watch(authControllerProvider);
 
     return Theme(
       data: ThemeData(
           appBarTheme: const AppBarTheme(color: ProjectPalette.neutral1)),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: FormBuilder(
@@ -85,7 +81,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                   color: ProjectPalette.neutral6),
                               borderRadius: BorderRadius.circular(4)),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          label: Text(AppLocalizations.of(context)!.name), //TEXTO A CAMBIAR
+                          label: Text(AppLocalizations.of(context)!
+                              .name), //TEXTO A CAMBIAR
                           labelStyle: ProjectFonts.caption.copyWith(
                               color: ProjectPalette.neutral6,
                               backgroundColor: ProjectPalette.neutral3),
@@ -111,7 +108,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                   color: ProjectPalette.neutral6),
                               borderRadius: BorderRadius.circular(4)),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          label: Text(AppLocalizations.of(context)!.lastname), //TEXTO A CAMBIAR
+                          label: Text(AppLocalizations.of(context)!
+                              .lastname), //TEXTO A CAMBIAR
                           labelStyle: ProjectFonts.caption.copyWith(
                               color: ProjectPalette.neutral6,
                               backgroundColor: ProjectPalette.neutral3),
@@ -150,11 +148,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         height: 24,
                       ),
                       FormBuilderTextField(
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required()
-                        ]),
+                        validator: FormBuilderValidators.compose(
+                            [FormBuilderValidators.required()]),
                         onEditingComplete: onFormChanged,
-
                         name: 'password',
                         keyboardType: TextInputType.visiblePassword,
                         decoration: InputDecoration(
@@ -165,7 +161,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           suffixIcon: ProjectIcons.visibilityOffFilledEnabled,
                           suffixIconColor: ProjectPalette.neutral6,
-                          label: Text(AppLocalizations.of(context)!.password), //TEXTO A CAMBIAR
+                          label: Text(AppLocalizations.of(context)!
+                              .password), //TEXTO A CAMBIAR
                           labelStyle: ProjectFonts.caption.copyWith(
                               color: ProjectPalette.neutral6,
                               backgroundColor: ProjectPalette.neutral3),
@@ -180,44 +177,43 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 12.0),
-                      child: ValueListenableBuilder(
-                        valueListenable: formValid,
-                        builder: (context, formValid, child) {
-                          return CtaButton(
-                            enabled: formValid,
-                            onPressed: () async {
-                              if (!formValid){
-                                return;
-                              }
-                              if (formKey.currentState?.saveAndValidate() ??
-                                  false) {
-                                final formValues = formKey.currentState?.value;
-                                final email = formValues?['email'];
-                                final password = formValues?['password'];
-                                final name = formValues?['name'];
-                                final lastName = formValues?['lastname'];
-                                try {
-                                  await authProvider.signOut();
-                                  await authProvider.registerUser(
-                                      email, password, name, lastName);
-                                  print(authProvider.currentUser);
-                                  context.go('/apply');
-                                } catch (e) {
-                                  print(e);
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 12.0),
+                        child: ValueListenableBuilder(
+                          valueListenable: formValid,
+                          builder: (context, formValid, child) {
+                            return CtaButton(
+                              enabled: formValid,
+                              onPressed: () async {
+                                if (!formValid) {
+                                  return;
                                 }
-                              } else {
-                                print("Validation failed");
-                              }
-                            },
-                            filled: true,
-                            actionStr: AppLocalizations.of(context)!.register, //TEXTO A CAMBIAR
-                          );
-                        },
-                      )
-                       
-                   ),
+                                if (formKey.currentState?.saveAndValidate() ??
+                                    false) {
+                                  final formValues =
+                                      formKey.currentState?.value;
+                                  final email = formValues?['email'];
+                                  final password = formValues?['password'];
+                                  final name = formValues?['name'];
+                                  final lastName = formValues?['lastname'];
+                                  try {
+                                    await authController.signOut();
+                                    await authController.registerUser(
+                                        email, password, name, lastName);
+                                    context.go('/apply');
+                                  } catch (e) {
+                                    print(e);
+                                  }
+                                } else {
+                                  print("Validation failed");
+                                }
+                              },
+                              filled: true,
+                              actionStr: AppLocalizations.of(context)!
+                                  .register, //TEXTO A CAMBIAR
+                            );
+                          },
+                        )),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 12.0),
@@ -225,7 +221,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           enabled: true,
                           onPressed: () => context.go('/login'),
                           filled: false,
-                          actionStr: AppLocalizations.of(context)!.alreadyHaveAccount), //TEXTO A CAMBIAR
+                          actionStr: AppLocalizations.of(context)!
+                              .alreadyHaveAccount), //TEXTO A CAMBIAR
                     ),
                   ],
                 ),

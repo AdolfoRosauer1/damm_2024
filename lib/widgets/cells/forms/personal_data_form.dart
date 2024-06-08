@@ -11,45 +11,44 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonalDataForm extends ConsumerStatefulWidget {
   PersonalDataForm({super.key});
-  
+
   static const route = "editProfile";
   static const completeRoute = "${ProfileScreen.route}/$route";
-
 
   @override
   _PersonalDataFormState createState() => _PersonalDataFormState();
 }
 
 class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
-
   final formKey = GlobalKey<FormBuilderState>();
-  late ValueNotifier isFormValidNotifier; 
+  late ValueNotifier isFormValidNotifier;
   late Volunteer volunteer;
 
   @override
   void initState() {
     super.initState();
-    volunteer = ref.read(volunteerProvider);
+    Volunteer? aux = ref.read(currentUserProvider);
+    volunteer = aux!;
     isFormValidNotifier = ValueNotifier(volunteer.hasCompletedProfile());
-
   }
 
   void onFormChanged() {
     print("ON FORM CHANGEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
-    FocusScope.of(context).unfocus(); 
-    isFormValidNotifier.value = formKey.currentState!.validate(focusOnInvalid: false);
+    FocusScope.of(context).unfocus();
+    isFormValidNotifier.value =
+        formKey.currentState!.validate(focusOnInvalid: false);
     final errors = formKey.currentState?.errors;
     if (errors != null) {
-        errors.forEach((key, value) {
-            print('Error en el campo $key: $value');
-        });
+      errors.forEach((key, value) {
+        print('Error en el campo $key: $value');
+      });
     }
   }
 
@@ -58,203 +57,225 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
     isFormValidNotifier.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-
-
     return Theme(
       data: ThemeData(
-        appBarTheme: const AppBarTheme(
-          color: ProjectPalette.neutral1
-        )
-      ),
+          appBarTheme: const AppBarTheme(color: ProjectPalette.neutral1)),
       child: Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: ProjectPalette.neutral6),
-          leading:IconButton(
-            onPressed: () => {
-              CustomNavigationHelper.parentNavigatorKey.currentState!.pop()
-              
-            }, 
-            icon: ProjectIcons.closeFilledEnabled),
+          leading: IconButton(
+              onPressed: () => {
+                    CustomNavigationHelper.parentNavigatorKey.currentState!
+                        .pop()
+                  },
+              icon: ProjectIcons.closeFilledEnabled),
         ),
         body: SingleChildScrollView(
           child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: FormBuilder(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    AppLocalizations.of(context)!.profileData, //TEXTO A CAMBIAR
-                    style: ProjectFonts.headline1,
-                  ),
-                ),
-                const SizedBox(height: 24,),
-                FormBuilderDateTimePicker(
-                  name: 'dateOfBirth',
-                  initialValue: volunteer.dateOfBirth,
-                  validator: FormBuilderValidators.required(),
-                  decoration: InputDecoration(
-                    suffixIcon: ProjectIcons.calendarFilledActivated,
-                    
-                    labelStyle: ProjectFonts.caption.copyWith(color: ProjectPalette.neutral6, backgroundColor: ProjectPalette.neutral3 ),
-                    hintText: "DD/MM/YY",
-                    hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5 ),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: AppLocalizations.of(context)!.dateOfBirthMin, //TEXTO A CAMBIAR
-                    
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: ProjectPalette.neutral6),
-                      borderRadius: BorderRadius.circular(4),
+            padding: const EdgeInsets.all(16.0),
+            child: FormBuilder(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      AppLocalizations.of(context)!
+                          .profileData, //TEXTO A CAMBIAR
+                      style: ProjectFonts.headline1,
                     ),
                   ),
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                  inputType: InputType.date,
-                  format: DateFormat('dd/MM/yyyy'),
-                ),
-                const SizedBox(height: 24),
-                Container(
-                  decoration: const BoxDecoration(
-                    color: ProjectPalette.neutral3
+                  const SizedBox(
+                    height: 24,
                   ),
-                  child: FormBuilderField(
-                    name: 'gender',
-                    initialValue: volunteer.gender?.value,
-                    
+                  FormBuilderDateTimePicker(
+                    name: 'dateOfBirth',
+                    initialValue: volunteer.dateOfBirth,
                     validator: FormBuilderValidators.required(),
-                    builder: (FormFieldState<dynamic> field){
-                      return InputCard(title: AppLocalizations.of(context)!.profileInformation, //TEXTO A CAMBIAR
-                        labels: Gender.values.map((e) => e.value).toList(),
-                        state: field
+                    decoration: InputDecoration(
+                      suffixIcon: ProjectIcons.calendarFilledActivated,
 
-                      );
-                    }
+                      labelStyle: ProjectFonts.caption.copyWith(
+                          color: ProjectPalette.neutral6,
+                          backgroundColor: ProjectPalette.neutral3),
+                      hintText: "DD/MM/YY",
+                      hintStyle: ProjectFonts.subtitle1
+                          .copyWith(color: ProjectPalette.neutral5),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      labelText: AppLocalizations.of(context)!
+                          .dateOfBirthMin, //TEXTO A CAMBIAR
+
+                      border: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: ProjectPalette.neutral6),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                    inputType: InputType.date,
+                    format: DateFormat('dd/MM/yyyy'),
+                  ),
+                  const SizedBox(height: 24),
+                  Container(
+                      decoration:
+                          const BoxDecoration(color: ProjectPalette.neutral3),
+                      child: FormBuilderField(
+                          name: 'gender',
+                          initialValue: volunteer.gender?.value,
+                          validator: FormBuilderValidators.required(),
+                          builder: (FormFieldState<dynamic> field) {
+                            return InputCard(
+                                title: AppLocalizations.of(context)!
+                                    .profileInformation, //TEXTO A CAMBIAR
+                                labels:
+                                    Gender.values.map((e) => e.value).toList(),
+                                state: field);
+                          })
+                      //  ],
+                      //   ),
+                      ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  FormBuilderField(
+                      name: 'profilePicture',
+                      onSaved: (_) => onFormChanged(),
+                      validator: FormBuilderValidators.required(),
+                      initialValue: volunteer.profileImageURL,
+                      builder: (FormFieldState<dynamic> field) {
+                        return ProfilePictureCard(
+                          imageUrl: volunteer.profileImageURL,
+                          field: field,
+                        );
+                      }),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      AppLocalizations.of(context)!
+                          .contactInformation, //TEXTO A CAMBIAR
+                      style: ProjectFonts.headline1,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.contactText, //TEXTO A CAMBIAR
+                    style: ProjectFonts.subtitle1,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  FormBuilderTextField(
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.match(r'^\+\d{1,15}$')
+                    ]),
+                    initialValue: volunteer.phoneNumber,
+                    onEditingComplete: onFormChanged,
+                    name: 'phoneNumber',
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: ProjectPalette.neutral6),
+                          borderRadius: BorderRadius.circular(4)),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      label: Text(AppLocalizations.of(context)!
+                          .phoneMin), //TEXTO A CAMBIAR
+                      labelStyle: ProjectFonts.caption.copyWith(
+                          color: ProjectPalette.neutral6,
+                          backgroundColor: ProjectPalette.neutral3),
+                      hintText: 'Ej: +541178445459',
+                      hintStyle: ProjectFonts.subtitle1
+                          .copyWith(color: ProjectPalette.neutral5),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  FormBuilderTextField(
+                    initialValue: volunteer.email,
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.email()
+                    ]),
+                    name: 'email',
+                    onEditingComplete: onFormChanged,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: ProjectPalette.neutral6),
+                          borderRadius: BorderRadius.circular(4)),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      label: const Text('Mail'),
+                      labelStyle: ProjectFonts.caption.copyWith(
+                          color: ProjectPalette.neutral6,
+                          backgroundColor: ProjectPalette.neutral3),
+                      hintText: 'Ej: mimail@mail.com',
+                      hintStyle: ProjectFonts.subtitle1
+                          .copyWith(color: ProjectPalette.neutral5),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  ValueListenableBuilder(
+                      valueListenable: isFormValidNotifier,
+                      builder: (context, valid, child) {
+                        return CtaButton(
+                            enabled: valid,
+                            onPressed: () {
+                              if (!valid) {
+                                return;
+                              }
+
+                              if (formKey.currentState?.saveAndValidate() ??
+                                  false) {
+                                // Formulario validado y guardado
+                                final formData = formKey.currentState?.value;
+                                print('Form Data: $formData');
+                                ref
+                                    .read(profileControllerProvider)
+                                    .finishSetup(formData!);
+                              } else {
+                                // Manejar errores de validación
+                                print('Validation failed');
+                              }
+                            },
+                            filled: true,
+                            actionStr: AppLocalizations.of(context)!.saveData);
+                      }),
+                  const SizedBox(
+                    height: 32,
                   )
-                  //  ],
-               //   ),
-                ),
-                const SizedBox(height: 24,),
-                FormBuilderField(
-                  name: 'profilePicture',
-                  onSaved: (_) => onFormChanged(), 
-
-                  validator: FormBuilderValidators.required(),
-                  builder: (FormFieldState<dynamic> field){
-                    return ProfilePictureCard(imageUrl: volunteer.profileImageURL,field: field,);
-                  }
-                ),
-                const SizedBox(height: 32,),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    AppLocalizations.of(context)!.contactInformation, //TEXTO A CAMBIAR
-                    style: ProjectFonts.headline1,
-                  ),
-                ),
-                const SizedBox(height: 24,),
-                Text(
-                  AppLocalizations.of(context)!.contactText, //TEXTO A CAMBIAR
-                  style: ProjectFonts.subtitle1,
-                ),
-                const SizedBox(height: 24,),
-                FormBuilderTextField(
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.match(r'^\+\d{1,15}$')
-                  ]),
-                  initialValue: volunteer.phoneNumber,
-                  
-                  onEditingComplete: onFormChanged,
-                  name: 'phoneNumber',
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: ProjectPalette.neutral6),                    
-                      borderRadius: BorderRadius.circular(4)
-                    ),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    label: Text(AppLocalizations.of(context)!.phoneMin), //TEXTO A CAMBIAR
-                    labelStyle: ProjectFonts.caption.copyWith(color: ProjectPalette.neutral6, backgroundColor: ProjectPalette.neutral3 ),
-                    hintText: 'Ej: +541178445459',
-                    hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5 ),
-          
-                  ),
-                ),
-                const SizedBox(height: 24,),
-                FormBuilderTextField(
-                  initialValue: volunteer.email,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.email()
-                  ]),
-                  name: 'email',
-                  onEditingComplete: onFormChanged,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: ProjectPalette.neutral6),
-                      borderRadius: BorderRadius.circular(4)
-                    ),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    label: const Text('Mail'),
-                    labelStyle: ProjectFonts.caption.copyWith(color: ProjectPalette.neutral6, backgroundColor: ProjectPalette.neutral3 ),
-                    hintText: 'Ej: mimail@mail.com',
-                    hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5 ),
-          
-                  ),
-                ),
-                const SizedBox(height: 32,),
-                ValueListenableBuilder(
-                  valueListenable: isFormValidNotifier,
-                  builder: (context,valid,child){
-                    return CtaButton(
-                      enabled: valid,
-                      onPressed: () {
-                        if (!valid) {
-                          return;
-                        }
-                        
-                        if (formKey.currentState?.saveAndValidate() ?? false) {
-                          // Formulario validado y guardado
-                          final formData = formKey.currentState?.value;
-                          print('Form Data: $formData');
-                        } else {
-                          // Manejar errores de validación
-                          print('Validation failed');
-                        }
-                      },                 
-
-                      filled: true,
-                      actionStr: AppLocalizations.of(context)!.saveData
-                    );
-                  }
-                ),
-                const SizedBox(height: 32,)
-           
-              ],
+                ],
+              ),
             ),
           ),
-                ),
         ),
       ),
     );
   }
 }
 
-
-
-Widget _buildRadioOption(FormFieldState<dynamic> field, String value, String label) {
+Widget _buildRadioOption(
+    FormFieldState<dynamic> field, String value, String label) {
   return Theme(
     data: Theme.of(field.context).copyWith(
       radioTheme: Theme.of(field.context).radioTheme.copyWith(
-        fillColor: MaterialStateProperty.all(ProjectPalette.primary1),
-      ),
+            fillColor: MaterialStateProperty.all(ProjectPalette.primary1),
+          ),
     ),
     child: Row(
       children: [
@@ -268,9 +289,9 @@ Widget _buildRadioOption(FormFieldState<dynamic> field, String value, String lab
             },
           ),
         ),
-        Text(label,style: ProjectFonts.body1.copyWith(
-          color: ProjectPalette.black
-          ),
+        Text(
+          label,
+          style: ProjectFonts.body1.copyWith(color: ProjectPalette.black),
         ),
       ],
     ),

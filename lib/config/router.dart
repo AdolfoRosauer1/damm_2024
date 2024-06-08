@@ -11,7 +11,6 @@ import 'package:damm_2024/widgets/cells/forms/login_form.dart';
 import 'package:damm_2024/widgets/cells/forms/personal_data_form.dart';
 import 'package:damm_2024/widgets/cells/forms/register_form.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomNavigationHelper {
@@ -156,15 +155,16 @@ class CustomNavigationHelper {
         routes: routes,
         initialLocation: "/",
         redirect: (context, state) {
-          final container = ProviderContainer();
-          final authState = container.read(authProvider).currentUser;
-          print('authState = $authState');
-
-          if (authState == null) {
-            print('Not authenticated');
-            return '/access';
-          }
-          // print('n');
+          // final container = ProviderContainer();
+          // final authState = container.read(authProvider).currentUser;
+          // print('authState = $authState');
+          // print(
+          //     '\nEste es el GoRouter state actual:$state\ncontext: $context\n');
+          // if (authState == null) {
+          //   print('Not authenticated');
+          //   return '/access';
+          // }
+          // // print('n');
           return null;
         });
   }
