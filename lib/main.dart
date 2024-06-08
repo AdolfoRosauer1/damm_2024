@@ -2,13 +2,14 @@ import 'package:damm_2024/bootstrap.dart';
 import 'package:damm_2024/config/router.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:go_router/go_router.dart';
+
 //import 'package:flutter_localization/flutter_localization.dart';
 import 'widgets/tokens/colors.dart';
 
@@ -20,17 +21,17 @@ void main() async {
   // print('Splash Screen UP!');
 
   // initialize
-  await bootstrap();
+  ProviderContainer container = await bootstrap();
 
   await FirebaseMessaging.instance.requestPermission(
-  alert: true,
-  announcement: false,
-  badge: true,
-  carPlay: false,
-  criticalAlert: false,
-  provisional: false, 
-  sound: true,
-);
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true, // Required to display a heads up notification
@@ -39,15 +40,16 @@ void main() async {
   );
 
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description: 'This channel is used for important notifications.', // description
-  importance: Importance.max,
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    description:
+        'This channel is used for important notifications.', // description
+    importance: Importance.max,
   );
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-  
+      FlutterLocalNotificationsPlugin();
+
   flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -55,19 +57,21 @@ void main() async {
     onDidReceiveNotificationResponse: (details) {
       print('Notification received');
       print(details.payload);
-      if(details.payload != null){
-        CustomNavigationHelper.parentNavigatorKey.currentState?.context.go(details.payload!);
+      if (details.payload != null) {
+        CustomNavigationHelper.parentNavigatorKey.currentState?.context
+            .go(details.payload!);
       }
     },
   );
 
   await flutterLocalNotificationsPlugin
-    .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-    ?.createNotificationChannel(channel);
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
 
   FirebaseMessaging.instance.getToken().then((onValue) async {
     print('Token: $onValue');
-  });  
+  });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message whilst in the foreground!');
@@ -92,20 +96,18 @@ void main() async {
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
-              channelDescription:  channel.description,
+              channelDescription: channel.description,
               icon: android.smallIcon,
               // other properties...
             ),
           ));
     }
-
   });
-
 
   // router
   CustomNavigationHelper.instance;
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(parent: container, child: MyApp()));
 
   // remove splash screen
   FlutterNativeSplash.remove();
@@ -119,17 +121,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-       localizationsDelegates: const [
-          AppLocalizations.delegate, //Comentar esto si no funciona. Y hacer flutter run. Ahi debería funcionar
+        localizationsDelegates: const [
+          AppLocalizations
+              .delegate, //Comentar esto si no funciona. Y hacer flutter run. Ahi debería funcionar
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           FormBuilderLocalizations.delegate,
-
-       ], 
+        ],
         supportedLocales: const [
-          Locale('en'), 
-          Locale('es'), 
+          Locale('en'),
+          Locale('es'),
         ],
         localeResolutionCallback: (locale, supportedLocales) {
           for (var supportedLocale in supportedLocales) {
