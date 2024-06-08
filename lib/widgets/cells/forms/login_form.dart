@@ -1,11 +1,14 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -150,18 +153,52 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                 final formValues = formKey.currentState?.value;
                                 final email = formValues?['email'];
                                 final password = formValues?['password'];
-                                try {
+                                try { 
                                   await authProvider.signOut();
-                                  await authProvider.signInWithEmailAndPassword(
+                                  User? user = await authProvider.signInWithEmailAndPassword(
                                     email,
                                     password,
                                   );
-                                  print(authProvider.currentUser);
-                                  context.go('/apply');
+                                  if (user != null){
+                                    print(authProvider.currentUser);
+                                    context.go('/apply');
+                                  }
+  
+                                } on FirebaseAuthException catch (e) {
+                
+                                  if (e.code == "user-not-found" || e.code == "wrong-password"
+                                      || e.code == "invalid-credential"
+                                  ){
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.transparent,
+                                        content: AwesomeSnackbarContent(
+                                          title: "Error",
+                                          message: AppLocalizations.of(context)!.error_noUser,
+                                          contentType: ContentType.failure,
+                                        )
+                                      )
+                                    );
+                                  }
                                 } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.transparent,
+                                        content: AwesomeSnackbarContent(
+                                          title: "Error",
+                                          message: AppLocalizations.of(context)!.error_generic,
+                                          contentType: ContentType.failure,
+                                        )
+                                      )
+                                    );
                                   print(e);
                                 }
                               } else {
+
                                 print("Validation failed");
                               }
                             }

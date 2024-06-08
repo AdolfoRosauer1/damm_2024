@@ -1,7 +1,9 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/utils/maps_utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geolocator/geolocator.dart';
 
 class VolunteerDetailsService{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -14,7 +16,10 @@ class VolunteerDetailsService{
     QuerySnapshot snapshot = await _firestore.collection('volunteerOpportunities').get();
     return snapshot.docs.isNotEmpty;
   }
-  Future<List<VolunteerDetails>> getVolunteers({String? query}) async {
+
+
+
+  Future<List<VolunteerDetails>> getVolunteers({String? query, Position? userPosition}) async {
     List<VolunteerDetails> volunteers = [];
     QuerySnapshot snapshot = await _firestore.collection('volunteerOpportunities').get();
     for (var element in snapshot.docs) {
@@ -36,9 +41,26 @@ class VolunteerDetailsService{
 
       }
     }
-  
+
+    if (userPosition != null) {
+      volunteers.sort((a, b) {
+        double distanceA = Geolocator.distanceBetween(
+            userPosition.latitude, userPosition.longitude, a.location.latitude, a.location.longitude);
+        double distanceB = Geolocator.distanceBetween(
+            userPosition.latitude, userPosition.longitude, b.location.latitude, b.location.longitude);
+
+        if (distanceA == distanceB) {
+          return b.createdAt.compareTo(a.createdAt);
+        }
+        return distanceA.compareTo(distanceB);
+      });
+    } else {
+      volunteers.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    }
+
     return volunteers;
   }
+
 
   Future<VolunteerDetails?> getVolunteerById(String id) async {
     try {

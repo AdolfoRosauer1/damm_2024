@@ -22,9 +22,19 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin{
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this, initialIndex: widget.child.currentIndex);
+    
     super.initState();
   }
 
+
+  @override
+  void didUpdateWidget(Tabs oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.child.currentIndex != _tabController.index) {
+      _tabController.index = widget.child.currentIndex;
+    }
+  }
+  
   @override
   void dispose() {
     super.dispose();

@@ -40,38 +40,42 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final volunteer = ref.watch(volunteerProvider);
     if (!volunteer.hasCompletedProfile()){
       return SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 147.5,),
-            ProjectIcons.profilePicture,
-            const SizedBox(height: 16,),
-            Text(
-              AppLocalizations.of(context)!.volunteer,
-              style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6)
-            ),
-            const SizedBox(height: 8,),
-            Text(
-              '${volunteer.firstName} ${volunteer.lastName}',
-              style: ProjectFonts.subtitle1
-            ),
-            const SizedBox(height: 8,),
-            Text(
-              AppLocalizations.of(context)!.completeProfile,
-              style: ProjectFonts.body1.copyWith(color: ProjectPalette.neutral6),
-              textAlign: TextAlign.center,       
-            ),
-            const SizedBox(height: 147.5,),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 80),
-              child: ShortButton(
-                onPressed: () => {
-                  context.go(PersonalDataForm.completeRoute)
-                },
-                buttonText:  AppLocalizations.of(context)!.complete,
-                activated: true,
-                icon: Icon(ProjectIcons.addFilledEnabled.icon, color: ProjectPalette.neutral1),),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 147.5,),
+              ProjectIcons.profilePicture,
+              const SizedBox(height: 16,),
+              Text(
+                AppLocalizations.of(context)!.volunteer,
+                style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6)
+              ),
+              const SizedBox(height: 8,),
+              Text(
+                '${volunteer.firstName} ${volunteer.lastName}',
+                style: ProjectFonts.subtitle1
+              ),
+              const SizedBox(height: 8,),
+              Text(
+                AppLocalizations.of(context)!.completeProfile,
+                style: ProjectFonts.body1.copyWith(color: ProjectPalette.neutral6),
+                textAlign: TextAlign.center,       
+              ),
+              const SizedBox(height: 147.5,),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 80),
+                child: ShortButton(
+                  onPressed: () => {
+                    context.go(PersonalDataForm.completeRoute)
+                  },
+                  buttonText:  AppLocalizations.of(context)!.complete,
+                  activated: true,
+                  icon: Icon(ProjectIcons.addFilledEnabled.icon, color: ProjectPalette.neutral1),),
+              ),
+            ],
+          ),
         ),
       );
     }else{
