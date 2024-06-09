@@ -11,6 +11,7 @@ import 'package:damm_2024/widgets/cells/forms/login_form.dart';
 import 'package:damm_2024/widgets/cells/forms/personal_data_form.dart';
 import 'package:damm_2024/widgets/cells/forms/register_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomNavigationHelper {
@@ -151,22 +152,33 @@ class CustomNavigationHelper {
     ];
 
     router = GoRouter(
-        navigatorKey: parentNavigatorKey,
-        routes: routes,
-        initialLocation: "/",
-        redirect: (context, state) {
-          // final container = ProviderContainer();
-          // final authState = container.read(authProvider).currentUser;
-          // print('authState = $authState');
-          // print(
-          //     '\nEste es el GoRouter state actual:$state\ncontext: $context\n');
-          // if (authState == null) {
-          //   print('Not authenticated');
-          //   return '/access';
-          // }
-          // // print('n');
-          return null;
-        });
+      navigatorKey: parentNavigatorKey,
+      routes: routes,
+      initialLocation: "/",
+      redirect: (context, state) {
+        // Get the current route location
+        final currentLocation = state.uri.path;
+        // Define the routes where you don't want to redirect even if the user is not authenticated
+        const nonAuthRoutes = ['/signin', '/register', '/access', '/'];
+
+        // Access the auth state from a provider
+        final container = ProviderContainer();
+        final authState = container.read(authProvider).currentUser;
+
+        // Print statements for debugging
+        print('authState = $authState');
+        print('Current location: $currentLocation');
+
+        // If the user is not authenticated and the current location is not in the non-auth routes, redirect to '/access'
+        if (authState == null && !nonAuthRoutes.contains(currentLocation)) {
+          print('Not authenticated, redirecting to /access');
+          return '/access';
+        }
+
+        // If no redirect is needed, return null
+        return null;
+      },
+    );
   }
 
   static Page getPage({
