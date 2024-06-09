@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:958761820636:android:77b5ac2f69080de7cc2f19',
     messagingSenderId: '958761820636',
     projectId: 'damm-dc6d1',
+    databaseURL: 'https://damm-dc6d1-default-rtdb.firebaseio.com',
     storageBucket: 'damm-dc6d1.appspot.com',
   );
 
@@ -62,6 +63,7 @@ class DefaultFirebaseOptions {
     appId: '1:958761820636:ios:1481d31a9e650f99cc2f19',
     messagingSenderId: '958761820636',
     projectId: 'damm-dc6d1',
+    databaseURL: 'https://damm-dc6d1-default-rtdb.firebaseio.com',
     storageBucket: 'damm-dc6d1.appspot.com',
     iosBundleId: 'itba.edu.ar.damm2024',
   );
