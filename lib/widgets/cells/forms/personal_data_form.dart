@@ -240,19 +240,22 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                               if (!valid) {
                                 return;
                               }
-
-                              if (formKey.currentState?.saveAndValidate() ??
-                                  false) {
-                                // Formulario validado y guardado
-                                final formData = formKey.currentState?.value;
-                                print('Form Data: $formData');
-                                ref
-                                    .read(profileControllerProvider)
-                                    .finishSetup(formData!);
-                                context.go('/profileScreen');
-                              } else {
-                                // Manejar errores de validación
-                                print('Validation failed');
+                              try {
+                                if (formKey.currentState?.saveAndValidate() ??
+                                    false) {
+                                  // Formulario validado y guardado
+                                  final formData = formKey.currentState?.value;
+                                  print('Form Data: $formData');
+                                  ref
+                                      .read(profileControllerProvider)
+                                      .finishSetup(formData!);
+                                  context.go('/profileScreen');
+                                } else {
+                                  // Manejar errores de validación
+                                  print('Validation failed');
+                                }
+                              } catch (e) {
+                                print('Error saving form: $e');
                               }
                             },
                             filled: true,
