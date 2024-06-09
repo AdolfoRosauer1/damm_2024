@@ -9,6 +9,35 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'firestore_provider.g.dart';
 
 @Riverpod(keepAlive: true)
+class VolunteerDetailsProvider extends _$VolunteerDetailsProvider {
+  @override
+  Stream<VolunteerDetails?> build(String id) async* {
+    final firestoreDataSource = ref.watch(firestoreDataSourceProvider);
+    await for (final snapshot
+        in firestoreDataSource.getVolunteerByIdSnapshot(id)) {
+      if (snapshot.exists) {
+        var data = snapshot.data()!;
+        var imageUrl = await FirebaseStorage.instance
+            .ref()
+            .child(data['imagePath'])
+            .getDownloadURL();
+        data['id'] = snapshot.id;
+        data['imageUrl'] = imageUrl;
+        Timestamp timestamp = data['createdAt'];
+        data['createdAt'] = timestamp.toDate();
+        data['pendingApplicants'] ??= [''];
+        data['confirmedApplicants'] ??= [''];
+        data['remainingVacancies'] ??= data['vacancies'] -
+            List<String>.from(data['confirmedApplicants'] as List).length;
+        yield VolunteerDetails.fromJson(data);
+      } else {
+        yield null;
+      }
+    }
+  }
+}
+
+@Riverpod(keepAlive: true)
 FirestoreDataSource firestoreDataSource(FirestoreDataSourceRef ref) {
   return FirestoreDataSource(
       ref.watch(firebaseFirestoreProvider), ref.watch(firebaseStorageProvider));
@@ -276,5 +305,15 @@ class FirestoreDataSource {
       print("Error in FirestoreDataSource.getVolunteerById: $e");
       return null;
     }
+  }
+
+  // TODO: implement using the snapshots in order to provide real-time data to app
+  Stream<QuerySnapshot<Map<String, dynamic>>> getVolunteersSnapshot() {
+    return _firestore.collection('volunteerOpportunities').snapshots();
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getVolunteerByIdSnapshot(
+      String id) {
+    return _firestore.collection('volunteerOpportunities').doc(id).snapshots();
   }
 }
