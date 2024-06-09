@@ -166,7 +166,7 @@ class CustomNavigationHelper {
         final authState = container.read(authProvider).currentUser;
 
         // Print statements for debugging
-        print('authState = $authState');
+        // print('authState = $authState');
         print('Current location: $currentLocation');
 
         // If the user is not authenticated and the current location is not in the non-auth routes, redirect to '/access'

@@ -8,9 +8,9 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ApplyScreen extends StatefulWidget {
   static const route = "/apply";
@@ -23,7 +23,8 @@ class ApplyScreen extends StatefulWidget {
 
 class _ApplyScreenState extends State<ApplyScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final VolunteerDetailsService _volunteerDetailsService = VolunteerDetailsService();
+  final VolunteerDetailsService _volunteerDetailsService =
+      VolunteerDetailsService();
   late Future<List<VolunteerDetails>> _volunteers;
   late Future<bool> _areVolunteersAvailable;
   Position? _userPosition;
@@ -32,7 +33,8 @@ class _ApplyScreenState extends State<ApplyScreen> {
     setState(() {
       _volunteers = _volunteerDetailsService.getVolunteers(
           query: _searchController.text, userPosition: _userPosition);
-      _areVolunteersAvailable = _volunteerDetailsService.areVolunteersAvailable();
+      _areVolunteersAvailable =
+          _volunteerDetailsService.areVolunteersAvailable();
     });
   }
 
@@ -55,25 +57,29 @@ class _ApplyScreenState extends State<ApplyScreen> {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _userPosition = position;
       loadVolunteers();
     });
-  }  @override
+  }
+
+  @override
   void initState() {
     super.initState();
     _getUserLocation();
     _areVolunteersAvailable = _volunteerDetailsService.areVolunteersAvailable();
-    _volunteers = _volunteerDetailsService.getVolunteers(query: _searchController.text);
+    _volunteers =
+        _volunteerDetailsService.getVolunteers(query: _searchController.text);
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       decoration: const BoxDecoration(
         color: ProjectPalette.secondary1,
@@ -93,11 +99,13 @@ class _ApplyScreenState extends State<ApplyScreen> {
                 controller: _searchController,
                 onChanged: (_) => loadVolunteers(),
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   hintText: AppLocalizations.of(context)!.search,
-                  hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral6),
-                  prefixIcon: _searchController.text.isEmpty 
-                      ? ProjectIcons.searchFilledEnabled 
+                  hintStyle: ProjectFonts.subtitle1
+                      .copyWith(color: ProjectPalette.neutral6),
+                  prefixIcon: _searchController.text.isEmpty
+                      ? ProjectIcons.searchFilledEnabled
                       : null,
                   suffixIcon: _searchController.text.isEmpty
                       ? ProjectIcons.mapFilledActivated
@@ -112,16 +120,21 @@ class _ApplyScreenState extends State<ApplyScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            Text(AppLocalizations.of(context)!.volunteerings, style: ProjectFonts.headline1),
+            Text(AppLocalizations.of(context)!.volunteerings,
+                style: ProjectFonts.headline1),
             Expanded(
               child: FutureBuilder<bool>(
                 future: _areVolunteersAvailable,
                 builder: (context, availabilitySnapshot) {
-                  if (availabilitySnapshot.connectionState == ConnectionState.waiting) {
+                  if (availabilitySnapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (availabilitySnapshot.hasError) {
-                    return Center(child: Text('${AppLocalizations.of(context)!.error}: ${availabilitySnapshot.error}'));
-                  } else if (availabilitySnapshot.hasData && !availabilitySnapshot.data!) {
+                    return Center(
+                        child: Text(
+                            '${AppLocalizations.of(context)!.error}: ${availabilitySnapshot.error}'));
+                  } else if (availabilitySnapshot.hasData &&
+                      !availabilitySnapshot.data!) {
                     return Column(
                       children: [
                         const SizedBox(height: 16),
@@ -135,34 +148,41 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     return FutureBuilder<List<VolunteerDetails>>(
                       future: _volunteers,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else if (snapshot.hasError) {
-                          return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
+                          return Center(
+                              child: Text(
+                                  '${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
                         } else if (snapshot.hasData) {
-                          List<VolunteerDetails> volunteerDetails = snapshot.data!;
+                          List<VolunteerDetails> volunteerDetails =
+                              snapshot.data!;
                           if (volunteerDetails.isEmpty) {
-                            return Column(
-                              children: [
-                                  const SizedBox(height: 16),
-                                  NoVolunteersCard(
-                                  size: NoVolunteersCardSize.medium,
-                                  message: AppLocalizations.of(context)!.noVolunteersSearch,
-                                ),
-                              ]
-                            );
-                          } 
+                            return Column(children: [
+                              const SizedBox(height: 16),
+                              NoVolunteersCard(
+                                size: NoVolunteersCardSize.medium,
+                                message: AppLocalizations.of(context)!
+                                    .noVolunteersSearch,
+                              ),
+                            ]);
+                          }
                           return ListView.separated(
                             padding: const EdgeInsets.only(top: 24),
-                            separatorBuilder: (_, __) => const SizedBox(height: 24),
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 24),
                             itemCount: volunteerDetails.length,
                             itemBuilder: (context, index) {
                               return VolunteeringCard(
                                 onPressedLocation: () {
-                                  _volunteerDetailsService.openLocationInMap(volunteerDetails[index].location);
+                                  _volunteerDetailsService.openLocationInMap(
+                                      volunteerDetails[index].location);
                                 },
                                 onPressed: () {
-                                  context.go(VolunteerDetailsScreen.routeFromId(volunteerDetails[index].id));
+                                  context.go(VolunteerDetailsScreen.routeFromId(
+                                      volunteerDetails[index].id));
                                 },
                                 type: volunteerDetails[index].type,
                                 title: volunteerDetails[index].title,
@@ -172,7 +192,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                             },
                           );
                         } else {
-                          return Center(child: Text(AppLocalizations.of(context)!.noData));
+                          return Center(
+                              child:
+                                  Text(AppLocalizations.of(context)!.noData));
                         }
                       },
                     );

@@ -178,7 +178,7 @@ class ProfileRepository {
       }
       return null;
     } catch (e) {
-      print('Error getting volunteer by id: $e');
+      print('Error getting user volunteer by id: $e');
       return null;
     }
   }

@@ -93,6 +93,14 @@ class FirestoreDataSource {
       data['imageUrl'] = imageUrl;
       Timestamp timestamp = data['createdAt'];
       data['createdAt'] = timestamp.toDate();
+
+      if (data['pendingApplicants'] == null) {
+        data['pendingApplicants'] = [''];
+      }
+      if (data['confirmedApplicants'] == null) {
+        data['confirmedApplicants'] = [''];
+      }
+
       if (query != null && query.isNotEmpty) {
         if (data['title'].toLowerCase().contains(query.toLowerCase()) ||
             data['mission'].toLowerCase().contains(query.toLowerCase()) ||
