@@ -55,7 +55,7 @@ class AuthRepository {
       return user;
     } catch (e) {
       print(e);
-      return null;
+      rethrow;
     }
   }
 

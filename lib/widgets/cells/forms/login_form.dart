@@ -26,6 +26,7 @@ class LoginForm extends ConsumerStatefulWidget {
 class _LoginFormState extends ConsumerState<LoginForm> {
   final formKey = GlobalKey<FormBuilderState>();
   final ValueNotifier formValid = ValueNotifier<bool>(false);
+  bool isLoading = false;
   @override
   void dispose() {
     formValid.dispose();
@@ -33,7 +34,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   }
 
   void onFormChanged() {
-    print("ON FORM CHANGEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
     FocusScope.of(context).unfocus();
 
     formValid.value = formKey.currentState!.validate(focusOnInvalid: false);
@@ -131,7 +131,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         child: ValueListenableBuilder(
                             valueListenable: formValid,
                             builder: (context, formValid, child) {
-                              return CtaButton(
+                              return isLoading?
+                                const CircularProgressIndicator():
+                                CtaButton(
                                   enabled: formValid,
                                   actionStr:
                                       AppLocalizations.of(context)!.login,
@@ -147,7 +149,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                           formKey.currentState?.value;
                                       final email = formValues?['email'];
                                       final password = formValues?['password'];
+
                                       try {
+                                        setState(() {
+                                          isLoading = true;
+                                        });
                                         await authController.signOut();
                                         User? user = await authController
                                             .signInWithEmailAndPassword(
@@ -196,6 +202,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                                       ContentType.failure,
                                                 )));
                                         print(e);
+                                      }finally{
+                                        setState(() {
+                                          isLoading = false;
+                                        });
                                       }
                                     } else {
                                       print("Validation failed");
