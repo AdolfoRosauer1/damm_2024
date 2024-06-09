@@ -15,6 +15,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:damm_2024/widgets/tokens/fonts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   static const route = "/profileScreen";
@@ -108,7 +114,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 label1: AppLocalizations.of(context)!.birthDate,
                 content1: dateFormat.format(volunteer.dateOfBirth!),
                 label2: AppLocalizations.of(context)!.gender,
-                content2: (volunteer.gender!.value)),
+                content2: Gender.values.firstWhere((gender) => gender.toString().split('.').last == volunteer.gender).localizedValue(context)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
@@ -153,3 +159,4 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 }
+

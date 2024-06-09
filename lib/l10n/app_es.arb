@@ -73,6 +73,9 @@
   "profilePhoto": "Foto de perfil",
 
   "readMore": "Leer Más",
+  "male": "hombre",
+  "female": "mujer",
+  "nonBinary": "no Binario",
 
   "error_noUser" : "No existe usuario con esas credenciales",
   "error_generic" : "Ocurrió un error. Intenta de nuevo más tarde",

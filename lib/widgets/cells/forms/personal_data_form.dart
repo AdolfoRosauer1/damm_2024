@@ -29,7 +29,7 @@ class PersonalDataForm extends ConsumerStatefulWidget {
 
 class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
   final formKey = GlobalKey<FormBuilderState>();
-  late ValueNotifier isFormValidNotifier;
+  late ValueNotifier<bool> isFormValidNotifier;
   late Volunteer volunteer;
 
   @override
@@ -85,8 +85,7 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(context)!
-                          .profileData, //TEXTO A CAMBIAR
+                      AppLocalizations.of(context)!.profileData,
                       style: ProjectFonts.headline1,
                     ),
                   ),
@@ -99,7 +98,6 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                     validator: FormBuilderValidators.required(),
                     decoration: InputDecoration(
                       suffixIcon: ProjectIcons.calendarFilledActivated,
-
                       labelStyle: ProjectFonts.caption.copyWith(
                           color: ProjectPalette.neutral6,
                           backgroundColor: ProjectPalette.neutral3),
@@ -107,9 +105,7 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                       hintStyle: ProjectFonts.subtitle1
                           .copyWith(color: ProjectPalette.neutral5),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      labelText: AppLocalizations.of(context)!
-                          .dateOfBirthMin, //TEXTO A CAMBIAR
-
+                      labelText: AppLocalizations.of(context)!.dateOfBirthMin,
                       border: OutlineInputBorder(
                         borderSide:
                             const BorderSide(color: ProjectPalette.neutral6),
@@ -124,45 +120,54 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                   ),
                   const SizedBox(height: 24),
                   Container(
-                      decoration:
-                          const BoxDecoration(color: ProjectPalette.neutral3),
-                      child: FormBuilderField(
-                          name: 'gender',
-                          initialValue: volunteer.gender?.value,
-                          validator: FormBuilderValidators.required(),
-                          builder: (FormFieldState<dynamic> field) {
-                            return InputCard(
-                                title: AppLocalizations.of(context)!
-                                    .profileInformation, //TEXTO A CAMBIAR
-                                labels:
-                                    Gender.values.map((e) => e.value).toList(),
-                                state: field);
-                          })
-                      //  ],
-                      //   ),
-                      ),
+                    decoration:
+                        const BoxDecoration(color: ProjectPalette.neutral3),
+                    child: FormBuilderField(
+                      name: 'gender',
+                      initialValue: volunteer.gender,
+                      validator: FormBuilderValidators.required(),
+                      builder: (FormFieldState<dynamic> field) {
+                        return InputCard(
+                          title: AppLocalizations.of(context)!.profileInformation,
+                          labels: Gender.values.map((e) {
+                            switch (e) {
+                              case Gender.man:
+                                return AppLocalizations.of(context)!.male;
+                              case Gender.woman:
+                                return AppLocalizations.of(context)!.female;
+                              case Gender.nonBinary:
+                                return AppLocalizations.of(context)!.nonBinary;
+                              default:
+                                return '';
+                            }
+                          }).toList(),
+                          state: field,
+                        );
+                      },
+                    ),
+                  ),
                   const SizedBox(
                     height: 24,
                   ),
                   FormBuilderField(
-                      name: 'profilePicture',
-                      onSaved: (_) => onFormChanged(),
-                      validator: FormBuilderValidators.required(),
-                      initialValue: volunteer.profileImageURL,
-                      builder: (FormFieldState<dynamic> field) {
-                        return ProfilePictureCard(
-                          imageUrl: volunteer.profileImageURL,
-                          field: field,
-                        );
-                      }),
+                    name: 'profilePicture',
+                    onSaved: (_) => onFormChanged(),
+                    validator: FormBuilderValidators.required(),
+                    initialValue: volunteer.profileImageURL,
+                    builder: (FormFieldState<dynamic> field) {
+                      return ProfilePictureCard(
+                        imageUrl: volunteer.profileImageURL,
+                        field: field,
+                      );
+                    },
+                  ),
                   const SizedBox(
                     height: 32,
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(context)!
-                          .contactInformation, //TEXTO A CAMBIAR
+                      AppLocalizations.of(context)!.contactInformation,
                       style: ProjectFonts.headline1,
                     ),
                   ),
@@ -170,7 +175,7 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                     height: 24,
                   ),
                   Text(
-                    AppLocalizations.of(context)!.contactText, //TEXTO A CAMBIAR
+                    AppLocalizations.of(context)!.contactText,
                     style: ProjectFonts.subtitle1,
                   ),
                   const SizedBox(
@@ -187,12 +192,11 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: ProjectPalette.neutral6),
-                          borderRadius: BorderRadius.circular(4)),
+                        borderSide: const BorderSide(color: ProjectPalette.neutral6),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      label: Text(AppLocalizations.of(context)!
-                          .phoneMin), //TEXTO A CAMBIAR
+                      label: Text(AppLocalizations.of(context)!.phoneMin),
                       labelStyle: ProjectFonts.caption.copyWith(
                           color: ProjectPalette.neutral6,
                           backgroundColor: ProjectPalette.neutral3),
@@ -215,9 +219,9 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: ProjectPalette.neutral6),
-                          borderRadius: BorderRadius.circular(4)),
+                        borderSide: const BorderSide(color: ProjectPalette.neutral6),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       label: const Text('Mail'),
                       labelStyle: ProjectFonts.caption.copyWith(
@@ -232,38 +236,35 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                     height: 32,
                   ),
                   ValueListenableBuilder(
-                      valueListenable: isFormValidNotifier,
-                      builder: (context, valid, child) {
-                        return CtaButton(
-                            enabled: valid,
-                            onPressed: () {
-                              if (!valid) {
-                                return;
-                              }
-                              try {
-                                if (formKey.currentState?.saveAndValidate() ??
-                                    false) {
-                                  // Formulario validado y guardado
-                                  final formData = formKey.currentState?.value;
-                                  print('Form Data: $formData');
-                                  ref
-                                      .read(profileControllerProvider)
-                                      .finishSetup(formData!);
-                                  context.go('/profileScreen');
-                                } else {
-                                  // Manejar errores de validación
-                                  print('Validation failed');
-                                }
-                              } catch (e) {
-                                print('Error saving form: $e');
-                              }
-                            },
-                            filled: true,
-                            actionStr: AppLocalizations.of(context)!.saveData);
-                      }),
+                    valueListenable: isFormValidNotifier,
+                    builder: (context, valid, child) {
+                      return CtaButton(
+                        enabled: valid,
+                        onPressed: () {
+                          if (!valid) {
+                            return;
+                          }
+                          try {
+                            if (formKey.currentState?.saveAndValidate() ?? false) {
+                              final formData = formKey.currentState?.value;
+                              print('Form Data: $formData');
+                              ref.read(profileControllerProvider).finishSetup(formData!);
+                              context.go('/profileScreen');
+                            } else {
+                              print('Validation failed');
+                            }
+                          } catch (e) {
+                            print('Error saving form: $e');
+                          }
+                        },
+                        filled: true,
+                        actionStr: AppLocalizations.of(context)!.saveData,
+                      );
+                    },
+                  ),
                   const SizedBox(
                     height: 32,
-                  )
+                  ),
                 ],
               ),
             ),
@@ -302,3 +303,4 @@ Widget _buildRadioOption(
     ),
   );
 }
+

@@ -4,25 +4,25 @@ class Volunteer {
   final String firstName;
   final String lastName;
   final String email;
-  final Gender? gender;
+  final String? gender;  // Now stores the string representation of gender
   final String profileImageURL;
   final DateTime? dateOfBirth;
   final String phoneNumber;
   final String uid;
 
-  Volunteer(
-      {required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.gender,
-      required this.profileImageURL,
-      required this.dateOfBirth,
-      required this.phoneNumber,
-      required this.uid});
+  Volunteer({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.gender,
+    required this.profileImageURL,
+    required this.dateOfBirth,
+    required this.phoneNumber,
+    required this.uid
+  });
 
   bool hasCompletedProfile() {
-    print(
-        '$this: finishedSetup(${gender != null && phoneNumber.isNotEmpty && dateOfBirth != null && profileImageURL.isNotEmpty})');
+    print('Volunteer: finishedSetup(${gender != null && phoneNumber.isNotEmpty && dateOfBirth != null && profileImageURL.isNotEmpty})');
     return gender != null &&
         phoneNumber.isNotEmpty &&
         dateOfBirth != null &&
@@ -34,9 +34,9 @@ class Volunteer {
       firstName: data['firstName'] as String,
       lastName: data['lastName'] as String,
       email: data['email'] as String,
-      gender: genderFromString(data['gender']),
+      gender: data['gender'] as String?,
       profileImageURL: data['profileImageURL'] as String,
-      dateOfBirth: data['dateOfBirth'] as DateTime?,
+      dateOfBirth: (data['dateOfBirth'] as Timestamp?)?.toDate(),
       phoneNumber: data['phoneNumber'] as String,
       uid: data['uid'] as String,
     );
