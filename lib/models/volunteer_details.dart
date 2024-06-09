@@ -12,6 +12,7 @@ class VolunteerDetails {
   String requirements;
   String timeAvailability;
   int vacancies;
+  int remainingVacancies;
   List<String> pendingApplicants;
   List<String> confirmedApplicants;
   DateTime createdAt;
@@ -28,34 +29,41 @@ class VolunteerDetails {
       required this.requirements,
       required this.timeAvailability,
       required this.vacancies,
+      required this.remainingVacancies,
       required this.pendingApplicants,
       required this.confirmedApplicants,
       required this.createdAt});
 
   static VolunteerDetails fromJson(Map<String, dynamic> data) {
     return VolunteerDetails(
-        id: data['id'],
-        imageUrl: data['imageUrl'],
-        type: data['type'],
-        title: data['title'],
-        mission: data['mission'],
-        details: data['details'],
-        location: data['location'],
-        address: data['address'],
-        requirements: data['requirements'],
-        timeAvailability: data['timeAvailability'],
-        vacancies: data['vacancies'],
-        pendingApplicants: data['pendingApplicants'],
-        confirmedApplicants: data['confirmedApplicants'],
-        createdAt: data['createdAt']);
+        id: data['id'] as String,
+        imageUrl: data['imageUrl'] as String,
+        type: data['type'] as String,
+        title: data['title'] as String,
+        mission: data['mission'] as String,
+        details: data['details'] as String,
+        location: data['location'] as GeoPoint,
+        address: data['address'] as String,
+        requirements: data['requirements'] as String,
+        timeAvailability: data['timeAvailability'] as String,
+        vacancies: data['vacancies'] as int,
+        remainingVacancies: data['remainingVacancies'] as int,
+        pendingApplicants: List<String>.from(data['pendingApplicants'] as List),
+        confirmedApplicants:
+            List<String>.from(data['confirmedApplicants'] as List),
+        createdAt: data['createdAt'] as DateTime);
   }
 
   bool isUserPending(String userId) {
-    return this.pendingApplicants.contains(userId);
+    return pendingApplicants.contains(userId);
   }
 
   bool isUserConfirmed(String userId) {
-    return this.confirmedApplicants.contains(userId);
+    return confirmedApplicants.contains(userId);
+  }
+
+  void calculateVacancies() {
+    remainingVacancies = vacancies - confirmedApplicants.length;
   }
 
   Map<String, dynamic> toJson() {

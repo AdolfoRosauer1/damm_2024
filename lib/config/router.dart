@@ -159,7 +159,7 @@ class CustomNavigationHelper {
         // Get the current route location
         final currentLocation = state.uri.path;
         // Define the routes where you don't want to redirect even if the user is not authenticated
-        const nonAuthRoutes = ['/signin', '/register', '/access', '/'];
+        const nonAuthRoutes = ['/login', '/register', '/access', '/'];
 
         // Access the auth state from a provider
         final container = ProviderContainer();

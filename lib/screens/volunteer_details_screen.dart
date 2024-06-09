@@ -1,7 +1,7 @@
 import 'package:damm_2024/models/volunteer_details.dart';
+import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/screens/apply_screen.dart';
 import 'package:damm_2024/services/volunteer_details_service.dart';
-import 'package:damm_2024/utils/maps_utils.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
 import 'package:damm_2024/widgets/cells/modals/apply_confirmation_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
@@ -9,11 +9,11 @@ import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; //Si no funciona comentar y hacer flutter run, ahi debería andar
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
-class VolunteerDetailsScreen extends StatefulWidget {
+class VolunteerDetailsScreen extends ConsumerStatefulWidget {
   const VolunteerDetailsScreen({super.key, required this.id});
   static const route = ":id";
   static String routeFromId(String id) => "${ApplyScreen.route}/$id";
@@ -21,20 +21,18 @@ class VolunteerDetailsScreen extends StatefulWidget {
   final String id;
 
   @override
-  State<StatefulWidget> createState() {
-    return _VolunteerDetailsScreenState();
-  }
+  _VolunteerDetailsScreenState createState() => _VolunteerDetailsScreenState();
 }
 
-class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
-  late VolunteerDetailsService _service;
+class _VolunteerDetailsScreenState
+    extends ConsumerState<VolunteerDetailsScreen> {
   late Future<VolunteerDetails?> _future;
 
   @override
   void initState() {
     super.initState();
-    _service = VolunteerDetailsService();
-    _future = _service.getVolunteerById(widget.id);
+    // Accessing FirestoreControllerProvider to get volunteer details
+    _future = ref.read(firestoreControllerProvider).getVolunteerById(widget.id);
   }
 
   @override
@@ -61,7 +59,9 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
+            return Center(
+                child: Text(
+                    '${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             VolunteerDetails volunteerDetails = snapshot.data!;
             return SingleChildScrollView(
@@ -74,37 +74,43 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       volunteerDetails.type.toUpperCase(),
-                      style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6),
+                      style: ProjectFonts.overline
+                          .copyWith(color: ProjectPalette.neutral6),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(volunteerDetails.title, style: ProjectFonts.headline1),
+                    child: Text(volunteerDetails.title,
+                        style: ProjectFonts.headline1),
                   ),
                   const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       volunteerDetails.mission,
-                      style: ProjectFonts.body1.copyWith(color: ProjectPalette.secondary6),
+                      style: ProjectFonts.body1
+                          .copyWith(color: ProjectPalette.secondary6),
                     ),
                   ),
                   const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(AppLocalizations.of(context)!.about_activity, style: ProjectFonts.headline2),
+                    child: Text(AppLocalizations.of(context)!.about_activity,
+                        style: ProjectFonts.headline2),
                   ),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(volunteerDetails.details, style: ProjectFonts.body1),
+                    child: Text(volunteerDetails.details,
+                        style: ProjectFonts.body1),
                   ),
                   const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: InkWell(
                       onTap: () {
-                        _service.openLocationInMap(volunteerDetails.location);
+                        VolunteerDetailsService()
+                            .openLocationInMap(volunteerDetails.location);
                       },
                       child: InformationCard(
                         title: AppLocalizations.of(context)!.location,
@@ -118,19 +124,24 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                   const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(AppLocalizations.of(context)!.participate_in_volunteer, style: ProjectFonts.headline2),
+                    child: Text(
+                        AppLocalizations.of(context)!.participate_in_volunteer,
+                        style: ProjectFonts.headline2),
                   ),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(AppLocalizations.of(context)!.requirements, style: ProjectFonts.subtitle1),
+                    child: Text(AppLocalizations.of(context)!.requirements,
+                        style: ProjectFonts.subtitle1),
                   ),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: MarkdownBody(
                       data: volunteerDetails.requirements,
-                      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                      styleSheet:
+                          MarkdownStyleSheet.fromTheme(Theme.of(context))
+                              .copyWith(
                         p: ProjectFonts.body1,
                       ),
                     ),
@@ -138,14 +149,17 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(AppLocalizations.of(context)!.availability, style: ProjectFonts.subtitle1),
+                    child: Text(AppLocalizations.of(context)!.availability,
+                        style: ProjectFonts.subtitle1),
                   ),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: MarkdownBody(
                       data: volunteerDetails.timeAvailability,
-                      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                      styleSheet:
+                          MarkdownStyleSheet.fromTheme(Theme.of(context))
+                              .copyWith(
                         p: ProjectFonts.body1,
                       ),
                     ),
@@ -156,7 +170,9 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        VacanciesChip(vacancies: volunteerDetails.vacancies, enabled: true),
+                        VacanciesChip(
+                            vacancies: volunteerDetails.vacancies,
+                            enabled: true),
                       ],
                     ),
                   ),
@@ -168,7 +184,9 @@ class _VolunteerDetailsScreenState extends State<VolunteerDetailsScreen> {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) => ApplyConfirmationModal(title: volunteerDetails.title),
+                          builder: (context) => ApplyConfirmationModal(
+                              title: volunteerDetails.title,
+                              oppId: volunteerDetails.id),
                         );
                       },
                       filled: true,

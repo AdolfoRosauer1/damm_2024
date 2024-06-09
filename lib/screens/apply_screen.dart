@@ -9,10 +9,12 @@ import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
-class ApplyScreen extends StatefulWidget {
+// TODO: refactor to ConsumerStatefulWidget
+class ApplyScreen extends ConsumerStatefulWidget {
   static const route = "/apply";
 
   const ApplyScreen({super.key});
@@ -21,8 +23,10 @@ class ApplyScreen extends StatefulWidget {
   _ApplyScreenState createState() => _ApplyScreenState();
 }
 
-class _ApplyScreenState extends State<ApplyScreen> {
+class _ApplyScreenState extends ConsumerState<ApplyScreen> {
+  // TODO: MAINTAIN _searchController, DO NOT use a Provider
   final TextEditingController _searchController = TextEditingController();
+  // TODO: use firestoreControllerProvider for all service methods
   final VolunteerDetailsService _volunteerDetailsService =
       VolunteerDetailsService();
   late Future<List<VolunteerDetails>> _volunteers;
@@ -38,6 +42,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
     });
   }
 
+  // TODO: maintain getUserLocation method. DO NOT USE A PROVIDER
   Future<void> _getUserLocation() async {
     print("USER LOCATIONMMMMMMMMMMMMMMM");
     bool serviceEnabled;

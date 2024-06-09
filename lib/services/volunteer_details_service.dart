@@ -18,68 +18,95 @@ class VolunteerDetailsService {
     return snapshot.docs.isNotEmpty;
   }
 
+  // Method to get a list of volunteers from Firestore, optionally filtered by a query or user position
   Future<List<VolunteerDetails>> getVolunteers(
       {String? query, Position? userPosition}) async {
-    List<VolunteerDetails> volunteers = [];
-    QuerySnapshot snapshot =
-        await _firestore.collection('volunteerOpportunities').get();
-    for (var element in snapshot.docs) {
-      var data = element.data() as Map<String, dynamic>;
-      var imageUrl =
-          await _storage.ref().child(data['imagePath']).getDownloadURL();
-      data['id'] = element.id;
-      data['imageUrl'] = imageUrl;
-      Timestamp timestamp = data['createdAt'];
-      data['createdAt'] = timestamp.toDate();
+    try {
+      List<VolunteerDetails> volunteers = [];
+      QuerySnapshot snapshot =
+          await _firestore.collection('volunteerOpportunities').get();
+      print(
+          'FirestoreDataSource.getVolunteers: Fetched volunteer opportunities from Firestore');
 
-      if (data['pendingApplicants'] == null) {
-        data['pendingApplicants'] = [''];
-      }
-      if (data['confirmedApplicants'] == null) {
-        data['confirmedApplicants'] = [''];
-      }
+      for (var element in snapshot.docs) {
+        try {
+          var data = element.data() as Map<String, dynamic>;
+          var imageUrl =
+              await _storage.ref().child(data['imagePath']).getDownloadURL();
+          data['id'] = element.id;
+          data['imageUrl'] = imageUrl;
+          Timestamp timestamp = data['createdAt'];
+          data['createdAt'] = timestamp.toDate();
 
-      if (query != null && query.isNotEmpty) {
-        if (data['title'].toLowerCase().contains(query.toLowerCase()) ||
-            data['mission'].toLowerCase().contains(query.toLowerCase()) ||
-            data['details'].toLowerCase().contains(query.toLowerCase())) {
-          volunteers.add(VolunteerDetails.fromJson(data));
+          // Handle potential null fields
+          data['pendingApplicants'] ??= [''];
+          data['confirmedApplicants'] ??= [''];
+          data['remainingVacancies'] ??= data['vacancies'] -
+              List<String>.from(data['confirmedApplicants'] as List).length;
+
+          if (query != null && query.isNotEmpty) {
+            if (data['title'].toLowerCase().contains(query.toLowerCase()) ||
+                data['mission'].toLowerCase().contains(query.toLowerCase()) ||
+                data['details'].toLowerCase().contains(query.toLowerCase())) {
+              volunteers.add(VolunteerDetails.fromJson(data));
+            }
+          } else {
+            volunteers.add(VolunteerDetails.fromJson(data));
+          }
+        } catch (e) {
+          print(
+              'Error in FirestoreDataSource.getVolunteers (processing document): $e');
         }
+      }
+
+      // Sort volunteers based on distance to user position or creation date
+      if (userPosition != null) {
+        volunteers.sort((a, b) {
+          double distanceA = Geolocator.distanceBetween(
+              userPosition.latitude,
+              userPosition.longitude,
+              a.location.latitude,
+              a.location.longitude);
+          double distanceB = Geolocator.distanceBetween(
+              userPosition.latitude,
+              userPosition.longitude,
+              b.location.latitude,
+              b.location.longitude);
+
+          if (distanceA == distanceB) {
+            return b.createdAt.compareTo(a.createdAt);
+          }
+          return distanceA.compareTo(distanceB);
+        });
       } else {
-        volunteers.add(VolunteerDetails.fromJson(data));
+        volunteers.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       }
+
+      print(
+          'FirestoreDataSource.getVolunteers: Sorted and filtered volunteer opportunities');
+      return volunteers;
+    } catch (e) {
+      print('Error in FirestoreDataSource.getVolunteers: $e');
+      return [];
     }
-
-    if (userPosition != null) {
-      volunteers.sort((a, b) {
-        double distanceA = Geolocator.distanceBetween(userPosition.latitude,
-            userPosition.longitude, a.location.latitude, a.location.longitude);
-        double distanceB = Geolocator.distanceBetween(userPosition.latitude,
-            userPosition.longitude, b.location.latitude, b.location.longitude);
-
-        if (distanceA == distanceB) {
-          return b.createdAt.compareTo(a.createdAt);
-        }
-        return distanceA.compareTo(distanceB);
-      });
-    } else {
-      volunteers.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    }
-
-    return volunteers;
   }
 
+  // Method to update a volunteer opportunity in Firestore
   Future<void> updateVolunteerById(VolunteerDetails volunteer) async {
-    // Convert VolunteerDetails instance to a map
-    Map<String, dynamic> data = volunteer.toJson();
-
-    // Update the Firestore document with the given data
-    await _firestore
-        .collection('volunteerOpportunities')
-        .doc(volunteer.id)
-        .update(data);
+    try {
+      Map<String, dynamic> data = volunteer.toJson();
+      await _firestore
+          .collection('volunteerOpportunities')
+          .doc(volunteer.id)
+          .update(data);
+      print(
+          'FirestoreDataSource.updateVolunteerById: Updated volunteer opportunity: ${volunteer.id}');
+    } catch (e) {
+      print('Error in FirestoreDataSource.updateVolunteerById: $e');
+    }
   }
 
+  // Method to get a volunteer's details by their ID from Firestore
   Future<VolunteerDetails?> getVolunteerById(String id) async {
     try {
       DocumentSnapshot doc =
@@ -92,12 +119,21 @@ class VolunteerDetailsService {
         data['imageUrl'] = imageUrl;
         Timestamp timestamp = data['createdAt'];
         data['createdAt'] = timestamp.toDate();
+
+        // Handle potential null fields
+        data['pendingApplicants'] ??= [''];
+        data['confirmedApplicants'] ??= [''];
+        data['remainingVacancies'] ??= data['vacancies'] -
+            List<String>.from(data['confirmedApplicants'] as List).length;
+
+        print(
+            'FirestoreDataSource.getVolunteerById: Fetched volunteer details for ID: $id');
         return VolunteerDetails.fromJson(data);
       } else {
         return null;
       }
     } catch (e) {
-      print("Error getting volunteer details by id: $e");
+      print("Error in FirestoreDataSource.getVolunteerById: $e");
       return null;
     }
   }
