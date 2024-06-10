@@ -41,7 +41,6 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
   }
 
   void onFormChanged() {
-    print("ON FORM CHANGEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
     FocusScope.of(context).unfocus();
     isFormValidNotifier.value =
         formKey.currentState!.validate(focusOnInvalid: false);
@@ -124,22 +123,13 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         const BoxDecoration(color: ProjectPalette.neutral3),
                     child: FormBuilderField(
                       name: 'gender',
-                      initialValue: volunteer.gender,
+                      initialValue: genderFromString(volunteer.gender ?? '', context),
                       validator: FormBuilderValidators.required(),
                       builder: (FormFieldState<dynamic> field) {
                         return InputCard(
                           title: AppLocalizations.of(context)!.profileInformation,
-                          labels: Gender.values.map((e) {
-                            switch (e) {
-                              case Gender.man:
-                                return AppLocalizations.of(context)!.male;
-                              case Gender.woman:
-                                return AppLocalizations.of(context)!.female;
-                              case Gender.nonBinary:
-                                return AppLocalizations.of(context)!.nonBinary;
-                              default:
-                                return '';
-                            }
+                          labels: Gender.values.map((gender) {
+                            return gender.localizedValue(context);
                           }).toList(),
                           state: field,
                         );
@@ -264,7 +254,7 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                   ),
                   const SizedBox(
                     height: 32,
-                  ),
+                  )
                 ],
               ),
             ),
