@@ -25,8 +25,8 @@ class VolunteerDetailsProvider extends _$VolunteerDetailsProvider {
         data['imageUrl'] = imageUrl;
         Timestamp timestamp = data['createdAt'];
         data['createdAt'] = timestamp.toDate();
-        data['pendingApplicants'] ??= [''];
-        data['confirmedApplicants'] ??= [''];
+        data['pendingApplicants'] ??= [];
+        data['confirmedApplicants'] ??= [];
         data['remainingVacancies'] ??= data['vacancies'] -
             List<String>.from(data['confirmedApplicants'] as List).length;
         yield VolunteerDetails.fromJson(data);
@@ -80,6 +80,14 @@ class FirestoreController {
           'FirestoreController.unApplyToOpportunity: Finished un-applying from opportunity: $oppId');
     } catch (e) {
       print('Error in FirestoreController.unApplyToOpportunity: $e');
+    }
+  }
+
+  Future<void> cancelOpportunity(String oppId) async {
+    try {
+      await _firestoreRepository.cancelOpportunity(user.uid, oppId);
+    } catch (e) {
+      print('Error in FirestoreController.cancelOpportunity: $e');
     }
   }
 
@@ -151,6 +159,22 @@ class FirestoreRepository {
     }
   }
 
+  Future<void> cancelOpportunity(String userId, String oppId) async {
+    try {
+      VolunteerDetails? opportunity = await _dataSource.getVolunteerById(oppId);
+      if (opportunity != null) {
+        if (opportunity.isUserConfirmed(userId)) {
+          opportunity.confirmedApplicants.remove(userId);
+          await _dataSource.updateVolunteerById(opportunity);
+          print(
+              'FirestoreRepository.cancelOpportunity: User $userId canceled opportunity $oppId');
+        }
+      }
+    } catch (e) {
+      print('Error in FirestoreRepository.cancelOpportunity: $e');
+    }
+  }
+
   // Method to get a list of volunteers from the data source
   Future<List<VolunteerDetails>> getVolunteers(
       {String? query, Position? userPosition}) async {
@@ -208,8 +232,8 @@ class FirestoreDataSource {
           data['createdAt'] = timestamp.toDate();
 
           // Handle potential null fields
-          data['pendingApplicants'] ??= [''];
-          data['confirmedApplicants'] ??= [''];
+          data['pendingApplicants'] ??= [];
+          data['confirmedApplicants'] ??= [];
           data['remainingVacancies'] ??= data['vacancies'] -
               List<String>.from(data['confirmedApplicants'] as List).length;
 
@@ -290,8 +314,8 @@ class FirestoreDataSource {
         data['createdAt'] = timestamp.toDate();
 
         // Handle potential null fields
-        data['pendingApplicants'] ??= [''];
-        data['confirmedApplicants'] ??= [''];
+        data['pendingApplicants'] ??= [];
+        data['confirmedApplicants'] ??= [];
         data['remainingVacancies'] ??= data['vacancies'] -
             List<String>.from(data['confirmedApplicants'] as List).length;
 

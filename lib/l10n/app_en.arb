@@ -41,14 +41,23 @@
   "requirements": "Requirements",
   "availability": "Availability",
   "apply_now": "Apply Now",
+  "confirmed_title": "You are participating",
+  "confirmed_body": "The organization confirmed that you are already participating in this volunteering",
+  "cancel_volunteer": "Withdraw from volunteering",
+  "applied_title": "You have applied",
+  "applied_body": "The organization will contact you soon and enroll you as a participant",
+  "un_apply": "Withdraw application",
   "no_data": "No data",
 
   "welcome": "Welcome!",
   "welcomeMessage": "Never underestimate your ability to improve someone's life.",
 
-  "apply_confirmation": "You are about to apply for",
+  "apply_confirmation": "You are about to apply to",
   "cancel": "Cancel",
   "confirm": "Confirm",
+
+  "un_apply_confirmation": "You are about to un-apply to",
+  "cancel_confirmation": "You are about to withdraw from",
 
   "logout_confirmation": "Are you sure you want to log out?",
 

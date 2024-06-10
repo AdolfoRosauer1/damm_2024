@@ -1,28 +1,26 @@
-import 'package:damm_2024/models/gender.dart';
-
 class Volunteer {
   final String firstName;
   final String lastName;
   final String email;
-  final String? gender;  // Now stores the string representation of gender
+  final String? gender; // Now stores the string representation of gender
   final String profileImageURL;
   final DateTime? dateOfBirth;
   final String phoneNumber;
   final String uid;
 
-  Volunteer({
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.gender,
-    required this.profileImageURL,
-    required this.dateOfBirth,
-    required this.phoneNumber,
-    required this.uid
-  });
+  Volunteer(
+      {required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.gender,
+      required this.profileImageURL,
+      required this.dateOfBirth,
+      required this.phoneNumber,
+      required this.uid});
 
   bool hasCompletedProfile() {
-    print('Volunteer: finishedSetup(${gender != null && phoneNumber.isNotEmpty && dateOfBirth != null && profileImageURL.isNotEmpty})');
+    print(
+        'Volunteer: finishedSetup(${gender != null && phoneNumber.isNotEmpty && dateOfBirth != null && profileImageURL.isNotEmpty})');
     return gender != null &&
         phoneNumber.isNotEmpty &&
         dateOfBirth != null &&
@@ -36,7 +34,7 @@ class Volunteer {
       email: data['email'] as String,
       gender: data['gender'] as String?,
       profileImageURL: data['profileImageURL'] as String,
-      dateOfBirth: (data['dateOfBirth'] as Timestamp?)?.toDate(),
+      dateOfBirth: (data['dateOfBirth'] as DateTime?),
       phoneNumber: data['phoneNumber'] as String,
       uid: data['uid'] as String,
     );

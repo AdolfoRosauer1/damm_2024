@@ -13,8 +13,8 @@ class VolunteerDetails {
   String timeAvailability;
   int vacancies;
   int remainingVacancies;
-  List<String> pendingApplicants;
-  List<String> confirmedApplicants;
+  List<String?> pendingApplicants;
+  List<String?> confirmedApplicants;
   DateTime createdAt;
 
   VolunteerDetails(
@@ -48,9 +48,10 @@ class VolunteerDetails {
         timeAvailability: data['timeAvailability'] as String,
         vacancies: data['vacancies'] as int,
         remainingVacancies: data['remainingVacancies'] as int,
-        pendingApplicants: List<String>.from(data['pendingApplicants'] as List),
+        pendingApplicants:
+            List<String?>.from(data['pendingApplicants'] as List),
         confirmedApplicants:
-            List<String>.from(data['confirmedApplicants'] as List),
+            List<String?>.from(data['confirmedApplicants'] as List),
         createdAt: data['createdAt'] as DateTime);
   }
 

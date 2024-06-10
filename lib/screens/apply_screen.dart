@@ -191,7 +191,8 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
                                 },
                                 type: volunteerDetails[index].type,
                                 title: volunteerDetails[index].title,
-                                vacancies: volunteerDetails[index].vacancies,
+                                vacancies:
+                                    volunteerDetails[index].remainingVacancies,
                                 imageUrl: volunteerDetails[index].imageUrl,
                               );
                             },

@@ -41,6 +41,12 @@
   "requirements": "Requisitos",
   "availability": "Disponibilidad",
   "apply_now": "Postularme",
+  "confirmed_title": "Estas participando",
+  "confirmed_body": "La organización confirmó que ya estas participando de este voluntariado",
+  "cancel_volunteer": "Abandonar voluntariado",
+  "applied_title": "Te has postulado",
+  "applied_body": "Pronto la organización se pondrá en contacto contigo y te inscribirá como participante",
+  "un_apply": "Retirar postulación",
   "no_data": "Sin datos",
 
   "welcome": "¡Bienvenido!",
@@ -49,6 +55,9 @@
   "apply_confirmation": "Te estás por postular a",
   "cancel": "Cancelar",
   "confirm": "Confirmar",
+
+  "un_apply_confirmation": "Estás a punto de cancelar tu postulación a",
+  "cancel_confirmation": "Estás a punto de abandonar",
 
   "logout_confirmation": "¿Estás seguro que quieres cerrar sesión?",
 

@@ -1,5 +1,4 @@
 //TODO conectar con riverpod y statemanagement
-import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
@@ -9,12 +8,6 @@ import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/molecules/buttons/short_button.dart';
 import 'package:damm_2024/widgets/molecules/components/profile_picture.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
-import 'package:damm_2024/widgets/tokens/fonts.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -110,11 +103,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
             child: InformationCard(
-                title: AppLocalizations.of(context)!.personalInformation,
-                label1: AppLocalizations.of(context)!.birthDate,
-                content1: dateFormat.format(volunteer.dateOfBirth!),
-                label2: AppLocalizations.of(context)!.gender,
-                content2: Gender.values.firstWhere((gender) => gender.toString().split('.').last == volunteer.gender).localizedValue(context)),
+              title: AppLocalizations.of(context)!.personalInformation,
+              label1: AppLocalizations.of(context)!.birthDate,
+              content1: dateFormat.format(volunteer.dateOfBirth!),
+              label2: AppLocalizations.of(context)!.gender,
+              content2: volunteer.gender!,
+              // content2: Gender.values.firstWhere((gender) => gender.toString().split('.').last == volunteer.gender).localizedValue(context)
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
@@ -159,4 +154,3 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 }
-
