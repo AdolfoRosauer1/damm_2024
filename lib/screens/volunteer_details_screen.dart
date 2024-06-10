@@ -1,7 +1,6 @@
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/apply_screen.dart';
-import 'package:damm_2024/services/volunteer_details_service.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
 import 'package:damm_2024/widgets/cells/modals/apply_confirmation_modal.dart';
 import 'package:damm_2024/widgets/cells/modals/cancel_volunteer_modal.dart';
@@ -34,6 +33,8 @@ class _VolunteerDetailsScreenState
     final volunteerDetailsAsyncValue =
         ref.watch(volunteerDetailsProviderProvider(widget.id));
     final currentUser = ref.watch(currentUserProvider);
+    final FirestoreController _firestoreController =
+        ref.watch(firestoreControllerProvider);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -101,7 +102,7 @@ class _VolunteerDetailsScreenState
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: InkWell(
                     onTap: () {
-                      VolunteerDetailsService()
+                      _firestoreController
                           .openLocationInMap(volunteerDetails.location);
                     },
                     child: InformationCard(
@@ -167,14 +168,15 @@ class _VolunteerDetailsScreenState
                   ),
                 ),
                 const SizedBox(height: 8),
-                  // Añadir el costo aquí debajo de las vacantes
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      '${AppLocalizations.of(context)!.cost}: ${volunteerDetails.cost}',
-                      style: ProjectFonts.body1.copyWith(color: ProjectPalette.secondary6),
-                    ),
+                // Añadir el costo aquí debajo de las vacantes
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    '${AppLocalizations.of(context)!.cost}: ${volunteerDetails.cost}',
+                    style: ProjectFonts.body1
+                        .copyWith(color: ProjectPalette.secondary6),
                   ),
+                ),
                 const SizedBox(height: 24),
                 if (volunteerDetails.isUserConfirmed(currentUser.uid))
                   Padding(

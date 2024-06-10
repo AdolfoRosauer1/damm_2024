@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
+import 'package:damm_2024/utils/maps_utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,6 +61,14 @@ class FirestoreController {
   final Volunteer user;
 
   FirestoreController(this._firestoreRepository, this.user);
+
+  Future<bool> areVolunteersAvailable() async {
+    return _firestoreRepository.areVolunteersAvailable();
+  }
+
+  void openLocationInMap(GeoPoint location) {
+    openMap(location.latitude, location.longitude);
+  }
 
   // Method to apply to a volunteer opportunity
   Future<void> applyToOpportunity(String oppId) async {
@@ -124,6 +133,10 @@ class FirestoreRepository {
   final FirestoreDataSource _dataSource;
 
   FirestoreRepository(this._dataSource);
+
+  Future<bool> areVolunteersAvailable() async {
+    return _dataSource.areVolunteersAvailable();
+  }
 
   // Method to apply a user to a volunteer opportunity
   Future<void> applyToOpportunity(String userId, String oppId) async {
@@ -211,6 +224,12 @@ class FirestoreDataSource {
 
   FirestoreDataSource(this._firestore, this._storage);
 
+  Future<bool> areVolunteersAvailable() async {
+    QuerySnapshot snapshot =
+        await _firestore.collection('volunteerOpportunities').get();
+    return snapshot.docs.isNotEmpty;
+  }
+
   // Method to get a list of volunteers from Firestore, optionally filtered by a query or user position
   Future<List<VolunteerDetails>> getVolunteers(
       {String? query, Position? userPosition}) async {
@@ -236,6 +255,7 @@ class FirestoreDataSource {
           data['confirmedApplicants'] ??= [];
           data['remainingVacancies'] ??= data['vacancies'] -
               List<String>.from(data['confirmedApplicants'] as List).length;
+          data['cost'] ??= 0.0 as double;
 
           if (query != null && query.isNotEmpty) {
             if (data['title'].toLowerCase().contains(query.toLowerCase()) ||
@@ -318,6 +338,7 @@ class FirestoreDataSource {
         data['confirmedApplicants'] ??= [];
         data['remainingVacancies'] ??= data['vacancies'] -
             List<String>.from(data['confirmedApplicants'] as List).length;
+        data['cost'] ??= 0.0;
 
         print(
             'FirestoreDataSource.getVolunteerById: Fetched volunteer details for ID: $id');

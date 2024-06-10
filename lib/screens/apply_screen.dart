@@ -1,6 +1,6 @@
 import 'package:damm_2024/models/volunteer_details.dart';
+import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
-import 'package:damm_2024/services/volunteer_details_service.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/no_volunteers_card.dart';
 import 'package:damm_2024/widgets/cells/cards/volunteering_card.dart';
@@ -27,20 +27,12 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
   // TODO: MAINTAIN _searchController, DO NOT use a Provider
   final TextEditingController _searchController = TextEditingController();
   // TODO: use firestoreControllerProvider for all service methods
-  final VolunteerDetailsService _volunteerDetailsService =
-      VolunteerDetailsService();
+  // final VolunteerDetailsService _volunteerDetailsService =
+  //     VolunteerDetailsService();
+
   late Future<List<VolunteerDetails>> _volunteers;
   late Future<bool> _areVolunteersAvailable;
   Position? _userPosition;
-
-  void loadVolunteers() {
-    setState(() {
-      _volunteers = _volunteerDetailsService.getVolunteers(
-          query: _searchController.text, userPosition: _userPosition);
-      _areVolunteersAvailable =
-          _volunteerDetailsService.areVolunteersAvailable();
-    });
-  }
 
   // TODO: maintain getUserLocation method. DO NOT USE A PROVIDER
   Future<void> _getUserLocation() async {
@@ -70,7 +62,6 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
         desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _userPosition = position;
-      loadVolunteers();
     });
   }
 
@@ -78,13 +69,24 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
   void initState() {
     super.initState();
     _getUserLocation();
-    _areVolunteersAvailable = _volunteerDetailsService.areVolunteersAvailable();
-    _volunteers =
-        _volunteerDetailsService.getVolunteers(query: _searchController.text);
   }
 
   @override
   Widget build(BuildContext context) {
+    final firestoreController = ref.watch(firestoreControllerProvider);
+
+    void loadVolunteers() {
+      setState(() {
+        _volunteers = firestoreController.getVolunteers(
+            query: _searchController.text, userPosition: _userPosition);
+        _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
+      });
+    }
+
+    _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
+    _volunteers =
+        firestoreController.getVolunteers(query: _searchController.text);
+
     return Container(
       decoration: const BoxDecoration(
         color: ProjectPalette.secondary1,
@@ -182,7 +184,7 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
                             itemBuilder: (context, index) {
                               return VolunteeringCard(
                                 onPressedLocation: () {
-                                  _volunteerDetailsService.openLocationInMap(
+                                  firestoreController.openLocationInMap(
                                       volunteerDetails[index].location);
                                 },
                                 onPressed: () {
