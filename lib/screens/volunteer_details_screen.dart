@@ -166,6 +166,15 @@ class _VolunteerDetailsScreenState
                     ],
                   ),
                 ),
+                const SizedBox(height: 8),
+                  // Añadir el costo aquí debajo de las vacantes
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      '${AppLocalizations.of(context)!.cost}: ${volunteerDetails.cost}',
+                      style: ProjectFonts.body1.copyWith(color: ProjectPalette.secondary6),
+                    ),
+                  ),
                 const SizedBox(height: 24),
                 if (volunteerDetails.isUserConfirmed(currentUser.uid))
                   Padding(

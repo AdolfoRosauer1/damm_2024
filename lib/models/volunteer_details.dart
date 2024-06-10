@@ -16,6 +16,7 @@ class VolunteerDetails {
   List<String?> pendingApplicants;
   List<String?> confirmedApplicants;
   DateTime createdAt;
+  double cost;
 
   VolunteerDetails(
       {required this.id,
@@ -32,6 +33,7 @@ class VolunteerDetails {
       required this.remainingVacancies,
       required this.pendingApplicants,
       required this.confirmedApplicants,
+      required this.cost,
       required this.createdAt});
 
   static VolunteerDetails fromJson(Map<String, dynamic> data) {
@@ -47,6 +49,7 @@ class VolunteerDetails {
         requirements: data['requirements'] as String,
         timeAvailability: data['timeAvailability'] as String,
         vacancies: data['vacancies'] as int,
+        cost: data['cost'] as double,
         remainingVacancies: data['remainingVacancies'] as int,
         pendingApplicants:
             List<String?>.from(data['pendingApplicants'] as List),
@@ -83,6 +86,7 @@ class VolunteerDetails {
       'pendingApplicants': pendingApplicants,
       'confirmedApplicants': confirmedApplicants,
       'createdAt': createdAt,
+      'cost': cost,
     };
   }
 }
