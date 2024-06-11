@@ -1,8 +1,10 @@
+import 'package:damm_2024/models/gender.dart';
+
 class Volunteer {
   final String firstName;
   final String lastName;
   final String email;
-  final String? gender; // Now stores the string representation of gender
+  final Gender? gender;
   final String profileImageURL;
   final DateTime? dateOfBirth;
   final String phoneNumber;
@@ -32,7 +34,7 @@ class Volunteer {
       firstName: data['firstName'] as String,
       lastName: data['lastName'] as String,
       email: data['email'] as String,
-      gender: data['gender'] as String?,
+      gender: genderFromString(data['gender']),
       profileImageURL: data['profileImageURL'] as String,
       dateOfBirth: (data['dateOfBirth'] as DateTime?),
       phoneNumber: data['phoneNumber'] as String,

@@ -57,9 +57,18 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
     isFormValidNotifier.dispose();
     super.dispose();
   }
+  Map<String,String> genderGenderMap(BuildContext context){
+    Map<String, String> enumMap = {};
 
+    for (var item in Gender.values) {
+      enumMap[item.localizedValue(context)] = item.value;
+    }
+
+    return enumMap;
+  }
   @override
   Widget build(BuildContext context) {
+    var genderMap = genderGenderMap(context);
     return Theme(
       data: ThemeData(
           appBarTheme: const AppBarTheme(color: ProjectPalette.neutral1)),
@@ -123,14 +132,13 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         const BoxDecoration(color: ProjectPalette.neutral3),
                     child: FormBuilderField(
                       name: 'gender',
-                      initialValue: genderFromString(volunteer.gender ?? '', context),
+                      initialValue: volunteer.gender?.value,
                       validator: FormBuilderValidators.required(),
                       builder: (FormFieldState<dynamic> field) {
+
                         return InputCard(
                           title: AppLocalizations.of(context)!.profileInformation,
-                          labels: Gender.values.map((gender) {
-                            return gender.localizedValue(context);
-                          }).toList(),
+                          labels: genderMap.keys.toList(),
                           state: field,
                         );
                       },
@@ -237,8 +245,19 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                           try {
                             if (formKey.currentState?.saveAndValidate() ?? false) {
                               final formData = formKey.currentState?.value;
+                              formKey.currentState!.fields['gender']?.didChange(
+                                genderMap[formKey.currentState!.fields['gender']?.value]);
+
+                              print(formData?["gender"]);
                               print('Form Data: $formData');
-                              ref.read(profileControllerProvider).finishSetup(formData!);
+
+                              var gender = formData?["gender"];
+                              final updatedFormData = Map<String, dynamic>.from(formData ?? {});
+                              updatedFormData["gender"] = genderMap[gender];
+                              print("----------------");
+                              print(updatedFormData["gender"]);
+                              print('Form Data: $updatedFormData');
+                              ref.read(profileControllerProvider).finishSetup(updatedFormData);
                               context.go('/profileScreen');
                             } else {
                               print('Validation failed');

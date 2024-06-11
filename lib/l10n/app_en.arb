@@ -82,13 +82,15 @@
   "profilePhoto": "Profile Photo",
 
   "readMore": "Read More",
-  "male": "men",
-  "female": "women",
-  "nonBinary": "no Binary",
-  "cost": "cost",
+  "male": "Man",
+  "female": "Woman",
+  "nonBinary": "No binary",
+  "cost": "Cost",
+  "createdAtDate" : "Created at",
 
   "error_noUser" : "There is no user with those credentials",
   "error_generic" : "Something went wrong. Try again later",
-  "error_emailAlreadyExists" : "An account with that email already exists"
+  "error_emailAlreadyExists" : "An account with that email already exists",
   
+  "volunteerExtraInfo": "Extra information"
 }

@@ -7,7 +7,7 @@ class InputCard extends StatelessWidget {
   final List<String> labels;
   final FormFieldState state;
 
-  const InputCard({super.key, required this.title, required this.labels, required this.state});
+  const InputCard({super.key, required this.title, required this.state, required this.labels});
 
   @override
   Widget build(BuildContext context) {

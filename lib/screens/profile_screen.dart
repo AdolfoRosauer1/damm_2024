@@ -1,4 +1,5 @@
 //TODO conectar con riverpod y statemanagement
+import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
@@ -107,8 +108,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               label1: AppLocalizations.of(context)!.birthDate,
               content1: dateFormat.format(volunteer.dateOfBirth!),
               label2: AppLocalizations.of(context)!.gender,
-              content2: volunteer.gender!,
-              // content2: Gender.values.firstWhere((gender) => gender.toString().split('.').last == volunteer.gender).localizedValue(context)
+              content2: volunteer.gender!.localizedValue(context),
             ),
           ),
           Padding(
