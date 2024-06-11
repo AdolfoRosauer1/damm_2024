@@ -45,27 +45,28 @@ ProfileController profileController(ProfileControllerRef ref) {
   return ProfileController(
       ref.watch(profileRepositoryProvider),
       ref.watch(currentUserProvider.notifier),
-      ref.watch(authRepositoryProvider).currentUser);
+      ref.watch(firebaseAuthenticationProvider));
 }
 
 @Riverpod(keepAlive: true)
 StorageDataSource storageDataSource(StorageDataSourceRef ref) {
   return StorageDataSource(ref.watch(firebaseStorageProvider),
-      ref.watch(firebaseAuthenticationProvider).currentUser);
+      ref.watch(firebaseAuthenticationProvider));
 }
 
 class ProfileController {
   final ProfileRepository _repository;
   final CurrentUser _userNotifier;
-  final User? _user;
+  final FirebaseAuth _firebaseAuth;
 
-  ProfileController(this._repository, this._userNotifier, this._user);
+  ProfileController(this._repository, this._userNotifier, this._firebaseAuth);
 
   Future<void> finishSetup(Map<String, dynamic> data) async {
-    print('Starting finishSetup!: $_user, $data');
+    User? user = _firebaseAuth.currentUser;
+    print('Starting finishSetup!: $user, $data');
     try {
-      if (_user != null) {
-        Volunteer? toSet = await _repository.createVolunteer(_user, data);
+      if (user != null) {
+        Volunteer? toSet = await _repository.createVolunteer(user, data);
         if (toSet != null) {
           _userNotifier.set(toSet);
         }
@@ -76,8 +77,9 @@ class ProfileController {
   }
 
   void initUser() async {
-    if (_user != null) {
-      Volunteer? toSet = await getVolunteerById(_user.uid);
+    User? user = _firebaseAuth.currentUser;
+    if (user != null) {
+      Volunteer? toSet = await getVolunteerById(user.uid);
       if (toSet != null) {
         _userNotifier.set(toSet);
       }
@@ -91,16 +93,17 @@ class ProfileController {
 
 class StorageDataSource {
   final FirebaseStorage _storage;
-  final User? _user;
+  final FirebaseAuth _firebaseAuth;
 
-  StorageDataSource(this._storage, this._user);
+  StorageDataSource(this._storage, this._firebaseAuth);
 
   // Upload PFP to FirestoreStorage. Returns URL
   Future<String?> uploadPFP(String filePath) async {
+    User? user = _firebaseAuth.currentUser;
     print('Uploading PFP!');
-    if (_user != null) {
+    if (user != null) {
       final rootRef = _storage.ref();
-      String uid = _user.uid;
+      String uid = user.uid;
       final imageRef = rootRef.child('pfps/$uid');
 
       File file = File(filePath);
