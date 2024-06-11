@@ -66,7 +66,7 @@ final profileControllerProvider = Provider<ProfileController>.internal(
 );
 
 typedef ProfileControllerRef = ProviderRef<ProfileController>;
-String _$storageDataSourceHash() => r'e7e6e7aa8d4b60c1d27f68f65c74efe41f4c3342';
+String _$storageDataSourceHash() => r'f1a03683f42a234b2360543cc7530b6ac262478e';
 
 /// See also [storageDataSource].
 @ProviderFor(storageDataSource)
@@ -81,7 +81,7 @@ final storageDataSourceProvider = Provider<StorageDataSource>.internal(
 );
 
 typedef StorageDataSourceRef = ProviderRef<StorageDataSource>;
-String _$currentUserHash() => r'f9dd8787ce4df7ef14ee30610b505ea247332a86';
+String _$currentUserHash() => r'4c56bfebe92060645ba1a978caec320f2c863839';
 
 /// See also [CurrentUser].
 @ProviderFor(CurrentUser)

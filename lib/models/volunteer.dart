@@ -42,6 +42,18 @@ class Volunteer {
     );
   }
 
+  factory Volunteer.empty() {
+    return Volunteer(
+        firstName: '',
+        lastName: '',
+        email: '',
+        gender: null,
+        profileImageURL: '',
+        dateOfBirth: null,
+        phoneNumber: '',
+        uid: '');
+  }
+
   @override
   String toString() {
     return 'Volunteer{firstName: $firstName, lastName: $lastName, email: $email, gender: $gender, profileImageURL: $profileImageURL, dateOfBirth: $dateOfBirth, phoneNumber: $phoneNumber, uid: $uid}';

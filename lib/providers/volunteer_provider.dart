@@ -16,15 +16,7 @@ part 'volunteer_provider.g.dart';
 class CurrentUser extends _$CurrentUser {
   @override
   Volunteer build() {
-    return Volunteer(
-        firstName: '',
-        lastName: '',
-        email: '',
-        gender: null,
-        profileImageURL: '',
-        dateOfBirth: null,
-        phoneNumber: '',
-        uid: '');
+    return Volunteer.empty();
   }
 
   void set(Volunteer data) {
@@ -59,7 +51,7 @@ ProfileController profileController(ProfileControllerRef ref) {
 @Riverpod(keepAlive: true)
 StorageDataSource storageDataSource(StorageDataSourceRef ref) {
   return StorageDataSource(ref.watch(firebaseStorageProvider),
-      ref.watch(firebaseAuthProvider).currentUser);
+      ref.watch(firebaseAuthenticationProvider).currentUser);
 }
 
 class ProfileController {
@@ -69,12 +61,17 @@ class ProfileController {
 
   ProfileController(this._repository, this._userNotifier, this._user);
 
-  void finishSetup(Map<String, dynamic> data) async {
-    if (_user != null) {
-      Volunteer? toSet = await _repository.createVolunteer(_user, data);
-      if (toSet != null) {
-        _userNotifier.set(toSet);
+  Future<void> finishSetup(Map<String, dynamic> data) async {
+    print('Starting finishSetup!: $_user, $data');
+    try {
+      if (_user != null) {
+        Volunteer? toSet = await _repository.createVolunteer(_user, data);
+        if (toSet != null) {
+          _userNotifier.set(toSet);
+        }
       }
+    } catch (e) {
+      print('Error in ProfileController.finishSetup: $e');
     }
   }
 

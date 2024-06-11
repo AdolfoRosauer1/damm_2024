@@ -44,7 +44,7 @@ class CustomNavigationHelper {
   }
 
   CustomNavigationHelper._internal() {
-    final authProvider = firebaseAuthProvider;
+    final authProvider = firebaseAuthenticationProvider;
 
     final routes = [
       GoRoute(path: "/", builder: (_, __) => const WelcomeScreen()),
@@ -163,7 +163,8 @@ class CustomNavigationHelper {
 
         // Access the auth state from a provider
         final container = ProviderContainer();
-        final authState = container.read(authProvider).currentUser;
+        final authState =
+            container.read(firebaseAuthenticationProvider).currentUser;
 
         // Print statements for debugging
         // print('authState = $authState');

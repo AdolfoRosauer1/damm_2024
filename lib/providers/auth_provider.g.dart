@@ -6,7 +6,7 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRepositoryHash() => r'3871275ded2762a0e529629be71e890bfd3bd7ad';
+String _$authRepositoryHash() => r'5501d0caf55fffc1c500e8c9f56578f74daa51af';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)
@@ -21,21 +21,7 @@ final authRepositoryProvider = Provider<AuthRepository>.internal(
 );
 
 typedef AuthRepositoryRef = ProviderRef<AuthRepository>;
-String _$firebaseAuthHash() => r'46c40b7c5cf8ab936c0daa96a6af106bd2ae5d51';
-
-/// See also [firebaseAuth].
-@ProviderFor(firebaseAuth)
-final firebaseAuthProvider = Provider<FirebaseAuth>.internal(
-  firebaseAuth,
-  name: r'firebaseAuthProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$firebaseAuthHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef FirebaseAuthRef = ProviderRef<FirebaseAuth>;
-String _$authControllerHash() => r'df35f83a8543131791bb373c41af306773bcdbcb';
+String _$authControllerHash() => r'c173490fee8fe67245d389c57047decd215ea26b';
 
 /// See also [authController].
 @ProviderFor(authController)
@@ -50,5 +36,22 @@ final authControllerProvider = Provider<AuthController>.internal(
 );
 
 typedef AuthControllerRef = ProviderRef<AuthController>;
+String _$firebaseAuthenticationHash() =>
+    r'73300f5f37d552c559e048079af14c6af3e6d653';
+
+/// See also [FirebaseAuthentication].
+@ProviderFor(FirebaseAuthentication)
+final firebaseAuthenticationProvider =
+    NotifierProvider<FirebaseAuthentication, FirebaseAuth>.internal(
+  FirebaseAuthentication.new,
+  name: r'firebaseAuthenticationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$firebaseAuthenticationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$FirebaseAuthentication = Notifier<FirebaseAuth>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
