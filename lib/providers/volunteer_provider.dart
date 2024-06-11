@@ -92,20 +92,20 @@ class ProfileController {
   }
 
   Future<void> addFavoriteVolunteering(String opportunityId) async {
-    if (_user == null) {
+    if (_firebaseAuth.currentUser == null) {
       return;
     }
-    await _repository.addFavoriteVolunteering(_user.uid, opportunityId);
-    Volunteer updatedUser = (await _repository.getVolunteerById(_user.uid))!;
+    await _repository.addFavoriteVolunteering(_firebaseAuth.currentUser!.uid, opportunityId);
+    Volunteer updatedUser = (await _repository.getVolunteerById(_firebaseAuth.currentUser!.uid))!;
     _userNotifier.set(updatedUser);
   }
 
   Future<void> removeFavoriteVolunteering(String opportunityId) async {
-    if (_user == null) {
+    if (_firebaseAuth.currentUser == null) {
       return;
     }
-    await _repository.removeFavoriteVolunteering(_user.uid, opportunityId);
-    Volunteer updatedUser = (await _repository.getVolunteerById(_user.uid))!;
+    await _repository.removeFavoriteVolunteering(_firebaseAuth.currentUser!.uid, opportunityId);
+    Volunteer updatedUser = (await _repository.getVolunteerById(_firebaseAuth.currentUser!.uid))!;
     _userNotifier.set(updatedUser);
   }
 }
