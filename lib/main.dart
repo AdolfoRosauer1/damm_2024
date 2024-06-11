@@ -25,15 +25,6 @@ void main() async {
   // initialize
   ProviderContainer container = await bootstrap();
 
-  await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: false,
-  );
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true, // Required to display a heads up notification

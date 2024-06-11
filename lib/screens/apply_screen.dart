@@ -8,6 +8,7 @@ import 'package:damm_2024/widgets/cells/cards/volunteering_card.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,10 +66,22 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
     });
   }
 
+  void _askForNotificationPermission() async {
+    FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: false,
+    );
+  }
   @override
   void initState() {
     super.initState();
     _getUserLocation();
+    _askForNotificationPermission();
   }
 
   @override
