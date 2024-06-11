@@ -5,6 +5,7 @@ import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -170,6 +171,11 @@ class ProfileRepository {
       mutableData['profileImageURL'] =
           await _storageDataSource.uploadPFP(mutableData['profileImageURL']);
       mutableData['uid'] = user.uid;
+
+      mutableData['fcmToken'] = await FirebaseMessaging.instance.getToken();
+      mutableData['favoriteVolunteerings'] = [];
+      print("TOKEN = ${mutableData['fcmToken']}");
+
       await _firestore
           .collection('volunteer')
           .doc(user.uid)

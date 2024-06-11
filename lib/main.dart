@@ -32,7 +32,7 @@ void main() async {
     carPlay: false,
     criticalAlert: false,
     provisional: false,
-    sound: true,
+    sound: false,
   );
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -71,9 +71,6 @@ void main() async {
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
-  FirebaseMessaging.instance.getToken().then((onValue) async {
-    print('Token: $onValue');
-  });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message whilst in the foreground!');
