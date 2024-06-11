@@ -1,6 +1,7 @@
 import 'package:damm_2024/config/router.dart';
 import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/models/volunteer.dart';
+import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
@@ -9,6 +10,7 @@ import 'package:damm_2024/widgets/cells/cards/profile_picture_card.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -74,6 +76,8 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
   @override
   Widget build(BuildContext context) {
     final profileController = ref.read(profileControllerProvider);
+    final User? _firebaseUser =
+        ref.read(firebaseAuthenticationProvider).currentUser;
     var genderMap = genderGenderMap(context);
     return Theme(
       data: ThemeData(
@@ -217,7 +221,9 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         height: 24,
                       ),
                       FormBuilderTextField(
-                        initialValue: volunteer.email,
+                        initialValue: volunteer.email.isEmpty
+                            ? _firebaseUser?.email
+                            : volunteer.email,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.email()
