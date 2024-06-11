@@ -27,6 +27,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   final formKey = GlobalKey<FormBuilderState>();
   final ValueNotifier formValid = ValueNotifier<bool>(false);
   bool isLoading = false;
+  bool _hidePassword = true;
 
   @override
   void dispose() {
@@ -152,8 +153,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                       FormBuilderTextField(
                         validator: FormBuilderValidators.compose(
                             [FormBuilderValidators.required()]),
-                        onEditingComplete: onFormChanged,
+                        onEditingComplete: () => onFormChanged(),
                         name: 'password',
+                        obscureText: _hidePassword,
                         keyboardType: TextInputType.visiblePassword,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -161,8 +163,23 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                   color: ProjectPalette.neutral6),
                               borderRadius: BorderRadius.circular(4)),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          suffixIcon: ProjectIcons.visibilityOffFilledEnabled,
-                          suffixIconColor: ProjectPalette.neutral6,
+                          suffixIcon: _hidePassword ? 
+                              IconButton
+                              (onPressed: () {
+                                setState(() {
+                                  _hidePassword = !_hidePassword;
+                                });
+                              },
+                              icon: ProjectIcons.visibilityFilledEnabled)
+                              :
+                             IconButton
+                              (onPressed: () {
+                                setState(() {
+                                  _hidePassword = !_hidePassword;
+                                });
+                              },
+                              icon: ProjectIcons.visibilityOffFilledEnabled),                 
+                              suffixIconColor: ProjectPalette.neutral6,
                           label: Text(AppLocalizations.of(context)!
                               .password), //TEXTO A CAMBIAR
                           labelStyle: ProjectFonts.caption.copyWith(

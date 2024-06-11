@@ -27,6 +27,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   final formKey = GlobalKey<FormBuilderState>();
   final ValueNotifier formValid = ValueNotifier<bool>(false);
   bool isLoading = false;
+  bool _hidePassword = true;
   @override
   void dispose() {
     formValid.dispose();
@@ -97,7 +98,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       FormBuilderTextField(
                         onEditingComplete: () => onFormChanged(),
                         name: 'password',
+                        obscureText: _hidePassword,
                         keyboardType: TextInputType.visiblePassword,
+
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required()
                           //    FormBuilderValidators.minLength(8),
@@ -108,7 +111,24 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                   color: ProjectPalette.neutral6),
                               borderRadius: BorderRadius.circular(4)),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          suffixIcon: ProjectIcons.visibilityOffFilledEnabled,
+                          suffixIcon: _hidePassword ? 
+                              IconButton
+                              (onPressed: () {
+                                setState(() {
+                                  _hidePassword = !_hidePassword;
+                                });
+                              },
+                              icon: ProjectIcons.visibilityFilledEnabled)
+                              :
+                             IconButton
+                              (onPressed: () {
+                                setState(() {
+                                  _hidePassword = !_hidePassword;
+                                });
+                              },
+                              icon: ProjectIcons.visibilityOffFilledEnabled)
+                              
+                          ,
                           suffixIconColor: ProjectPalette.neutral6,
                           label: Text(AppLocalizations.of(context)!
                               .password), // TEXTO A CAMBIAR
