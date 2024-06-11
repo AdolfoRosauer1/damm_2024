@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -89,6 +90,24 @@ class ProfileController {
   Future<Volunteer?> getVolunteerById(String id) async {
     return _repository.getVolunteerById(id);
   }
+
+  Future<void> addFavoriteVolunteering(String opportunityId) async {
+    if (_user == null) {
+      return;
+    }
+    await _repository.addFavoriteVolunteering(_user.uid, opportunityId);
+    Volunteer updatedUser = (await _repository.getVolunteerById(_user.uid))!;
+    _userNotifier.set(updatedUser);
+  }
+
+  Future<void> removeFavoriteVolunteering(String opportunityId) async {
+    if (_user == null) {
+      return;
+    }
+    await _repository.removeFavoriteVolunteering(_user.uid, opportunityId);
+    Volunteer updatedUser = (await _repository.getVolunteerById(_user.uid))!;
+    _userNotifier.set(updatedUser);
+  }
 }
 
 class StorageDataSource {
@@ -112,7 +131,8 @@ class StorageDataSource {
         await imageRef.putFile(file);
         print('PFP uploaded correctly!');
         return imageRef.getDownloadURL();
-      } catch (e) {
+      } catch (e,stackTrace) {
+        FirebaseCrashlytics.instance.recordError(e, stackTrace);
         print('Error uploading PFP: $e');
         return null;
       }
@@ -158,10 +178,27 @@ class ProfileRepository {
 
       // Persist in Riverpod
       return Volunteer.fromJson(mutableData);
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error finishing setup: $e');
     }
     return null;
+  }
+
+  Future<void> addFavoriteVolunteering(String userId, String opportunityId) async {
+    try {
+      Volunteer? user = await getVolunteerById(userId);
+      if (user != null) {
+        user.favoriteVolunteerings.add(opportunityId);
+        await _firestore
+            .collection('volunteer')
+            .doc(userId)
+            .update({'favoriteVolunteerings': user.favoriteVolunteerings});
+      }
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
+      print('Error adding favorite volunteering: $e');
+    }
   }
 
   Future<Volunteer?> getVolunteerById(String id) async {
@@ -174,13 +211,35 @@ class ProfileRepository {
         var data = doc.data() as Map<String, dynamic>;
         Timestamp ts = data['dateOfBirth'] as Timestamp;
         data['dateOfBirth'] = ts.toDate();
+        data['favoriteVolunteerings'] ??= [];
         return Volunteer.fromJson(data);
       }
       return null;
-    } catch (e) {
+    } catch (e,stackTrace) {
       print('Error getting user by id: $e');
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       return null;
     }
+  }
+  
+  Future<void> removeFavoriteVolunteering(String uid, String opportunityId) async{
+    try{
+      Volunteer? user = await getVolunteerById(uid);
+      if (user != null) {
+        if (user.favoriteVolunteerings.contains(opportunityId)) {
+          user.favoriteVolunteerings.remove(opportunityId);
+          await _firestore
+              .collection('volunteer')
+              .doc(uid)
+              .update({'favoriteVolunteerings': user.favoriteVolunteerings});
+        }
+      }
+
+    }catch(e,stackTrace){
+      print('Error removing favorite volunteering: $e');
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
+    }
+
   }
 }
 

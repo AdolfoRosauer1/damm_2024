@@ -1,5 +1,6 @@
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
+import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/no_volunteers_card.dart';
@@ -36,7 +37,6 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
 
   // TODO: maintain getUserLocation method. DO NOT USE A PROVIDER
   Future<void> _getUserLocation() async {
-    print("USER LOCATIONMMMMMMMMMMMMMMM");
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -74,6 +74,7 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
   @override
   Widget build(BuildContext context) {
     final firestoreController = ref.watch(firestoreControllerProvider);
+    final profileController = ref.read(profileControllerProvider);
 
     void loadVolunteers() {
       setState(() {
@@ -182,10 +183,23 @@ class _ApplyScreenState extends ConsumerState<ApplyScreen> {
                                 const SizedBox(height: 24),
                             itemCount: volunteerDetails.length,
                             itemBuilder: (context, index) {
+                              final user = ref.watch(currentUserProvider);
+
+                              bool isFav = user.hasFavorite(volunteerDetails[index].id);
                               return VolunteeringCard(
+                                id: volunteerDetails[index].id,
                                 onPressedLocation: () {
                                   firestoreController.openLocationInMap(
                                       volunteerDetails[index].location);
+                                },
+                                isFav: isFav,
+                                onPressedFav: (){   
+                                  if (isFav){
+                                    profileController.removeFavoriteVolunteering(volunteerDetails[index].id);
+                                  } else{
+                                    profileController.addFavoriteVolunteering(volunteerDetails[index].id);                                 
+
+                                  }
                                 },
                                 onPressed: () {
                                   context.go(VolunteerDetailsScreen.routeFromId(

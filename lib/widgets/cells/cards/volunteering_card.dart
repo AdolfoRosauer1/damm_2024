@@ -1,4 +1,5 @@
 import 'package:damm_2024/models/volunteer_details.dart';
+import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
@@ -6,25 +7,41 @@ import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class VolunteeringCard extends StatelessWidget {
+class VolunteeringCard extends ConsumerStatefulWidget {
   const VolunteeringCard({
     super.key, 
+    required this.id,
     required this.onPressed,
     required this.onPressedLocation,
+    required this.isFav,
     required this.type,
     required this.title,
     required this.vacancies,
-    required this.imageUrl});
+    required this.imageUrl, required this.onPressedFav});
 
   final VoidCallback onPressed;
+  final VoidCallback onPressedFav;
   final VoidCallback onPressedLocation;
   final String type;
   final String title;
   final String imageUrl;
+  final String id;
   final int vacancies;
+  final bool isFav;
+  
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _VolunteeringCardState();
+  }
+
+}
+
+class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
   @override
   Widget build(BuildContext context) {
+
     return Container(
       decoration: BoxDecoration(
         color: ProjectPalette.neutral1,
@@ -39,9 +56,9 @@ class VolunteeringCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: onPressed,
+                      onTap: widget.onPressed,
                       child: Image.network(
-                        imageUrl,
+                        widget.imageUrl,
                         height: 138,
                         fit: BoxFit.fitWidth,
                       ),
@@ -56,12 +73,12 @@ class VolunteeringCard extends StatelessWidget {
                 children: [
                   const SizedBox(height: 8,),
                   Text(
-                    type.toUpperCase(),
+                    widget.type.toUpperCase(),
                     style: ProjectFonts.overline
                         .copyWith(color: ProjectPalette.neutral6),
                   ),
                   Text(
-                    title,
+                    widget.title,
                     style: ProjectFonts.subtitle1
                         .copyWith(color: ProjectPalette.neutral2),
                   ),
@@ -69,15 +86,19 @@ class VolunteeringCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      VacanciesChip(vacancies: vacancies, enabled: true),
+                      VacanciesChip(vacancies: widget.vacancies, enabled: true),
                       Row(
                         children: [
-                          ProjectIcons.favoriteOutlinedActivated,
+                          InkWell(
+                            onTap: widget.onPressedFav,
+                            child: widget.isFav? ProjectIcons.favoriteFilledActivated :
+                             ProjectIcons.favoriteOutlinedActivated,
+                          ),
                           const SizedBox(
                             width: 16,
                           ),
                           InkWell(
-                            onTap: onPressedLocation,
+                            onTap: widget.onPressedLocation,
                             child: ProjectIcons.locationFilledActivated
                           ),
                         ],

@@ -9,6 +9,8 @@ class Volunteer {
   final DateTime? dateOfBirth;
   final String phoneNumber;
   final String uid;
+  final List<String?> favoriteVolunteerings;
+
 
   Volunteer(
       {required this.firstName,
@@ -18,6 +20,7 @@ class Volunteer {
       required this.profileImageURL,
       required this.dateOfBirth,
       required this.phoneNumber,
+      required this.favoriteVolunteerings,
       required this.uid});
 
   bool hasCompletedProfile() {
@@ -39,6 +42,7 @@ class Volunteer {
       dateOfBirth: (data['dateOfBirth'] as DateTime?),
       phoneNumber: data['phoneNumber'] as String,
       uid: data['uid'] as String,
+      favoriteVolunteerings: List<String?>.from(data['favoriteVolunteerings'] as List),
     );
   }
 
@@ -51,12 +55,17 @@ class Volunteer {
         profileImageURL: '',
         dateOfBirth: null,
         phoneNumber: '',
+        favoriteVolunteerings: [],
         uid: '');
   }
 
   @override
   String toString() {
     return 'Volunteer{firstName: $firstName, lastName: $lastName, email: $email, gender: $gender, profileImageURL: $profileImageURL, dateOfBirth: $dateOfBirth, phoneNumber: $phoneNumber, uid: $uid}';
+  }
+
+  bool hasFavorite(String opportunityId) {
+    return favoriteVolunteerings.contains(opportunityId);
   }
 }
 
