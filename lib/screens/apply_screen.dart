@@ -1,5 +1,4 @@
 import 'package:damm_2024/models/volunteer_details.dart';
-import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';

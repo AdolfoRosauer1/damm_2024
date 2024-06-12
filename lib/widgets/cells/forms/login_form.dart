@@ -1,6 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
-import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
@@ -134,7 +133,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                       ProjectIcons.visibilityOffFilledEnabled),
                           suffixIconColor: ProjectPalette.neutral6,
                           label: Text(AppLocalizations.of(context)!
-                              .password), // TEXTO A CAMBIAR
+                              .password), 
                           labelStyle: ProjectFonts.caption.copyWith(
                               color: ProjectPalette.neutral6,
                               backgroundColor: ProjectPalette.neutral3),

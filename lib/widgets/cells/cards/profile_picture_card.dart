@@ -35,7 +35,7 @@ class _ProfilePictureCardState extends State<ProfilePictureCard> {
     setState(() {
       _isLoading = true;
     });
-    print("SLEECCION IMAGEN");
+    print("SELECCION IMAGEN");
     final ImagePicker picker = ImagePicker();
     final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {

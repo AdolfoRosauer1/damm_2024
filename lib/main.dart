@@ -20,7 +20,6 @@ void main() async {
 
   // Start splash screen
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  // print('Splash Screen UP!');
 
   // initialize
   ProviderContainer container = await bootstrap();

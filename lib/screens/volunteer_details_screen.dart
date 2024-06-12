@@ -1,4 +1,3 @@
-import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/apply_screen.dart';
