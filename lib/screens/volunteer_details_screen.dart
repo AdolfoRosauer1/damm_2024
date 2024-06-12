@@ -1,3 +1,4 @@
+import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/apply_screen.dart';
@@ -5,6 +6,7 @@ import 'package:damm_2024/utils/localization_utils.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
 import 'package:damm_2024/widgets/cells/modals/apply_confirmation_modal.dart';
 import 'package:damm_2024/widgets/cells/modals/cancel_volunteer_modal.dart';
+import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/cells/modals/unapply_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class VolunteerDetailsScreen extends ConsumerStatefulWidget {
   const VolunteerDetailsScreen({super.key, required this.id});
@@ -30,6 +33,9 @@ class _VolunteerDetailsScreenState
     extends ConsumerState<VolunteerDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final internetStatus = ref.watch(internetConnectionProvider);
+    final internet = internetStatus.value! == InternetStatus.connected;
+
     print(widget.id);
     final volunteerDetailsAsyncValue =
         ref.watch(volunteerDetailsProviderProvider(widget.id));
@@ -157,29 +163,27 @@ class _VolunteerDetailsScreenState
                   ),
                 ),
                 const SizedBox(height: 8),
-
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(AppLocalizations.of(context)!.volunteerExtraInfo,
                       style: ProjectFonts.subtitle1),
                 ),
-                const SizedBox(height: 8,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    "${AppLocalizations.of(context)!.cost}: ${localizeCurrency(volunteerDetails.cost, context)}",
-                      style: ProjectFonts.body1
-                    ,)
+                const SizedBox(
+                  height: 8,
                 ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "${AppLocalizations.of(context)!.cost}: ${localizeCurrency(volunteerDetails.cost, context)}",
+                      style: ProjectFonts.body1,
+                    )),
                 const SizedBox(height: 8),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    "${AppLocalizations.of(context)!.createdAtDate}: ${localizeDate(volunteerDetails.createdAt, context)}",
-                      style: ProjectFonts.body1
-                    ,)
-                ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "${AppLocalizations.of(context)!.createdAtDate}: ${localizeDate(volunteerDetails.createdAt, context)}",
+                      style: ProjectFonts.body1,
+                    )),
                 const SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -192,7 +196,6 @@ class _VolunteerDetailsScreenState
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 24),
                 if (volunteerDetails.isUserConfirmed(currentUser.uid))
                   Padding(
@@ -209,6 +212,14 @@ class _VolunteerDetailsScreenState
                         CtaButton(
                           enabled: true,
                           onPressed: () {
+                            if (!internet) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const NoInternetModal();
+                                  });
+                              return;
+                            }
                             showDialog(
                               context: context,
                               builder: (context) => CancelVolunteerModal(
@@ -238,6 +249,14 @@ class _VolunteerDetailsScreenState
                         CtaButton(
                           enabled: true,
                           onPressed: () {
+                            if (!internet) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const NoInternetModal();
+                                  });
+                              return;
+                            }
                             showDialog(
                               context: context,
                               builder: (context) => UnApplyModal(
@@ -257,6 +276,14 @@ class _VolunteerDetailsScreenState
                     child: CtaButton(
                       enabled: true,
                       onPressed: () {
+                        if (!internet) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const NoInternetModal();
+                              });
+                          return;
+                        }
                         showDialog(
                           context: context,
                           builder: (context) => ApplyConfirmationModal(

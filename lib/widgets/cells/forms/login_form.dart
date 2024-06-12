@@ -1,6 +1,8 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
+import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
+import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
@@ -48,6 +51,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final internetStatus = ref.watch(internetConnectionProvider);
+    final internet = internetStatus.value! == InternetStatus.connected;
+
     final authController = ref.watch(authControllerProvider);
 
     return Theme(
@@ -100,7 +106,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         name: 'password',
                         obscureText: _hidePassword,
                         keyboardType: TextInputType.visiblePassword,
-
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required()
                           //    FormBuilderValidators.minLength(8),
@@ -111,24 +116,22 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                   color: ProjectPalette.neutral6),
                               borderRadius: BorderRadius.circular(4)),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          suffixIcon: _hidePassword ? 
-                              IconButton
-                              (onPressed: () {
-                                setState(() {
-                                  _hidePassword = !_hidePassword;
-                                });
-                              },
-                              icon: ProjectIcons.visibilityFilledEnabled)
-                              :
-                             IconButton
-                              (onPressed: () {
-                                setState(() {
-                                  _hidePassword = !_hidePassword;
-                                });
-                              },
-                              icon: ProjectIcons.visibilityOffFilledEnabled)
-                              
-                          ,
+                          suffixIcon: _hidePassword
+                              ? IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _hidePassword = !_hidePassword;
+                                    });
+                                  },
+                                  icon: ProjectIcons.visibilityFilledEnabled)
+                              : IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _hidePassword = !_hidePassword;
+                                    });
+                                  },
+                                  icon:
+                                      ProjectIcons.visibilityOffFilledEnabled),
                           suffixIconColor: ProjectPalette.neutral6,
                           label: Text(AppLocalizations.of(context)!
                               .password), // TEXTO A CAMBIAR
@@ -151,86 +154,98 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         child: ValueListenableBuilder(
                             valueListenable: formValid,
                             builder: (context, formValid, child) {
-                              return isLoading?
-                                const CircularProgressIndicator():
-                                CtaButton(
-                                  enabled: formValid,
-                                  actionStr:
-                                      AppLocalizations.of(context)!.login,
-                                  filled: true,
-                                  onPressed: () async {
-                                    if (!formValid) {
-                                      return;
-                                    }
-                                    if (formKey.currentState
-                                            ?.saveAndValidate() ??
-                                        false) {
-                                      final formValues =
-                                          formKey.currentState?.value;
-                                      final email = formValues?['email'];
-                                      final password = formValues?['password'];
+                              return isLoading
+                                  ? const CircularProgressIndicator()
+                                  : CtaButton(
+                                      enabled: formValid,
+                                      actionStr:
+                                          AppLocalizations.of(context)!.login,
+                                      filled: true,
+                                      onPressed: () async {
+                                        if (!formValid) {
+                                          return;
+                                        }
+                                        if (!internet) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return const NoInternetModal();
+                                              });
+                                          return;
+                                        }
+                                        if (formKey.currentState
+                                                ?.saveAndValidate() ??
+                                            false) {
+                                          final formValues =
+                                              formKey.currentState?.value;
+                                          final email = formValues?['email'];
+                                          final password =
+                                              formValues?['password'];
 
-                                      try {
-                                        setState(() {
-                                          isLoading = true;
-                                        });
-                                        await authController.signOut();
-                                        User? user = await authController
-                                            .signInWithEmailAndPassword(
-                                          email,
-                                          password,
-                                        );
-                                        if (user != null) {
-                                          context.go('/apply');
+                                          try {
+                                            setState(() {
+                                              isLoading = true;
+                                            });
+                                            await authController.signOut();
+                                            User? user = await authController
+                                                .signInWithEmailAndPassword(
+                                              email,
+                                              password,
+                                            );
+                                            if (user != null) {
+                                              context.go('/apply');
+                                            }
+                                          } on FirebaseAuthException catch (e) {
+                                            if (e.code == "user-not-found" ||
+                                                e.code == "wrong-password" ||
+                                                e.code ==
+                                                    "invalid-credential") {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      elevation: 0,
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      content:
+                                                          AwesomeSnackbarContent(
+                                                        title: "Error",
+                                                        message:
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .error_noUser,
+                                                        contentType:
+                                                            ContentType.failure,
+                                                      )));
+                                            }
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    elevation: 0,
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    content:
+                                                        AwesomeSnackbarContent(
+                                                      title: "Error",
+                                                      message:
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .error_generic,
+                                                      contentType:
+                                                          ContentType.failure,
+                                                    )));
+                                            print(e);
+                                          } finally {
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                          }
+                                        } else {
+                                          print("Validation failed");
                                         }
-                                      } on FirebaseAuthException catch (e) {
-                                        if (e.code == "user-not-found" ||
-                                            e.code == "wrong-password" ||
-                                            e.code == "invalid-credential") {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  elevation: 0,
-                                                  behavior:
-                                                      SnackBarBehavior.floating,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  content:
-                                                      AwesomeSnackbarContent(
-                                                    title: "Error",
-                                                    message:
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .error_noUser,
-                                                    contentType:
-                                                        ContentType.failure,
-                                                  )));
-                                        }
-                                      } catch (e) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                elevation: 0,
-                                                behavior:
-                                                    SnackBarBehavior.floating,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                content: AwesomeSnackbarContent(
-                                                  title: "Error",
-                                                  message: AppLocalizations.of(
-                                                          context)!
-                                                      .error_generic,
-                                                  contentType:
-                                                      ContentType.failure,
-                                                )));
-                                        print(e);
-                                      }finally{
-                                        setState(() {
-                                          isLoading = false;
-                                        });
-                                      }
-                                    } else {
-                                      print("Validation failed");
-                                    }
-                                  });
+                                      });
                             })),
                     Padding(
                       padding: const EdgeInsets.symmetric(
