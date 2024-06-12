@@ -1,3 +1,4 @@
+import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
@@ -12,22 +13,22 @@ class VolunteeringCard extends ConsumerStatefulWidget {
     required this.id,
     required this.onPressed,
     required this.onPressedLocation,
-    required this.isFav,
     required this.type,
     required this.title,
     required this.vacancies,
-    required this.imageUrl, required this.onPressedFav});
+    required this.imageUrl,
+    // required this.onPressedFav,
+  });
 
   final VoidCallback onPressed;
-  final VoidCallback onPressedFav;
+  // final VoidCallback onPressedFav;
   final VoidCallback onPressedLocation;
   final String type;
   final String title;
   final String imageUrl;
   final String id;
   final int vacancies;
-  final bool isFav;
-  
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
     return _VolunteeringCardState();
@@ -38,6 +39,11 @@ class VolunteeringCard extends ConsumerStatefulWidget {
 class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
   @override
   Widget build(BuildContext context) {
+
+    final user = ref.watch(currentUserProvider);
+    final profileController = ref.read(profileControllerProvider);
+
+    bool isFav = user.hasFavorite(widget.id);
 
     return Container(
       decoration: BoxDecoration(
@@ -87,8 +93,15 @@ class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
                       Row(
                         children: [
                           InkWell(
-                            onTap: widget.onPressedFav,
-                            child: widget.isFav? ProjectIcons.favoriteFilledActivated :
+                            onTap: (){
+                              if (isFav){
+                                profileController.removeFavoriteVolunteering(widget.id);
+                              } else{
+                                profileController.addFavoriteVolunteering(widget.id);
+
+                              }
+                            },
+                            child: isFav? ProjectIcons.favoriteFilledActivated :
                              ProjectIcons.favoriteOutlinedActivated,
                           ),
                           const SizedBox(

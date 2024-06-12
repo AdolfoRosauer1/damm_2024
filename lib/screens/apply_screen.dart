@@ -86,7 +86,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final firestoreController = ref.watch(firestoreControllerProvider);
+    final firestoreController = ref.read(firestoreControllerProvider);
     final profileController = ref.read(profileControllerProvider);
 
     void loadVolunteers() {
@@ -100,6 +100,11 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
     _volunteers =
         firestoreController.getVolunteers(query: _searchController.text);
+
+    // USER
+    // final user = ref.watch(currentUserProvider);
+
+
 
     return Container(
       decoration: const BoxDecoration(
@@ -196,24 +201,21 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                                 const SizedBox(height: 24),
                             itemCount: volunteerDetails.length,
                             itemBuilder: (context, index) {
-                              final user = ref.watch(currentUserProvider);
-
-                              bool isFav = user.hasFavorite(volunteerDetails[index].id);
+                              // bool isFav = user.hasFavorite(volunteerDetails[index].id);
                               return VolunteeringCard(
                                 id: volunteerDetails[index].id,
                                 onPressedLocation: () {
                                   firestoreController.openLocationInMap(
                                       volunteerDetails[index].location);
                                 },
-                                isFav: isFav,
-                                onPressedFav: (){   
-                                  if (isFav){
-                                    profileController.removeFavoriteVolunteering(volunteerDetails[index].id);
-                                  } else{
-                                    profileController.addFavoriteVolunteering(volunteerDetails[index].id);                                 
-
-                                  }
-                                },
+                                // onPressedFav: (){
+                                //   if (isFav){
+                                //     profileController.removeFavoriteVolunteering(volunteerDetails[index].id);
+                                //   } else{
+                                //     profileController.addFavoriteVolunteering(volunteerDetails[index].id);
+                                //
+                                //   }
+                                // },
                                 onPressed: () {
                                   context.go(VolunteerDetailsScreen.routeFromId(
                                       volunteerDetails[index].id));
