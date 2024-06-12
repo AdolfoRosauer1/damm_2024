@@ -11,7 +11,6 @@ class Volunteer {
   final String uid;
   final List<String?> favoriteVolunteerings;
 
-
   Volunteer(
       {required this.firstName,
       required this.lastName,
@@ -25,7 +24,7 @@ class Volunteer {
 
   bool hasCompletedProfile() {
     print(
-        'Volunteer: finishedSetup(${gender != null && phoneNumber.isNotEmpty && dateOfBirth != null && profileImageURL.isNotEmpty})');
+        'Volunteer: $this finishedSetup(${gender != null && phoneNumber.isNotEmpty && dateOfBirth != null && profileImageURL.isNotEmpty})');
     return gender != null &&
         phoneNumber.isNotEmpty &&
         dateOfBirth != null &&
@@ -42,7 +41,8 @@ class Volunteer {
       dateOfBirth: (data['dateOfBirth'] as DateTime?),
       phoneNumber: data['phoneNumber'] as String,
       uid: data['uid'] as String,
-      favoriteVolunteerings: List<String?>.from(data['favoriteVolunteerings'] as List),
+      favoriteVolunteerings:
+          List<String?>.from(data['favoriteVolunteerings'] as List),
     );
   }
 

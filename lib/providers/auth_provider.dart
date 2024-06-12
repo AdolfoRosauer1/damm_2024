@@ -11,30 +11,31 @@ AuthRepository authRepository(AuthRepositoryRef ref) {
   return AuthRepository(ref.watch(firebaseAuthenticationProvider));
 }
 
-// @Riverpod(keepAlive: true)
-// FirebaseAuth firebaseAuth(FirebaseAuthRef ref) {
-//   return FirebaseAuth.instance;
-// }
-
 @Riverpod(keepAlive: true)
-class FirebaseAuthentication extends _$FirebaseAuthentication {
-  @override
-  FirebaseAuth build() {
-    return FirebaseAuth.instance;
-  }
-
-  void reset() {
-    state = FirebaseAuth.instance;
-  }
+FirebaseAuth firebaseAuthentication(FirebaseAuthenticationRef ref) {
+  return FirebaseAuth.instance;
 }
+
+// @Riverpod(keepAlive: true)
+// class FirebaseAuthentication extends _$FirebaseAuthentication {
+//   @override
+//   FirebaseAuth build() {
+//     return FirebaseAuth.instance;
+//   }
+//
+//   void reset() {
+//     state = FirebaseAuth.instance;
+//   }
+// }
 
 @Riverpod(keepAlive: true)
 AuthController authController(AuthControllerRef ref) {
   return AuthController(
-      ref.watch(authRepositoryProvider),
-      ref.watch(currentUserProvider.notifier),
-      ref.watch(currentUserProvider),
-      ref.watch(firebaseAuthenticationProvider.notifier));
+    ref.watch(authRepositoryProvider),
+    ref.watch(profileControllerProvider),
+    ref.watch(currentUserProvider.notifier),
+    ref.watch(currentUserProvider),
+  );
 }
 
 class AuthRepository {
@@ -90,27 +91,36 @@ class AuthRepository {
 
 class AuthController {
   final AuthRepository _authRepo;
+  final ProfileController _profileController;
   final CurrentUser _currentUserNotifier;
   final Volunteer _currentUser;
-  final FirebaseAuthentication _firebaseAuthenticationNotifier;
-  AuthController(this._authRepo, this._currentUserNotifier, this._currentUser,
-      this._firebaseAuthenticationNotifier);
+  AuthController(this._authRepo, this._profileController,
+      this._currentUserNotifier, this._currentUser);
 
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
-    return _authRepo.signInWithEmailAndPassword(email, password);
+    await _authRepo.signInWithEmailAndPassword(email, password);
+    _profileController.initUser();
+    return _authRepo.currentUser;
   }
 
   Future<User?> registerUser(
       String email, String password, String name, String lastName) async {
-    return _authRepo.registerUser(email, password, name, lastName);
+    try {
+      print('AuthRepo currentUser before register: ${_authRepo.currentUser}');
+      await _authRepo.registerUser(email, password, name, lastName);
+      print('AuthRepo currentUser after register: ${_authRepo.currentUser}');
+      return await _profileController.registerVolunteer(name, lastName);
+    } catch (e) {
+      print('Error AuthController.registerUser: $e');
+    }
   }
 
   Future<void> signOut() async {
     _currentUserNotifier.set(Volunteer.empty());
     print('Current User should be empty: $_currentUser');
     await _authRepo.signOut();
-    return _firebaseAuthenticationNotifier.reset();
+    return;
   }
 }
 

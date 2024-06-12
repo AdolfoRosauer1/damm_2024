@@ -21,7 +21,23 @@ final authRepositoryProvider = Provider<AuthRepository>.internal(
 );
 
 typedef AuthRepositoryRef = ProviderRef<AuthRepository>;
-String _$authControllerHash() => r'c173490fee8fe67245d389c57047decd215ea26b';
+String _$firebaseAuthenticationHash() =>
+    r'a5e01f95ac600b5e8e7756b8366569aecc54abda';
+
+/// See also [firebaseAuthentication].
+@ProviderFor(firebaseAuthentication)
+final firebaseAuthenticationProvider = Provider<FirebaseAuth>.internal(
+  firebaseAuthentication,
+  name: r'firebaseAuthenticationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$firebaseAuthenticationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FirebaseAuthenticationRef = ProviderRef<FirebaseAuth>;
+String _$authControllerHash() => r'3600c0e77eb2c1549758f358be8dcda2255833f4';
 
 /// See also [authController].
 @ProviderFor(authController)
@@ -36,22 +52,5 @@ final authControllerProvider = Provider<AuthController>.internal(
 );
 
 typedef AuthControllerRef = ProviderRef<AuthController>;
-String _$firebaseAuthenticationHash() =>
-    r'73300f5f37d552c559e048079af14c6af3e6d653';
-
-/// See also [FirebaseAuthentication].
-@ProviderFor(FirebaseAuthentication)
-final firebaseAuthenticationProvider =
-    NotifierProvider<FirebaseAuthentication, FirebaseAuth>.internal(
-  FirebaseAuthentication.new,
-  name: r'firebaseAuthenticationProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$firebaseAuthenticationHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$FirebaseAuthentication = Notifier<FirebaseAuth>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

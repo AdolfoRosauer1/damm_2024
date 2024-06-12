@@ -177,6 +177,7 @@ class CustomNavigationHelper {
         }
 
         // If no redirect is needed, return null
+        print('No redirect needed!');
         return null;
       },
     );
