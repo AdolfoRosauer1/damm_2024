@@ -41,7 +41,7 @@ class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
   Widget build(BuildContext context) {
 
     final user = ref.watch(currentUserProvider);
-    final profileController = ref.read(profileControllerProvider);
+    final profileController = ref.watch(profileControllerProvider);
 
     bool isFav = user.hasFavorite(widget.id);
 

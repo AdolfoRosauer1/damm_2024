@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/gender.dart';
 
 class Volunteer {
@@ -39,7 +40,7 @@ class Volunteer {
       firstName: data['firstName'] as String,
       lastName: data['lastName'] as String,
       email: data['email'] as String,
-      gender: genderFromString(data['gender']),
+      gender: genderFromString(data['gender'])?? null,
       profileImageURL: data['profileImageURL'] as String,
       dateOfBirth: (data['dateOfBirth'] as DateTime?),
       phoneNumber: data['phoneNumber'] as String,
@@ -65,9 +66,39 @@ class Volunteer {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'gender': gender?.value,
+      'profileImageURL': profileImageURL,
+      'dateOfBirth': dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null,
+      'phoneNumber': phoneNumber,
+      'uid': uid,
+      'favoriteVolunteerings': favoriteVolunteerings,
+      'currentVolunteering': currentVolunteering,
+    };
+  }
+
+  factory Volunteer.fromVolunteer(Volunteer volunteer) {
+    return Volunteer(
+      firstName: volunteer.firstName,
+      lastName: volunteer.lastName,
+      email: volunteer.email,
+      gender: volunteer.gender,
+      profileImageURL: volunteer.profileImageURL,
+      dateOfBirth: volunteer.dateOfBirth,
+      phoneNumber: volunteer.phoneNumber,
+      favoriteVolunteerings: List<String?>.from(volunteer.favoriteVolunteerings),
+      uid: volunteer.uid,
+      currentVolunteering: volunteer.currentVolunteering,
+    );
+  }
+
   @override
   String toString() {
-    return 'Volunteer{firstName: $firstName, lastName: $lastName, email: $email, gender: $gender, profileImageURL: $profileImageURL, dateOfBirth: $dateOfBirth, phoneNumber: $phoneNumber, uid: $uid}';
+    return 'Volunteer{firstName: $firstName, lastName: $lastName, email: $email, gender: $gender, profileImageURL: $profileImageURL, dateOfBirth: $dateOfBirth, phoneNumber: $phoneNumber, uid: $uid, favoriteVolunteerings: $favoriteVolunteerings, currentVolunteering: $currentVolunteering}';
   }
 
   bool hasFavorite(String opportunityId) {
@@ -82,7 +113,15 @@ class Volunteer {
   }
 
   void addFavoriteVolunteer(String volunteeringId) {
-    favoriteVolunteerings.add(volunteeringId);
+    if (!hasFavorite(volunteeringId)){
+      favoriteVolunteerings.add(volunteeringId);
+    }
+  }
+
+  void removeFavoriteVolunteer(String volunteeringId){
+    if (hasFavorite(volunteeringId)){
+      favoriteVolunteerings.remove(volunteeringId);
+    }
   }
 }
 

@@ -84,8 +84,10 @@ class ProfileController {
 
   void initUser() async {
     User? user = _firebaseAuth.currentUser;
+    print('initUSer: FirebaseUser = $user');
     if (user != null) {
       Volunteer? toSet = await getVolunteerById(user.uid);
+      print('initUser: getVolunteerById=$toSet');
       if (toSet != null) {
         _userNotifier.set(toSet);
       }
@@ -97,25 +99,70 @@ class ProfileController {
   }
 
   Future<void> addFavoriteVolunteering(String opportunityId) async {
-    if (_firebaseAuth.currentUser == null) {
+    if (_firebaseAuth.currentUser == null ) {
       return;
     }
-    await _repository.addFavoriteVolunteering(
-        _firebaseAuth.currentUser!.uid, opportunityId);
-    Volunteer updatedUser =
-        (await _repository.getVolunteerById(_firebaseAuth.currentUser!.uid))!;
-    _userNotifier.set(updatedUser);
+    try{
+      // get current user
+      // Volunteer toSet = _currentUser;
+      // // addFavorite
+      // toSet.addFavoriteVolunteer(opportunityId);
+
+      Volunteer toSet = Volunteer.fromVolunteer(_currentUser);
+      toSet.addFavoriteVolunteer(opportunityId);
+      // set notifier
+      _userNotifier.set(toSet);
+
+      // _currentUser.addFavoriteVolunteer(opportunityId);
+      // store in Firestore async
+      print('About to store in Firestore');
+      // _repository.addFavoriteVolunteering(_currentUser.uid, opportunityId);
+      _repository.setVolunteerFromJson(toSet.toJson());
+      print('Stored in Firestore');
+    }catch(e){
+      print('Error in profileController.addFavoriteVolunteering: $e');
+    }
+
+
+    // await _repository.addFavoriteVolunteering(
+    //     _firebaseAuth.currentUser!.uid, opportunityId);
+    // Volunteer updatedUser =
+    //     (await _repository.getVolunteerById(_firebaseAuth.currentUser!.uid))!;
+    // _userNotifier.set(updatedUser);
   }
 
   Future<void> removeFavoriteVolunteering(String opportunityId) async {
     if (_firebaseAuth.currentUser == null) {
       return;
     }
-    await _repository.removeFavoriteVolunteering(
-        _firebaseAuth.currentUser!.uid, opportunityId);
-    Volunteer updatedUser =
-        (await _repository.getVolunteerById(_firebaseAuth.currentUser!.uid))!;
-    _userNotifier.set(updatedUser);
+
+    try{
+      // get current user
+      // Volunteer toSet = _currentUser;
+      // // addFavorite
+      // print('original User: $_currentUser');
+      // toSet.removeFavoriteVolunteer(opportunityId);
+      // // set notifier
+      // print('toSet: $toSet');
+      Volunteer toSet = Volunteer.fromVolunteer(_currentUser);
+      toSet.removeFavoriteVolunteer(opportunityId);
+      _userNotifier.set(toSet);
+
+      // _currentUser.removeFavoriteVolunteer(opportunityId);
+      // store in Firestore async
+      // _repository.removeFavoriteVolunteering(_currentUser.uid, opportunityId);
+      _repository.setVolunteerFromJson(toSet.toJson());
+    }catch(e){
+      print('Error in profileController.removeFavoriteVolunteering: $e');
+    }
+
+
+
+    // await _repository.removeFavoriteVolunteering(
+    //     _firebaseAuth.currentUser!.uid, opportunityId);
+    // Volunteer updatedUser =
+    //     (await _repository.getVolunteerById(_firebaseAuth.currentUser!.uid))!;
+    // _userNotifier.set(updatedUser);
   }
 
   Future<User?> registerVolunteer(String name, String lastName) async {
@@ -202,42 +249,43 @@ class ProfileRepository {
     return null;
   }
 
+  Future<void> setVolunteerFromJson(Map<String, dynamic> data)async {
+    print('About to set VolunteerFromJson in Firestore');
+    await _firestore.collection('volunteer').doc(data['uid']).set(data).onError((e, _) => print('Error setting Volunteer from Json: $e'));
+  }
+
   Future<Volunteer?> editVolunteer(
       Volunteer user, Map<String, dynamic> data) async {
     try {
       // CREATE A USER DOCUMENT IN FIREBASE
-
-      // Create a mutable copy of the data map
-      Map<String, dynamic> mutableData = Map<String, dynamic>.from(data);
-      mutableData['profileImageURL'] = mutableData['profilePicture'];
-      mutableData.remove('profilePicture');
       // SET riverpod volunteer
+      Map<String,dynamic> cuJson = user.toJson();
+      cuJson['profileImageURL'] = data['profilePicture'];
+      cuJson['email'] = data['email'];
+      cuJson['phoneNumber'] = data['phoneNumber'];
+      cuJson['gender'] = data['gender'];
+      cuJson['dateOfBirth'] = data['dateOfBirth'];
 
-      mutableData['firstName'] = user.firstName;
-      mutableData['lastName'] = user.lastName;
 
-      if (mutableData['profileImageURL'] != user.profileImageURL) {
-        mutableData['profileImageURL'] =
-            await _storageDataSource.uploadPFP(mutableData['profileImageURL']);
+      if (cuJson['profileImageURL'] != user.profileImageURL) {
+        cuJson['profileImageURL'] =
+            await _storageDataSource.uploadPFP(cuJson['profileImageURL']);
       }
 
-      mutableData['uid'] = user.uid;
-
-      mutableData['fcmToken'] = await FirebaseMessaging.instance.getToken();
-      mutableData['favoriteVolunteerings'] = [];
-      print("TOKEN = ${mutableData['fcmToken']}");
+      cuJson['fcmToken'] = await FirebaseMessaging.instance.getToken();
+      print("TOKEN = ${cuJson['fcmToken']}");
 
       await _firestore
           .collection('volunteer')
           .doc(user.uid)
-          .set(mutableData)
+          .set(cuJson)
           .onError((e, _) => print("Error writing document: $e"));
       
       _analyticsService.logCompleteVolunteerProfile(user.uid);
 
       // Persist in Riverpod
-      print('editProfile: about to createVolunteer from JSON: $mutableData');
-      return Volunteer.fromJson(mutableData);
+      print('editProfile: about to createVolunteer from JSON: $cuJson');
+      return Volunteer.fromJson(cuJson);
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error finishing setup: $e');
