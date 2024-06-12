@@ -22,10 +22,10 @@ class ApplyScreen extends ConsumerStatefulWidget {
   const ApplyScreen({super.key});
 
   @override
-  _ApplyScreenState createState() => _ApplyScreenState();
+  ApplyScreenState createState() => ApplyScreenState();
 }
 
-class _ApplyScreenState extends ConsumerState<ApplyScreen> {
+class ApplyScreenState extends ConsumerState<ApplyScreen> {
   // TODO: MAINTAIN _searchController, DO NOT use a Provider
   final TextEditingController _searchController = TextEditingController();
   // TODO: use firestoreControllerProvider for all service methods

@@ -39,8 +39,7 @@ FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
 
 @Riverpod(keepAlive: true)
 ProfileRepository profileRepository(ProfileRepositoryRef ref) {
-  return ProfileRepository(ref.watch(firebaseFirestoreProvider),
-      ref.watch(firebaseStorageProvider), ref.watch(storageDataSourceProvider));
+  return ProfileRepository(ref.watch(firebaseFirestoreProvider), ref.watch(storageDataSourceProvider));
 }
 
 @Riverpod(keepAlive: true)
@@ -183,11 +182,10 @@ class StorageDataSource {
 
 class ProfileRepository {
   final FirebaseFirestore _firestore;
-  final FirebaseStorage _storage;
   final StorageDataSource _storageDataSource;
   final AnalyticsService _analyticsService = AnalyticsService();
 
-  ProfileRepository(this._firestore, this._storage, this._storageDataSource);
+  ProfileRepository(this._firestore, this._storageDataSource);
 
   Future<Volunteer?> createVolunteerFromJSON(Map<String, dynamic> data) async {
     try {

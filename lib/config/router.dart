@@ -44,8 +44,6 @@ class CustomNavigationHelper {
   }
 
   CustomNavigationHelper._internal() {
-    final authProvider = firebaseAuthenticationProvider;
-
     final routes = [
       GoRoute(path: "/", builder: (_, __) => const WelcomeScreen()),
       GoRoute(

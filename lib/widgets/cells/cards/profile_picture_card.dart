@@ -12,10 +12,10 @@ class ProfilePictureCard extends StatefulWidget{
   const ProfilePictureCard({super.key, required this.imageUrl, required this.field});
 
   @override
-  _ProfilePictureCardState createState() => _ProfilePictureCardState();
+  ProfilePictureCardState createState() => ProfilePictureCardState();
 }
 
-class _ProfilePictureCardState extends State<ProfilePictureCard> {
+class ProfilePictureCardState extends State<ProfilePictureCard> {
   bool _isLoading = false;
   String? _imageUrl;
 

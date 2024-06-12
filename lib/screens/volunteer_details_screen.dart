@@ -26,10 +26,10 @@ class VolunteerDetailsScreen extends ConsumerStatefulWidget {
   final String id;
 
   @override
-  _VolunteerDetailsScreenState createState() => _VolunteerDetailsScreenState();
+  VolunteerDetailsScreenState createState() => VolunteerDetailsScreenState();
 }
 
-class _VolunteerDetailsScreenState
+class VolunteerDetailsScreenState
     extends ConsumerState<VolunteerDetailsScreen> {
   @override
   Widget build(BuildContext context) {

@@ -29,10 +29,10 @@ class PersonalDataForm extends ConsumerStatefulWidget {
   static const completeRoute = "${ProfileScreen.route}/$route";
 
   @override
-  _PersonalDataFormState createState() => _PersonalDataFormState();
+  PersonalDataFormState createState() => PersonalDataFormState();
 }
 
-class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
+class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
   bool _internet = false;
   final formKey = GlobalKey<FormBuilderState>();
   late ValueNotifier<bool> isFormValidNotifier;
@@ -351,31 +351,31 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
   }
 }
 
-Widget _buildRadioOption(
-    FormFieldState<dynamic> field, String value, String label) {
-  return Theme(
-    data: Theme.of(field.context).copyWith(
-      radioTheme: Theme.of(field.context).radioTheme.copyWith(
-            fillColor: WidgetStateProperty.all(ProjectPalette.primary1),
-          ),
-    ),
-    child: Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Radio<String>(
-            value: value,
-            groupValue: field.value,
-            onChanged: (val) {
-              field.didChange(val);
-            },
-          ),
-        ),
-        Text(
-          label,
-          style: ProjectFonts.body1.copyWith(color: ProjectPalette.black),
-        ),
-      ],
-    ),
-  );
-}
+// Widget _buildRadioOption(
+//     FormFieldState<dynamic> field, String value, String label) {
+//   return Theme(
+//     data: Theme.of(field.context).copyWith(
+//       radioTheme: Theme.of(field.context).radioTheme.copyWith(
+//             fillColor: WidgetStateProperty.all(ProjectPalette.primary1),
+//           ),
+//     ),
+//     child: Row(
+//       children: [
+//         Padding(
+//           padding: const EdgeInsets.only(left: 8),
+//           child: Radio<String>(
+//             value: value,
+//             groupValue: field.value,
+//             onChanged: (val) {
+//               field.didChange(val);
+//             },
+//           ),
+//         ),
+//         Text(
+//           label,
+//           style: ProjectFonts.body1.copyWith(color: ProjectPalette.black),
+//         ),
+//       ],
+//     ),
+//   );
+// }
