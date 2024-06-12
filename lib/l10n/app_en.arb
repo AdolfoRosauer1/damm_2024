@@ -93,6 +93,7 @@
   "error_noUser" : "There is no user with those credentials",
   "error_generic" : "Something went wrong. Try again later",
   "error_emailAlreadyExists" : "An account with that email already exists",
+  "error_invalidPhoneFormat" : "Format must be '+<COUNTRY_CODE><NUMBER>'",
   
   "volunteerExtraInfo": "Extra information"
 }

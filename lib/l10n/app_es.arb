@@ -93,6 +93,8 @@
   "error_noUser" : "No existe usuario con esas credenciales",
   "error_generic" : "Ocurrió un error. Intenta de nuevo más tarde",
   "error_emailAlreadyExists" : "Ya existe una cuenta con ese email",
+  "error_invalidPhoneFormat" : "El formato debe ser '+<CODIGO_PAIS><NUMERO>'",
+
   
   "volunteerExtraInfo" : "Información adicional"
 

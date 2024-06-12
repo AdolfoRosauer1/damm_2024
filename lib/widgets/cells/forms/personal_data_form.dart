@@ -208,9 +208,12 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
 
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
-                          FormBuilderValidators.match(r'^\+\d{1,15}$')
+                          FormBuilderValidators.match(r'^\+\d{10,14}$',
+                              errorText: AppLocalizations.of(context)!.error_invalidPhoneFormat)
                         ]),
-                        initialValue: volunteer.phoneNumber,
+                        initialValue: volunteer.phoneNumber.isEmpty
+                            ? '+'
+                            : volunteer.phoneNumber,
                         onEditingComplete: onFormChanged,
                         name: 'phoneNumber',
                         keyboardType: TextInputType.phone,
