@@ -1,3 +1,4 @@
+import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';

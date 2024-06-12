@@ -2,6 +2,7 @@ import 'package:damm_2024/config/router.dart';
 import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
+import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';

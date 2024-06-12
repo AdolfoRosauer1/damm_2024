@@ -1,5 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
+import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';

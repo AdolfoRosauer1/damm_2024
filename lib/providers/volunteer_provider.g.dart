@@ -51,7 +51,7 @@ final profileRepositoryProvider = Provider<ProfileRepository>.internal(
 );
 
 typedef ProfileRepositoryRef = ProviderRef<ProfileRepository>;
-String _$profileControllerHash() => r'38f175c78e46d2335c0e987e9068dc331caa55fc';
+String _$profileControllerHash() => r'70bcb33416ccae9720ebee3bffbc4c50cc6c75dd';
 
 /// See also [profileController].
 @ProviderFor(profileController)
