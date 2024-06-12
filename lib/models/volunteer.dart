@@ -10,17 +10,20 @@ class Volunteer {
   final String phoneNumber;
   final String uid;
   final List<String?> favoriteVolunteerings;
+  String? currentVolunteering;
 
-  Volunteer(
-      {required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.gender,
-      required this.profileImageURL,
-      required this.dateOfBirth,
-      required this.phoneNumber,
-      required this.favoriteVolunteerings,
-      required this.uid});
+  Volunteer({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.gender,
+    required this.profileImageURL,
+    required this.dateOfBirth,
+    required this.phoneNumber,
+    required this.favoriteVolunteerings,
+    required this.uid,
+    this.currentVolunteering,
+  });
 
   bool hasCompletedProfile() {
     print(
@@ -43,20 +46,23 @@ class Volunteer {
       uid: data['uid'] as String,
       favoriteVolunteerings:
           List<String?>.from(data['favoriteVolunteerings'] as List),
+      currentVolunteering: data['currentVolunteering'] as String?,
     );
   }
 
   factory Volunteer.empty() {
     return Volunteer(
-        firstName: '',
-        lastName: '',
-        email: '',
-        gender: null,
-        profileImageURL: '',
-        dateOfBirth: null,
-        phoneNumber: '',
-        favoriteVolunteerings: [],
-        uid: '');
+      firstName: '',
+      lastName: '',
+      email: '',
+      gender: null,
+      profileImageURL: '',
+      dateOfBirth: null,
+      phoneNumber: '',
+      favoriteVolunteerings: [],
+      uid: '',
+      currentVolunteering: null,
+    );
   }
 
   @override
@@ -67,7 +73,19 @@ class Volunteer {
   bool hasFavorite(String opportunityId) {
     return favoriteVolunteerings.contains(opportunityId);
   }
+
+  void applyToVolunteer(String volunteeringId) {
+    if (currentVolunteering != null) {
+      throw Exception('Volunteer is already enrolled in a volunteering');
+    }
+    currentVolunteering = volunteeringId;
+  }
+
+  void addFavoriteVolunteer(String volunteeringId) {
+    favoriteVolunteerings.add(volunteeringId);
+  }
 }
+
 
 // un volunteer tiene un unico voluntariado en el que esta participando.
 // un voluntariado tiene una cantidad de vacantes, una lista de aplicantes y una lista de confirmados
