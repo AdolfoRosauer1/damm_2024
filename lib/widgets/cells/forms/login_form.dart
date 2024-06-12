@@ -76,6 +76,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         height: 16,
                       ),
                       FormBuilderTextField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
                         name: 'email',
                         onEditingComplete: () => onFormChanged(),
                         validator: FormBuilderValidators.compose([
@@ -102,6 +104,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         height: 24,
                       ),
                       FormBuilderTextField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         onEditingComplete: () => onFormChanged(),
                         name: 'password',
                         obscureText: _hidePassword,

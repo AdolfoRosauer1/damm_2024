@@ -119,6 +119,7 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         height: 24,
                       ),
                       FormBuilderDateTimePicker(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         name: 'dateOfBirth',
                         initialValue: volunteer.dateOfBirth,
                         validator: FormBuilderValidators.required(),
@@ -150,6 +151,8 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         decoration:
                             const BoxDecoration(color: ProjectPalette.neutral3),
                         child: FormBuilderField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+
                           name: 'gender',
                           initialValue: volunteer.gender?.value,
                           validator: FormBuilderValidators.required(),
@@ -167,6 +170,8 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         height: 24,
                       ),
                       FormBuilderField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
                         name: 'profilePicture',
                         onSaved: (_) => onFormChanged(),
                         validator: FormBuilderValidators.required(),
@@ -199,6 +204,8 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         height: 24,
                       ),
                       FormBuilderTextField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.match(r'^\+\d{1,15}$')
@@ -227,6 +234,8 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         height: 24,
                       ),
                       FormBuilderTextField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
                         initialValue: volunteer.email.isEmpty
                             ? _firebaseUser?.email
                             : volunteer.email,
