@@ -1,6 +1,9 @@
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
+import 'package:damm_2024/services/analytics_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -40,7 +43,7 @@ AuthController authController(AuthControllerRef ref) {
 
 class AuthRepository {
   final FirebaseAuth _auth;
-
+  final AnalyticsService _analyticsService = AnalyticsService();
   AuthRepository(this._auth);
 
   Stream<User?> authStateChanges() => _auth.authStateChanges();
@@ -70,6 +73,8 @@ class AuthRepository {
         await user.updateDisplayName('$name $lastName');
         await user.reload();
         user = _auth.currentUser;
+        _analyticsService.logSignup(user!.uid);
+
       }
       return user;
     } catch (e) {
@@ -141,8 +146,9 @@ Future<void> initializeProviders(ProviderContainer container) async {
     try {
       // renew token if needed
       await authUser.getIdToken(true);
-    } catch (e) {
-      print('Error getting the refresh Token: $e');
+    } catch (error,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(error, stackTrace);
+      print('Error getting the refresh Token: $error');
     }
   }
   print('Initialized authStateProvider');

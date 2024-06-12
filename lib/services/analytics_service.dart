@@ -39,4 +39,13 @@ class AnalyticsService{
       },
     );
   }
+
+  void logSignup(String uid) {
+    FirebaseAnalytics.instance.logEvent(
+      name: 'signup',
+      parameters: <String, dynamic>{
+        'user_id': uid,
+      },
+    );
+  }
 }

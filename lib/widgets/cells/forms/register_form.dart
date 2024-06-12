@@ -1,7 +1,9 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:damm_2024/providers/connectivity_provider.dart';
+import 'package:damm_2024/screens/apply_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
+import 'package:damm_2024/widgets/cells/forms/login_form.dart';
 import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
@@ -218,7 +220,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 });
                                 await authController.signOut();
                                 await authController.registerUser(email, password, name, lastName);
-                                context.go('/apply');
+                                context.go(ApplyScreen.route);
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == "email-already-in-use") {
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -264,7 +266,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 child: CtaButton(
                   enabled: true,
-                  onPressed: () => context.go('/login'),
+                  onPressed: () => context.go(LoginForm.route),
                   filled: false,
                   actionStr: AppLocalizations.of(context)!.alreadyHaveAccount,
                 ),

@@ -24,7 +24,7 @@ void shareNews(News news) async {
 
     await Share.shareXFiles(
       [xfile],
-      text: news.description,
+      text: "${news.description}'\n\n'serManos.com/news/${news.id}",
     );
     _analyticsService.logShareNews(news.id, FirebaseAuth.instance.currentUser!.uid);
   } catch (e) {
