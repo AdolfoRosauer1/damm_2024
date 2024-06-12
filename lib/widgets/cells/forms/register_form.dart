@@ -40,7 +40,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
   void onFormChanged() {
     FocusScope.of(context).unfocus();
-
     formValid.value = formKey.currentState!.validate(focusOnInvalid: false);
     final errors = formKey.currentState?.errors;
     if (errors != null) {
@@ -58,266 +57,219 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
     return Theme(
       data: ThemeData(
-          appBarTheme: const AppBarTheme(color: ProjectPalette.neutral1)),
+        appBarTheme: const AppBarTheme(color: ProjectPalette.neutral1),
+      ),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Padding(
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: FormBuilder(
-            key: formKey,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/images/logo_cuadrado.png'),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      FormBuilderTextField(
-                        name: 'name',
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.match(r'^[a-zA-Z ]+$')
-                        ]),
-                        onEditingComplete: onFormChanged,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: ProjectPalette.neutral6),
-                              borderRadius: BorderRadius.circular(4)),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          label: Text(AppLocalizations.of(context)!
-                              .name), //TEXTO A CAMBIAR
-                          labelStyle: ProjectFonts.caption.copyWith(
-                              color: ProjectPalette.neutral6,
-                              backgroundColor: ProjectPalette.neutral3),
-                          hintText: 'Ej: Juan',
-                          hintStyle: ProjectFonts.subtitle1
-                              .copyWith(color: ProjectPalette.neutral5),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      FormBuilderTextField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        name: 'lastname',
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.match(r'^[a-zA-Z ]+$')
-                        ]),
-                        onEditingComplete: onFormChanged,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: ProjectPalette.neutral6),
-                              borderRadius: BorderRadius.circular(4)),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          label: Text(AppLocalizations.of(context)!
-                              .lastname), //TEXTO A CAMBIAR
-                          labelStyle: ProjectFonts.caption.copyWith(
-                              color: ProjectPalette.neutral6,
-                              backgroundColor: ProjectPalette.neutral3),
-                          hintText: 'Ej: Barcena',
-                          hintStyle: ProjectFonts.subtitle1
-                              .copyWith(color: ProjectPalette.neutral5),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      FormBuilderTextField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.email()
-                        ]),
-                        onEditingComplete: onFormChanged,
-                        name: 'email',
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: ProjectPalette.neutral6),
-                              borderRadius: BorderRadius.circular(4)),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          label: const Text('Email'),
-                          labelStyle: ProjectFonts.caption.copyWith(
-                              color: ProjectPalette.neutral6,
-                              backgroundColor: ProjectPalette.neutral3),
-                          hintText: 'Ej: juanbarcena@mail.com',
-                          hintStyle: ProjectFonts.subtitle1
-                              .copyWith(color: ProjectPalette.neutral5),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      FormBuilderTextField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-
-                        validator: FormBuilderValidators.compose(
-                            [FormBuilderValidators.required()]),
-                        onEditingComplete: () => onFormChanged(),
-                        name: 'password',
-                        obscureText: _hidePassword,
-                        keyboardType: TextInputType.visiblePassword,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: ProjectPalette.neutral6),
-                              borderRadius: BorderRadius.circular(4)),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          suffixIcon: _hidePassword
-                              ? IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _hidePassword = !_hidePassword;
-                                    });
-                                  },
-                                  icon: ProjectIcons.visibilityFilledEnabled)
-                              : IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _hidePassword = !_hidePassword;
-                                    });
-                                  },
-                                  icon:
-                                      ProjectIcons.visibilityOffFilledEnabled),
-                          suffixIconColor: ProjectPalette.neutral6,
-                          label: Text(AppLocalizations.of(context)!
-                              .password), //TEXTO A CAMBIAR
-                          labelStyle: ProjectFonts.caption.copyWith(
-                              color: ProjectPalette.neutral6,
-                              backgroundColor: ProjectPalette.neutral3),
-                          hintText: 'Ej: ABCD1234',
-                          hintStyle: ProjectFonts.subtitle1
-                              .copyWith(color: ProjectPalette.neutral5),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height:31),
+              Image.asset('assets/images/logo_cuadrado.png'),
+              const SizedBox(height: 16),
+              FormBuilder(
+                key: formKey,
+                child: Column(
                   children: [
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 12.0),
-                        child: ValueListenableBuilder(
-                          valueListenable: formValid,
-                          builder: (context, formValid, child) {
-                            return isLoading
-                                ? const CircularProgressIndicator()
-                                : CtaButton(
-                                    enabled: formValid,
-                                    onPressed: () async {
-                                      if (!formValid) {
-                                        return;
-                                      }
-                                      if (!internet) {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return const NoInternetModal();
-                                            });
-                                        return;
-                                      }
-                                      if (formKey.currentState
-                                              ?.saveAndValidate() ??
-                                          false) {
-                                        final formValues =
-                                            formKey.currentState?.value;
-                                        final email = formValues?['email'];
-                                        final password =
-                                            formValues?['password'];
-                                        final name = formValues?['name'];
-                                        final lastName =
-                                            formValues?['lastname'];
-                                        try {
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-                                          await authController.signOut();
-                                          await authController.registerUser(
-                                              email, password, name, lastName);
-                                          context.go('/apply');
-                                        } on FirebaseAuthException catch (e) {
-                                          if (e.code ==
-                                              "email-already-in-use") {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    elevation: 0,
-                                                    behavior: SnackBarBehavior
-                                                        .floating,
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    content:
-                                                        AwesomeSnackbarContent(
-                                                      title: "Error",
-                                                      message: AppLocalizations
-                                                              .of(context)!
-                                                          .error_emailAlreadyExists,
-                                                      contentType:
-                                                          ContentType.failure,
-                                                    )));
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    elevation: 0,
-                                                    behavior: SnackBarBehavior
-                                                        .floating,
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    content:
-                                                        AwesomeSnackbarContent(
-                                                      title: "Error",
-                                                      message:
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .error_generic,
-                                                      contentType:
-                                                          ContentType.failure,
-                                                    )));
-                                          }
-                                          print(e);
-                                        } catch (e) {
-                                          print(e);
-                                        } finally {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                        }
-                                      } else {
-                                        print("Validation failed");
-                                      }
-                                    },
-                                    filled: true,
-                                    actionStr: AppLocalizations.of(context)!
-                                        .register, //TEXTO A CAMBIAR
-                                  );
+                    FormBuilderTextField(
+                      name: 'name',
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.match(r'^[a-zA-Z ]+$')
+                      ]),
+                      onEditingComplete: onFormChanged,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ProjectPalette.neutral6),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        label: Text(AppLocalizations.of(context)!.name),
+                        labelStyle: ProjectFonts.caption.copyWith(
+                          color: ProjectPalette.neutral6,
+                          backgroundColor: ProjectPalette.neutral3,
+                        ),
+                        hintText: 'Ej: Juan',
+                        hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    FormBuilderTextField(
+                      name: 'lastname',
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.match(r'^[a-zA-Z ]+$')
+                      ]),
+                      onEditingComplete: onFormChanged,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ProjectPalette.neutral6),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        label: Text(AppLocalizations.of(context)!.lastname),
+                        labelStyle: ProjectFonts.caption.copyWith(
+                          color: ProjectPalette.neutral6,
+                          backgroundColor: ProjectPalette.neutral3,
+                        ),
+                        hintText: 'Ej: Barcena',
+                        hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    FormBuilderTextField(
+                      name: 'email',
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.email()
+                      ]),
+                      onEditingComplete: onFormChanged,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ProjectPalette.neutral6),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        label: const Text('Email'),
+                        labelStyle: ProjectFonts.caption.copyWith(
+                          color: ProjectPalette.neutral6,
+                          backgroundColor: ProjectPalette.neutral3,
+                        ),
+                        hintText: 'Ej: juanbarcena@mail.com',
+                        hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    FormBuilderTextField(
+                      name: 'password',
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required()
+                      ]),
+                      onEditingComplete: onFormChanged,
+                      obscureText: _hidePassword,
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ProjectPalette.neutral6),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _hidePassword = !_hidePassword;
+                            });
                           },
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 12.0),
-                      child: CtaButton(
-                          enabled: true,
-                          onPressed: () => context.go('/login'),
-                          filled: false,
-                          actionStr: AppLocalizations.of(context)!
-                              .alreadyHaveAccount), //TEXTO A CAMBIAR
+                          icon: _hidePassword
+                              ? ProjectIcons.visibilityFilledEnabled
+                              : ProjectIcons.visibilityOffFilledEnabled,
+                        ),
+                        suffixIconColor: ProjectPalette.neutral6,
+                        label: Text(AppLocalizations.of(context)!.password),
+                        labelStyle: ProjectFonts.caption.copyWith(
+                          color: ProjectPalette.neutral6,
+                          backgroundColor: ProjectPalette.neutral3,
+                        ),
+                        hintText: 'Ej: ABCD1234',
+                        hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5),
+                      ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 104),
+              ValueListenableBuilder(
+                valueListenable: formValid,
+                builder: (context, formValid, child) {
+                  return isLoading
+                      ? const CircularProgressIndicator()
+                      : CtaButton(
+                          enabled: formValid,
+                          onPressed: () async {
+                            if (!formValid) {
+                              return;
+                            }
+                            if (!internet) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const NoInternetModal();
+                                },
+                              );
+                              return;
+                            }
+                            if (formKey.currentState?.saveAndValidate() ?? false) {
+                              final formValues = formKey.currentState?.value;
+                              final email = formValues?['email'];
+                              final password = formValues?['password'];
+                              final name = formValues?['name'];
+                              final lastName = formValues?['lastname'];
+                              try {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                await authController.signOut();
+                                await authController.registerUser(email, password, name, lastName);
+                                context.go('/apply');
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == "email-already-in-use") {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    elevation: 0,
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.transparent,
+                                    content: AwesomeSnackbarContent(
+                                      title: "Error",
+                                      message: AppLocalizations.of(context)!.error_emailAlreadyExists,
+                                      contentType: ContentType.failure,
+                                    ),
+                                  ));
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    elevation: 0,
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.transparent,
+                                    content: AwesomeSnackbarContent(
+                                      title: "Error",
+                                      message: AppLocalizations.of(context)!.error_generic,
+                                      contentType: ContentType.failure,
+                                    ),
+                                  ));
+                                }
+                                print(e);
+                              } catch (e) {
+                                print(e);
+                              } finally {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                            } else {
+                              print("Validation failed");
+                            }
+                          },
+                          filled: true,
+                          actionStr: AppLocalizations.of(context)!.register,
+                        );
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                child: CtaButton(
+                  enabled: true,
+                  onPressed: () => context.go('/login'),
+                  filled: false,
+                  actionStr: AppLocalizations.of(context)!.alreadyHaveAccount,
+                ),
+              ),
+            ],
           ),
         ),
       ),
