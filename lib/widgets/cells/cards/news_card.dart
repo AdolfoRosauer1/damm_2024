@@ -37,7 +37,7 @@ class NewsCard extends StatelessWidget {
               // Error builder para utilzar una imagen stock para fallback
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset(
-                  'lib/resources/news_card.png',
+                  'assets/images/news_card.png',
                   width: 118,
                   fit: BoxFit.cover,
                 );

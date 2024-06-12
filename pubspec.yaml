@@ -99,10 +99,10 @@ flutter:
     #template-arb-file: app_en.arb
     #output-localization-file: app_localizations.dart
   assets:
-    - lib/widgets/atoms/logo_cuadrado.png
-    - lib/widgets/atoms/logo_rectangular.png
-    - lib/resources/voluntary_card.png
-    - lib/resources/news_card.png
+    - assets/images/logo_cuadrado.png
+    - assets/images/logo_rectangular.png
+    - assets/images/voluntary_card.png
+    - assets/images/news_card.png
 
 
   # To add assets to your application, add an assets section, like this:

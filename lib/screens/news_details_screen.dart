@@ -83,7 +83,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                           //Error builder para utilizar una imagen stock para fallback
                           errorBuilder: (context, error, stackTrace) {
                             return Image.asset(
-                              'lib/resources/news_card.png',
+                              'assets/images/news_card.png',
                               fit: BoxFit.cover,
                             );
                           },

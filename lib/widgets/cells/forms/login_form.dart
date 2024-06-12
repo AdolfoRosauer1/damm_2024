@@ -71,7 +71,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('lib/widgets/atoms/logo_cuadrado.png'),
+                      Image.asset('assets/images/logo_cuadrado.png'),
                       const SizedBox(
                         height: 16,
                       ),

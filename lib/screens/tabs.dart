@@ -51,7 +51,7 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin{
         appBar: AppBar(
 
           backgroundColor: ProjectPalette.secondary5,
-          title: Image.asset('lib/widgets/atoms/logo_rectangular.png'),
+          title: Image.asset('assets/images/logo_rectangular.png'),
           bottom:  TabBar(
             onTap: (index) {
               widget.child.goBranch(
