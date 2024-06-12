@@ -77,7 +77,7 @@ class CustomNavigationHelper {
                 ],
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: ApplyScreen(),
+                    child: const ApplyScreen(),
                     state: state,
                   );
                 },
@@ -101,7 +101,7 @@ class CustomNavigationHelper {
                       path: PersonalDataForm.route,
                       pageBuilder: (context, state) {
                         return getPage(
-                          child: PersonalDataForm(),
+                          child: const PersonalDataForm(),
                           state: state,
                         );
                       },

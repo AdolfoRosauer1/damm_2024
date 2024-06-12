@@ -269,7 +269,7 @@ class FirestoreDataSource {
           data['confirmedApplicants'] ??= [];
           data['remainingVacancies'] ??= data['vacancies'] -
               List<String>.from(data['confirmedApplicants'] as List).length;
-          data['cost'] ??= 0.0 as double;
+          data['cost'] ??= 0.0;
 
           if (query != null && query.isNotEmpty) {
             if (data['title'].toLowerCase().contains(query.toLowerCase()) ||

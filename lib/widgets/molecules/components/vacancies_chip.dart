@@ -26,7 +26,7 @@ class VacanciesChip extends StatelessWidget {
               style: ProjectFonts.body2
             ),
           ),
-          SizedBox(width: 8,),
+          const SizedBox(width: 8,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
             child: Row(

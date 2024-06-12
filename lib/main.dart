@@ -106,7 +106,7 @@ void main() async {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
-  runApp(ProviderScope(parent: container, child: MyApp()));
+  runApp(ProviderScope(parent: container, child: const MyApp()));
 
   // remove splash screen
   FlutterNativeSplash.remove();
@@ -143,7 +143,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           tabBarTheme: TabBarTheme(
-            overlayColor: MaterialStateProperty.all(
+            overlayColor: WidgetStateProperty.all(
                 ProjectPalette.neutral2.withOpacity(0.1)),
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: const BoxDecoration(

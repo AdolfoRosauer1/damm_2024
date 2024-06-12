@@ -201,6 +201,7 @@ class ProfileRepository {
     } catch (e) {
       print('Error in ProfileRepository.createVolunteerFromJSON: $e');
     }
+    return null;
   }
 
   Future<Volunteer?> editVolunteer(

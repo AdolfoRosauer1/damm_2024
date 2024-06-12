@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsDetailsScreen extends StatefulWidget {
-  const NewsDetailsScreen({Key? key, required this.id}) : super(key: key);
+  const NewsDetailsScreen({super.key, required this.id});
 
   final String id;
 
@@ -102,7 +102,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                       height: 16,
                     ),
                     Text(
-                      news.body!,
+                      news.body,
                       style: ProjectFonts.body1,
                     ),
                     const SizedBox(

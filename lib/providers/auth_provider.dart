@@ -114,6 +114,7 @@ class AuthController {
     } catch (e) {
       print('Error AuthController.registerUser: $e');
     }
+    return null;
   }
 
   Future<void> signOut() async {

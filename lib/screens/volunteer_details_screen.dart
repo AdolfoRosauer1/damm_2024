@@ -40,7 +40,7 @@ class _VolunteerDetailsScreenState
     final volunteerDetailsAsyncValue =
         ref.watch(volunteerDetailsProviderProvider(widget.id));
     final currentUser = ref.watch(currentUserProvider);
-    final FirestoreController _firestoreController =
+    final FirestoreController firestoreController =
         ref.watch(firestoreControllerProvider);
 
     return Scaffold(
@@ -109,7 +109,7 @@ class _VolunteerDetailsScreenState
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: InkWell(
                     onTap: () {
-                      _firestoreController
+                      firestoreController
                           .openLocationInMap(volunteerDetails.location);
                     },
                     child: InformationCard(

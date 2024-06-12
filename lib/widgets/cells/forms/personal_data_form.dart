@@ -23,7 +23,7 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:intl/intl.dart';
 
 class PersonalDataForm extends ConsumerStatefulWidget {
-  PersonalDataForm({super.key});
+  const PersonalDataForm({super.key});
 
   static const route = "editProfile";
   static const completeRoute = "${ProfileScreen.route}/$route";
@@ -82,7 +82,7 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
     final internetStatus = ref.watch(internetConnectionProvider);
     _internet = internetStatus.value! == InternetStatus.connected;
     final profileController = ref.read(profileControllerProvider);
-    final User? _firebaseUser =
+    final User? firebaseUser =
         ref.read(firebaseAuthenticationProvider).currentUser;
     var genderMap = genderGenderMap(context);
     return Theme(
@@ -237,7 +237,7 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
 
                         initialValue: volunteer.email.isEmpty
-                            ? _firebaseUser?.email
+                            ? firebaseUser?.email
                             : volunteer.email,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -356,7 +356,7 @@ Widget _buildRadioOption(
   return Theme(
     data: Theme.of(field.context).copyWith(
       radioTheme: Theme.of(field.context).radioTheme.copyWith(
-            fillColor: MaterialStateProperty.all(ProjectPalette.primary1),
+            fillColor: WidgetStateProperty.all(ProjectPalette.primary1),
           ),
     ),
     child: Row(
