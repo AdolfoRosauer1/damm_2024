@@ -77,6 +77,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                       ),
                       FormBuilderTextField(
                         name: 'name',
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.match(r'^[a-zA-Z ]+$')
@@ -103,6 +105,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         height: 24,
                       ),
                       FormBuilderTextField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         name: 'lastname',
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -130,6 +133,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         height: 24,
                       ),
                       FormBuilderTextField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.email()
@@ -156,6 +161,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         height: 24,
                       ),
                       FormBuilderTextField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
                         validator: FormBuilderValidators.compose(
                             [FormBuilderValidators.required()]),
                         onEditingComplete: () => onFormChanged(),
