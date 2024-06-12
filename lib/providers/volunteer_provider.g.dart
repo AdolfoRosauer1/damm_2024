@@ -51,7 +51,7 @@ final profileRepositoryProvider = Provider<ProfileRepository>.internal(
 );
 
 typedef ProfileRepositoryRef = ProviderRef<ProfileRepository>;
-String _$profileControllerHash() => r'8c905cfc46053d95d62909ca102b42321d389b05';
+String _$profileControllerHash() => r'38f175c78e46d2335c0e987e9068dc331caa55fc';
 
 /// See also [profileController].
 @ProviderFor(profileController)
@@ -66,7 +66,7 @@ final profileControllerProvider = Provider<ProfileController>.internal(
 );
 
 typedef ProfileControllerRef = ProviderRef<ProfileController>;
-String _$storageDataSourceHash() => r'f1a03683f42a234b2360543cc7530b6ac262478e';
+String _$storageDataSourceHash() => r'e5380306e0cbc4ec8ccf9806713fe1a22f6e87cc';
 
 /// See also [storageDataSource].
 @ProviderFor(storageDataSource)

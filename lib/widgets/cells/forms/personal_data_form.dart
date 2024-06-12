@@ -2,6 +2,7 @@ import 'package:damm_2024/config/router.dart';
 import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
+import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 
 class PersonalDataForm extends ConsumerStatefulWidget {
@@ -30,6 +32,7 @@ class PersonalDataForm extends ConsumerStatefulWidget {
 }
 
 class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
+  bool _internet = false;
   final formKey = GlobalKey<FormBuilderState>();
   late ValueNotifier<bool> isFormValidNotifier;
   late ValueNotifier<bool> isLoadingNotifier;
@@ -75,6 +78,8 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
 
   @override
   Widget build(BuildContext context) {
+    final internetStatus = ref.watch(internetConnectionProvider);
+    _internet = internetStatus.value! == InternetStatus.connected;
     final profileController = ref.read(profileControllerProvider);
     final User? _firebaseUser =
         ref.read(firebaseAuthenticationProvider).currentUser;
@@ -254,9 +259,11 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         valueListenable: isFormValidNotifier,
                         builder: (context, valid, child) {
                           return CtaButton(
-                            enabled: valid,
+                            enabled: _internet && valid,
                             onPressed: () async {
-                              if (!valid) {
+                              if (!valid || !_internet) {
+                                print(
+                                    'Form validity: $valid, Internet: $_internet');
                                 return;
                               }
                               try {
