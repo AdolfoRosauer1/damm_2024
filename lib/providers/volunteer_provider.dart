@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
+import 'package:damm_2024/services/analytics_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -75,6 +76,7 @@ class ProfileController {
         if (toSet != null) {
           _userNotifier.set(toSet);
         }
+
       }
     } catch (e) {
       print('Error in ProfileController.finishSetup: $e');
@@ -183,6 +185,7 @@ class ProfileRepository {
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
   final StorageDataSource _storageDataSource;
+  final AnalyticsService _analyticsService = AnalyticsService();
 
   ProfileRepository(this._firestore, this._storage, this._storageDataSource);
 
@@ -230,6 +233,8 @@ class ProfileRepository {
           .doc(user.uid)
           .set(mutableData)
           .onError((e, _) => print("Error writing document: $e"));
+      
+      _analyticsService.logCompleteVolunteerProfile(user.uid);
 
       // Persist in Riverpod
       print('editProfile: about to createVolunteer from JSON: $mutableData');

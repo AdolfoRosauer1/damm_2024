@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/news.dart';
+import 'package:damm_2024/services/analytics_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
@@ -11,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 class NewsService{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
-
+  final AnalyticsService _analyticsService = AnalyticsService();
 
 void shareNews(News news) async {
   try {
@@ -25,6 +28,7 @@ void shareNews(News news) async {
       [xfile],
       text: news.description,
     );
+    _analyticsService.logShareNews(news.id, FirebaseAuth.instance.currentUser!.uid);
   } catch (e) {
     print('Error sharing news: $e');
   }

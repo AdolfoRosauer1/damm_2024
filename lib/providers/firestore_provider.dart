@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
+import 'package:damm_2024/services/analytics_service.dart';
 import 'package:damm_2024/utils/maps_utils.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -76,7 +78,8 @@ class FirestoreController {
       await _firestoreRepository.applyToOpportunity(user.uid, oppId);
       print(
           'FirestoreController.applyToOpportunity: Finished applying to opportunity: $oppId');
-    } catch (e) {
+    } catch (e,stackTrace){
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreController.applyToOpportunity: $e');
     }
   }
@@ -87,7 +90,8 @@ class FirestoreController {
       await _firestoreRepository.unApplyToOpportunity(user.uid, oppId);
       print(
           'FirestoreController.unApplyToOpportunity: Finished un-applying from opportunity: $oppId');
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreController.unApplyToOpportunity: $e');
     }
   }
@@ -107,7 +111,8 @@ class FirestoreController {
       print(
           'FirestoreController.getVolunteerById: Finished getting volunteer details for ID: $id');
       return result;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
       print('Error in FirestoreController.getVolunteerById: $e');
       return null;
     }
@@ -121,7 +126,8 @@ class FirestoreController {
           query: query, userPosition: userPosition);
       print('FirestoreController.getVolunteers: Finished getting volunteers');
       return result;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
       print('Error in FirestoreController.getVolunteers: $e');
       return [];
     }
@@ -131,6 +137,7 @@ class FirestoreController {
 // Repository class to handle communication with the Firestore data source
 class FirestoreRepository {
   final FirestoreDataSource _dataSource;
+  final AnalyticsService _analyticsService = AnalyticsService();
 
   FirestoreRepository(this._dataSource);
 
@@ -146,11 +153,13 @@ class FirestoreRepository {
         if (!opportunity.pendingApplicants.contains(userId)) {
           opportunity.pendingApplicants.add(userId);
           await _dataSource.updateVolunteerById(opportunity);
+          _analyticsService.logApplyToVolunteer(oppId, userId);
           print(
               'FirestoreRepository.applyToOpportunity: User $userId applied to opportunity $oppId');
         }
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
       print('Error in FirestoreRepository.applyToOpportunity: $e');
     }
   }
@@ -163,11 +172,14 @@ class FirestoreRepository {
         if (opportunity.pendingApplicants.contains(userId)) {
           opportunity.pendingApplicants.remove(userId);
           await _dataSource.updateVolunteerById(opportunity);
+          _analyticsService.logUnapplyToVolunteer(oppId, userId);
+
           print(
               'FirestoreRepository.unApplyToOpportunity: User $userId un-applied from opportunity $oppId');
         }
       }
-    } catch (e) {
+    } catch (e,stacTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stacTrace);
       print('Error in FirestoreRepository.unApplyToOpportunity: $e');
     }
   }
@@ -197,7 +209,8 @@ class FirestoreRepository {
       print(
           'FirestoreRepository.getVolunteers: Fetched volunteers from data source');
       return result;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
       print('Error in FirestoreRepository.getVolunteers: $e');
       return [];
     }
@@ -210,7 +223,8 @@ class FirestoreRepository {
       print(
           'FirestoreRepository.getVolunteerById: Fetched volunteer details for ID: $id');
       return result;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
       print('Error in FirestoreRepository.getVolunteerById: $e');
       return null;
     }
@@ -266,7 +280,8 @@ class FirestoreDataSource {
           } else {
             volunteers.add(VolunteerDetails.fromJson(data));
           }
-        } catch (e) {
+        } catch (e,stackTrace) {
+          FirebaseCrashlytics.instance.recordError(e,stackTrace);
           print(
               'Error in FirestoreDataSource.getVolunteers (processing document): $e');
         }
@@ -298,7 +313,8 @@ class FirestoreDataSource {
       print(
           'FirestoreDataSource.getVolunteers: Sorted and filtered volunteer opportunities');
       return volunteers;
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
       print('Error in FirestoreDataSource.getVolunteers: $e');
       return [];
     }
@@ -314,7 +330,8 @@ class FirestoreDataSource {
           .update(data);
       print(
           'FirestoreDataSource.updateVolunteerById: Updated volunteer opportunity: ${volunteer.id}');
-    } catch (e) {
+    } catch (e,stacTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stacTrace);
       print('Error in FirestoreDataSource.updateVolunteerById: $e');
     }
   }
@@ -346,7 +363,8 @@ class FirestoreDataSource {
       } else {
         return null;
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
       print("Error in FirestoreDataSource.getVolunteerById: $e");
       return null;
     }
