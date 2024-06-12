@@ -8,6 +8,7 @@ import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/input_card.dart';
 import 'package:damm_2024/widgets/cells/cards/profile_picture_card.dart';
+import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
@@ -259,11 +260,19 @@ class _PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         valueListenable: isFormValidNotifier,
                         builder: (context, valid, child) {
                           return CtaButton(
-                            enabled: _internet && valid,
+                            enabled: valid,
                             onPressed: () async {
-                              if (!valid || !_internet) {
+                              if (!valid) {
                                 print(
                                     'Form validity: $valid, Internet: $_internet');
+                                return;
+                              }
+                              if (!_internet) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const NoInternetModal();
+                                    });
                                 return;
                               }
                               try {

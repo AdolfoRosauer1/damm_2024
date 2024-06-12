@@ -13,6 +13,8 @@
   "noVolunteersSearch": "No active volunteer opportunities for your search",
   "noData": "No data available",
 
+  "no_internet": "No internet connection. Check your connection and try again.",
+
   "news": "News",
   "newsNotFound": "News not found",
   "shareThisNote": "Share this note",

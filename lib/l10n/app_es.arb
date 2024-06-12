@@ -13,6 +13,8 @@
   "noVolunteersSearch": "No hay voluntariados vigentes para tu búsqueda",
   "noData": "Sin datos disponibles",
 
+  "no_internet": "Sin conexión a Internet. Verifica tu conexión y vuelve a intentarlo.",
+
   "news": "Novedades",
   "newsNotFound": "No se encontró la noticia",
   "shareThisNote": "Comparte esta nota",
