@@ -13,6 +13,5 @@ Stream<InternetStatus> internetConnection(InternetConnectionRef ref) {
 
 void init(ProviderContainer container) {
   container.read(internetConnectionProvider);
-
   return;
 }

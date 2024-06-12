@@ -31,7 +31,7 @@ class AuthService {
       return await _auth.signOut();
     } catch (e) {
       print(e.toString());
-      return null;
+      return;
     }
   }
 }
