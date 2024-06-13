@@ -24,23 +24,29 @@ class CurrentVolunteerSection extends ConsumerStatefulWidget {
   }
 }
 
-class CurrentVolunteerSectionState extends ConsumerState<CurrentVolunteerSection> {
+class CurrentVolunteerSectionState
+    extends ConsumerState<CurrentVolunteerSection> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
     final firestoreController = ref.read(firestoreControllerProvider);
 
     // Check if there is a matching element in detailsList
-    bool test = widget.detailsList.any((volunteer) => volunteer.id == user.currentVolunteering);
+    bool test = widget.detailsList.any((volunteer) =>
+        volunteer.id == user.currentVolunteering ||
+        volunteer.id == user.currentApplication);
     if (test) {
       final data = widget.detailsList.firstWhere(
-            (volunteer) => volunteer.id == user.currentVolunteering,
+        (volunteer) =>
+            volunteer.id == user.currentVolunteering ||
+            volunteer.id == user.currentApplication,
       );
       return Column(
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(AppLocalizations.of(context)!.my_volunteerings, style: ProjectFonts.headline1),
+            child: Text(AppLocalizations.of(context)!.my_volunteerings,
+                style: ProjectFonts.headline1),
           ),
           const SizedBox(height: 24),
           Container(
@@ -53,7 +59,8 @@ class CurrentVolunteerSectionState extends ConsumerState<CurrentVolunteerSection
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -66,11 +73,13 @@ class CurrentVolunteerSectionState extends ConsumerState<CurrentVolunteerSection
                         children: [
                           Text(
                             data.type,
-                            style: ProjectFonts.overline.copyWith(color: ProjectPalette.neutral6),
+                            style: ProjectFonts.overline
+                                .copyWith(color: ProjectPalette.neutral6),
                           ),
                           Text(
                             data.title,
-                            style: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral2),
+                            style: ProjectFonts.subtitle1
+                                .copyWith(color: ProjectPalette.neutral2),
                           ),
                           const SizedBox(height: 4),
                         ],

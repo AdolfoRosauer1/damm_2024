@@ -54,15 +54,19 @@ FirestoreRepository firestoreRepository(FirestoreRepositoryRef ref) {
 @Riverpod(keepAlive: true)
 FirestoreController firestoreController(FirestoreControllerRef ref) {
   return FirestoreController(
-      ref.watch(firestoreRepositoryProvider), ref.watch(currentUserProvider));
+    ref.watch(firestoreRepositoryProvider),
+    ref.watch(currentUserProvider),
+    ref.watch(currentUserProvider.notifier),
+  );
 }
 
 // Controller class to handle higher-level business logic
 class FirestoreController {
   final FirestoreRepository _firestoreRepository;
   final Volunteer user;
+  final CurrentUser notifier;
 
-  FirestoreController(this._firestoreRepository, this.user);
+  FirestoreController(this._firestoreRepository, this.user, this.notifier);
 
   Future<bool> areVolunteersAvailable() async {
     return _firestoreRepository.areVolunteersAvailable();
@@ -76,8 +80,9 @@ class FirestoreController {
   Future<void> applyToOpportunity(String oppId) async {
     try {
       if (user.currentApplication == null) {
-        await _firestoreRepository.applyToOpportunity(user.uid, oppId);
         user.applyToVolunteer(oppId);
+        await _firestoreRepository.applyToOpportunity(user.uid, oppId);
+        notifier.set(Volunteer.fromVolunteer(user));
         print(
             'FirestoreController.applyToOpportunity: Finished applying to opportunity: $oppId');
       }
@@ -91,8 +96,9 @@ class FirestoreController {
   Future<void> unApplyToOpportunity(String oppId) async {
     try {
       if (user.currentApplication != null) {
-        await _firestoreRepository.unApplyToOpportunity(user.uid, oppId);
         user.unApplyToVolunteer();
+        await _firestoreRepository.unApplyToOpportunity(user.uid, oppId);
+        notifier.set(Volunteer.fromVolunteer(user));
         print(
             'FirestoreController.unApplyToOpportunity: Finished un-applying from opportunity: $oppId');
       }
@@ -105,8 +111,9 @@ class FirestoreController {
   Future<void> cancelOpportunity(String oppId) async {
     try {
       if (user.currentVolunteering != null) {
-        await _firestoreRepository.cancelOpportunity(user.uid, oppId);
         user.currentVolunteering = null;
+        await _firestoreRepository.cancelOpportunity(user.uid, oppId);
+        notifier.set(Volunteer.fromVolunteer(user));
       }
     } catch (e) {
       print('Error in FirestoreController.cancelOpportunity: $e');
