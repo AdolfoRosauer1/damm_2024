@@ -50,6 +50,8 @@
   "apply_now": "Postularme",
   "confirmed_title": "Estas participando",
   "confirmed_body": "La organización confirmó que ya estas participando de este voluntariado",
+  "must_cancel_title": "Ya estas participando en otro voluntariado, debes abandonarlo primero para postularte a este.",
+  "must_cancel_body": "Abandonar voluntariado actual",
   "cancel_volunteer": "Abandonar voluntariado",
   "applied_title": "Te has postulado",
   "applied_body": "Pronto la organización se pondrá en contacto contigo y te inscribirá como participante",
