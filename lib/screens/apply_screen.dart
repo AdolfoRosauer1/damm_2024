@@ -70,8 +70,9 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
   }
 
 */
-  void _askForNotificationPermission() async {
-    await FirebaseMessaging.instance.requestPermission(
+
+  void _askForNotificationPermission() {
+    FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -82,15 +83,15 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     );
   }
 
-  void _askForLocationPermission() async {
-    await Geolocator.requestPermission();
+  void _askForLocationPermission() {
+    Geolocator.requestPermission();
   }
 
   @override
   void initState() {
     super.initState();
     _askForNotificationPermission();
-    _askForLocationPermission();
+    // _askForLocationPermission();
   }
 
   @override

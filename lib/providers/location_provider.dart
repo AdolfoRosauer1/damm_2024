@@ -68,6 +68,14 @@ LocationRepository locationRepository(LocationRepositoryRef ref) {
 }
 
 class LocationRepository {
+  Future<void> getPermission() async {
+    try {
+      await Geolocator.requestPermission();
+    } catch (e) {
+      print('ERROR locationRepository.getPermission: $e');
+    }
+  }
+
   Future<GeoPoint?> getUserLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -85,9 +93,6 @@ class LocationRepository {
     if (permission == LocationPermission.denied) {
       return null;
     }
-    // if (permission == LocationPermission.unableToDetermine) {
-    //   await Geolocator.requestPermission();
-    // }
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -104,6 +109,7 @@ class LocationController {
       this._locationRepository, this._locationNotifier, this._userLocation);
 
   Future<void> updateUserLocation() async {
+    await _locationRepository.getPermission();
     GeoPoint? toSet = await _locationRepository.getUserLocation();
     if (toSet != null && toSet != _userLocation) {
       _locationNotifier.set(toSet);
