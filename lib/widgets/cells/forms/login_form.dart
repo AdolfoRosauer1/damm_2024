@@ -38,8 +38,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   }
 
   void onFormChanged() {
-    FocusScope.of(context).unfocus();
-
     formValid.value = formKey.currentState!.validate(focusOnInvalid: false);
     final errors = formKey.currentState?.errors;
     if (errors != null) {
@@ -79,7 +77,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
 
                         name: 'email',
-                        onEditingComplete: () => onFormChanged(),
+                        onChanged: (_) => onFormChanged(),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.email(),
@@ -105,7 +103,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       ),
                       FormBuilderTextField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        onEditingComplete: () => onFormChanged(),
+                        onChanged: (_) => onFormChanged(),
                         name: 'password',
                         obscureText: _hidePassword,
                         keyboardType: TextInputType.visiblePassword,

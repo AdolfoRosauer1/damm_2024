@@ -49,7 +49,6 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
   }
 
   void onFormChanged() {
-    FocusScope.of(context).unfocus();
     isFormValidNotifier.value =
         formKey.currentState!.validate(focusOnInvalid: false);
     final errors = formKey.currentState?.errors;
@@ -120,6 +119,7 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                       ),
                       FormBuilderDateTimePicker(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
+                        onChanged: (_) => onFormChanged(),
                         name: 'dateOfBirth',
                         initialValue: volunteer.dateOfBirth,
                         validator: FormBuilderValidators.required(),
@@ -152,9 +152,10 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                             const BoxDecoration(color: ProjectPalette.neutral3),
                         child: FormBuilderField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onChanged: (_) => onFormChanged(),
 
                           name: 'gender',
-                          initialValue: volunteer.gender?.value,
+                          initialValue: volunteer.gender?.localizedValue(context),
                           validator: FormBuilderValidators.required(),
                           builder: (FormFieldState<dynamic> field) {
                             return InputCard(
@@ -173,7 +174,7 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
 
                         name: 'profilePicture',
-                        onSaved: (_) => onFormChanged(),
+                        onChanged: (_) => onFormChanged(),
                         validator: FormBuilderValidators.required(),
                         initialValue: volunteer.profileImageURL,
                         builder: (FormFieldState<dynamic> field) {
@@ -214,7 +215,8 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         initialValue: volunteer.phoneNumber.isEmpty
                             ? '+'
                             : volunteer.phoneNumber,
-                        onEditingComplete: onFormChanged,
+                        
+                        onChanged: (_)  => onFormChanged(),
                         name: 'phoneNumber',
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
@@ -247,7 +249,7 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                           FormBuilderValidators.email()
                         ]),
                         name: 'email',
-                        onEditingComplete: onFormChanged,
+                        onChanged: (_) => onFormChanged(),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(

@@ -41,7 +41,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   }
 
   void onFormChanged() {
-    FocusScope.of(context).unfocus();
     formValid.value = formKey.currentState!.validate(focusOnInvalid: false);
     final errors = formKey.currentState?.errors;
     if (errors != null) {
@@ -81,7 +80,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         FormBuilderValidators.required(),
                         FormBuilderValidators.match(r'^[a-zA-Z ]+$')
                       ]),
-                      onEditingComplete: onFormChanged,
+                      onChanged: (_) => onFormChanged,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -106,7 +105,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         FormBuilderValidators.required(),
                         FormBuilderValidators.match(r'^[a-zA-Z ]+$')
                       ]),
-                      onEditingComplete: onFormChanged,
+                      onChanged: (_) => onFormChanged,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -131,7 +130,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         FormBuilderValidators.required(),
                         FormBuilderValidators.email()
                       ]),
-                      onEditingComplete: onFormChanged,
+                      onChanged: (_) => onFormChanged,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -155,7 +154,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required()
                       ]),
-                      onEditingComplete: onFormChanged,
+                      onChanged: (_) => onFormChanged,
                       obscureText: _hidePassword,
                       keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
