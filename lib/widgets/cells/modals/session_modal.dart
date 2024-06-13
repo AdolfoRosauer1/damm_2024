@@ -52,8 +52,10 @@ class SessionModal extends ConsumerWidget {
                   TextButton(
                     onPressed: () async {
                       await auth.signOut();
-                      context.go(
-                          '/access'); // Navigate to login page or any desired route
+                      if (context.mounted) {
+                        context.go(
+                            '/access'); // Navigate to login page or any desired route
+                      }
                     },
                     style: TextButton.styleFrom(
                       textStyle: ProjectFonts.button,

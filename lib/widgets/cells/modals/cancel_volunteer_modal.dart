@@ -71,7 +71,9 @@ class CancelVolunteerModal extends ConsumerWidget {
                           await ref
                               .read(firestoreControllerProvider)
                               .cancelOpportunity(oppId);
-                          Navigator.of(context).pop();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         } catch (e) {
                           print('Error canceling volunteer modal: $e');
                         }

@@ -42,7 +42,7 @@ class Volunteer {
       firstName: data['firstName'] as String,
       lastName: data['lastName'] as String,
       email: data['email'] as String,
-      gender: genderFromString(data['gender']) ?? null,
+      gender: genderFromString(data['gender']),
       profileImageURL: data['profileImageURL'] as String,
       dateOfBirth: (data['dateOfBirth'] as DateTime?),
       phoneNumber: data['phoneNumber'] as String,

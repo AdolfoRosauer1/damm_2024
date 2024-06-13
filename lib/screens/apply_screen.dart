@@ -83,9 +83,9 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     );
   }
 
-  void _askForLocationPermission() {
-    Geolocator.requestPermission();
-  }
+  // void _askForLocationPermission() {
+  //   Geolocator.requestPermission();
+  // }
 
   @override
   void initState() {

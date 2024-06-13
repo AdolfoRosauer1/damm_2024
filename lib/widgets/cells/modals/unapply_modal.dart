@@ -69,7 +69,9 @@ class UnApplyModal extends ConsumerWidget {
                           await ref
                               .read(firestoreControllerProvider)
                               .unApplyToOpportunity(oppId);
-                          Navigator.of(context).pop();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         } catch (e) {
                           print('Error unApplying to volunteer: $e');
                         }

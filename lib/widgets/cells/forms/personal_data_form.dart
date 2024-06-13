@@ -153,9 +153,9 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                         child: FormBuilderField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           onChanged: (_) => onFormChanged(),
-
                           name: 'gender',
-                          initialValue: volunteer.gender?.localizedValue(context),
+                          initialValue:
+                              volunteer.gender?.localizedValue(context),
                           validator: FormBuilderValidators.required(),
                           builder: (FormFieldState<dynamic> field) {
                             return InputCard(
@@ -172,7 +172,6 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                       ),
                       FormBuilderField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-
                         name: 'profilePicture',
                         onChanged: (_) => onFormChanged(),
                         validator: FormBuilderValidators.required(),
@@ -206,17 +205,16 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                       ),
                       FormBuilderTextField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.match(r'^\+\d{10,14}$',
-                              errorText: AppLocalizations.of(context)!.error_invalidPhoneFormat)
+                              errorText: AppLocalizations.of(context)!
+                                  .error_invalidPhoneFormat)
                         ]),
                         initialValue: volunteer.phoneNumber.isEmpty
                             ? '+'
                             : volunteer.phoneNumber,
-                        
-                        onChanged: (_)  => onFormChanged(),
+                        onChanged: (_) => onFormChanged(),
                         name: 'phoneNumber',
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
@@ -240,7 +238,6 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                       ),
                       FormBuilderTextField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-
                         initialValue: volunteer.email.isEmpty
                             ? firebaseUser?.email
                             : volunteer.email,
@@ -313,7 +310,9 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                                   await profileController
                                       .finishSetup(updatedFormData);
                                   isLoadingNotifier.value = false;
-                                  context.go('/profileScreen');
+                                  if (context.mounted) {
+                                    context.go('/profileScreen');
+                                  }
                                 } else {
                                   print('Validation failed');
                                 }

@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 class ApplyConfirmationModal extends ConsumerWidget {
   const ApplyConfirmationModal(
       {super.key, required this.title, required this.oppId});
+
   final String title;
   final String oppId;
 
@@ -47,7 +48,9 @@ class ApplyConfirmationModal extends ConsumerWidget {
                     await ref
                         .read(firestoreControllerProvider)
                         .applyToOpportunity(oppId);
-                    Navigator.of(context).pop();
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
                   },
                   style: TextButton.styleFrom(
                     textStyle: ProjectFonts.button,
