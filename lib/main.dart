@@ -1,3 +1,4 @@
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:damm_2024/bootstrap.dart';
 import 'package:damm_2024/config/router.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -23,6 +24,9 @@ void main() async {
 
   // initialize
   ProviderContainer container = await bootstrap();
+
+  //para el tracking en ios
+  await AppTrackingTransparency.requestTrackingAuthorization();
 
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
