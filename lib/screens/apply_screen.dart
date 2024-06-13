@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
+import 'package:damm_2024/providers/location_provider.dart';
+import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/current_volunteer.dart';
@@ -34,10 +37,10 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
 
   late Future<List<VolunteerDetails>> _volunteers;
   late Future<bool> _areVolunteersAvailable;
-  Position? _userPosition;
+  GeoPoint? _userPosition;
 
   // TODO: maintain getUserLocation method. DO NOT USE A PROVIDER
-  Future<void> _getUserLocation() async {
+ /* Future<void> _getUserLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -66,6 +69,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     });
   }
 
+*/
   void _askForNotificationPermission() async {
     FirebaseMessaging.instance.requestPermission(
       alert: true,
@@ -77,17 +81,24 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
       sound: false,
     );
   }
+  void _askForLocationPermission() async {
+    await Geolocator.requestPermission();
+  }
+
   @override
   void initState() {
     super.initState();
-    _getUserLocation();
     _askForNotificationPermission();
+    _askForLocationPermission();
+
   }
 
+  
   @override
   Widget build(BuildContext context) {
 
     final firestoreController = ref.read(firestoreControllerProvider);
+    final locationAsyncValue = ref.watch(locationProvider);
 
     void loadVolunteers() {
       setState(() {
@@ -96,10 +107,24 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
         _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
       });
     }
-
-    _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
+    locationAsyncValue.when(
+      data: (location) {
+        if (location != null) {
+          setState(() {
+            _userPosition = location;
+          });
+     
+        }
+            _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
     _volunteers =
-        firestoreController.getVolunteers(query: _searchController.text);
+        firestoreController.getVolunteers(query: _searchController.text,userPosition: _userPosition);
+
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Error: $error')),
+    );
+
+
 
     // USER
     // final user = ref.watch(currentUserProvider);

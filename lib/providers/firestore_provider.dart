@@ -120,7 +120,7 @@ class FirestoreController {
 
   // Method to get a list of volunteers, optionally filtered by a query or user position
   Future<List<VolunteerDetails>> getVolunteers(
-      {String? query, Position? userPosition}) async {
+      {String? query, GeoPoint? userPosition}) async {
     try {
       var result = await _firestoreRepository.getVolunteers(
           query: query, userPosition: userPosition);
@@ -202,7 +202,7 @@ class FirestoreRepository {
 
   // Method to get a list of volunteers from the data source
   Future<List<VolunteerDetails>> getVolunteers(
-      {String? query, Position? userPosition}) async {
+      {String? query, GeoPoint? userPosition}) async {
     try {
       var result = await _dataSource.getVolunteers(
           query: query, userPosition: userPosition);
@@ -246,7 +246,7 @@ class FirestoreDataSource {
 
   // Method to get a list of volunteers from Firestore, optionally filtered by a query or user position
   Future<List<VolunteerDetails>> getVolunteers(
-      {String? query, Position? userPosition}) async {
+      {String? query, GeoPoint? userPosition}) async {
     try {
       List<VolunteerDetails> volunteers = [];
       QuerySnapshot snapshot =
