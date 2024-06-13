@@ -2,6 +2,7 @@ import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
+import 'package:damm_2024/widgets/cells/cards/current_volunteer.dart';
 import 'package:damm_2024/widgets/cells/cards/no_volunteers_card.dart';
 import 'package:damm_2024/widgets/cells/cards/volunteering_card.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
@@ -125,7 +126,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                 onChanged: (_) => loadVolunteers(),
                 decoration: InputDecoration(
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   hintText: AppLocalizations.of(context)!.search,
                   hintStyle: ProjectFonts.subtitle1
                       .copyWith(color: ProjectPalette.neutral6),
@@ -135,18 +136,16 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                   suffixIcon: _searchController.text.isEmpty
                       ? ProjectIcons.mapFilledActivated
                       : IconButton(
-                          icon: ProjectIcons.closeFilledEnabled,
-                          onPressed: () {
-                            _searchController.clear();
-                            loadVolunteers();
-                          },
-                        ),
+                    icon: ProjectIcons.closeFilledEnabled,
+                    onPressed: () {
+                      _searchController.clear();
+                      loadVolunteers();
+                    },
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 32),
-            Text(AppLocalizations.of(context)!.volunteerings,
-                style: ProjectFonts.headline1),
             Expanded(
               child: FutureBuilder<bool>(
                 future: _areVolunteersAvailable,
@@ -156,12 +155,31 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                     return const Center(child: CircularProgressIndicator());
                   } else if (availabilitySnapshot.hasError) {
                     return Center(
-                        child: Text(
-                            '${AppLocalizations.of(context)!.error}: ${availabilitySnapshot.error}'));
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // Ensure alignment
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.volunteerings,
+                            style: ProjectFonts.headline1,
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            '${AppLocalizations.of(context)!.error}: ${availabilitySnapshot.error}',
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    );
                   } else if (availabilitySnapshot.hasData &&
                       !availabilitySnapshot.data!) {
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start, // Ensure alignment
                       children: [
+                        Text(
+                          AppLocalizations.of(context)!.volunteerings,
+                          style: ProjectFonts.headline1,
+                          textAlign: TextAlign.left,
+                        ),
                         const SizedBox(height: 16),
                         NoVolunteersCard(
                           size: NoVolunteersCardSize.small,
@@ -173,64 +191,74 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                     return FutureBuilder<List<VolunteerDetails>>(
                       future: _volunteers,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
                         } else if (snapshot.hasError) {
                           return Center(
-                              child: Text(
-                                  '${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
+                            child: Text(
+                              '${AppLocalizations.of(context)!.error}: ${snapshot.error}',
+                              textAlign: TextAlign.left,
+                            ),
+                          );
                         } else if (snapshot.hasData) {
-                          List<VolunteerDetails> volunteerDetails =
-                              snapshot.data!;
+                          List<VolunteerDetails> volunteerDetails = snapshot.data!;
                           if (volunteerDetails.isEmpty) {
-                            return Column(children: [
-                              const SizedBox(height: 16),
-                              NoVolunteersCard(
-                                size: NoVolunteersCardSize.medium,
-                                message: AppLocalizations.of(context)!
-                                    .noVolunteersSearch,
-                              ),
-                            ]);
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start, // Ensure alignment
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.volunteerings,
+                                  style: ProjectFonts.headline1,
+                                  textAlign: TextAlign.left,
+                                ),
+                                const SizedBox(height: 16),
+                                NoVolunteersCard(
+                                  size: NoVolunteersCardSize.medium,
+                                  message: AppLocalizations.of(context)!.noVolunteersSearch,
+                                ),
+                              ],
+                            );
                           }
-                          return ListView.separated(
-                            padding: const EdgeInsets.only(top: 24),
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: 24),
-                            itemCount: volunteerDetails.length,
-                            itemBuilder: (context, index) {
-                              // bool isFav = user.hasFavorite(volunteerDetails[index].id);
-                              return VolunteeringCard(
-                                id: volunteerDetails[index].id,
-                                onPressedLocation: () {
-                                  firestoreController.openLocationInMap(
-                                      volunteerDetails[index].location);
-                                },
-                                // onPressedFav: (){
-                                //   if (isFav){
-                                //     profileController.removeFavoriteVolunteering(volunteerDetails[index].id);
-                                //   } else{
-                                //     profileController.addFavoriteVolunteering(volunteerDetails[index].id);
-                                //
-                                //   }
-                                // },
-                                onPressed: () {
-                                  context.go(VolunteerDetailsScreen.routeFromId(
-                                      volunteerDetails[index].id));
-                                },
-                                type: volunteerDetails[index].type,
-                                title: volunteerDetails[index].title,
-                                vacancies:
-                                    volunteerDetails[index].remainingVacancies,
-                                imageUrl: volunteerDetails[index].imageUrl,
-                              );
-                            },
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start, // Ensure alignment
+                            children: [
+                              CurrentVolunteerSection(detailsList: volunteerDetails),
+                              Text(
+                                AppLocalizations.of(context)!.volunteerings,
+                                style: ProjectFonts.headline1,
+                                textAlign: TextAlign.left,
+                              ),
+                              Expanded(
+                                child: ListView.separated(
+                                  padding: const EdgeInsets.only(top: 24),
+                                  separatorBuilder: (_, __) => const SizedBox(height: 24),
+                                  itemCount: volunteerDetails.length,
+                                  itemBuilder: (context, index) {
+                                    return VolunteeringCard(
+                                      id: volunteerDetails[index].id,
+                                      onPressedLocation: () {
+                                        firestoreController.openLocationInMap(volunteerDetails[index].location);
+                                      },
+                                      onPressed: () {
+                                        context.go(VolunteerDetailsScreen.routeFromId(volunteerDetails[index].id));
+                                      },
+                                      type: volunteerDetails[index].type,
+                                      title: volunteerDetails[index].title,
+                                      vacancies: volunteerDetails[index].remainingVacancies,
+                                      imageUrl: volunteerDetails[index].imageUrl,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           );
                         } else {
                           return Center(
-                              child:
-                                  Text(AppLocalizations.of(context)!.noData));
+                            child: Text(
+                              AppLocalizations.of(context)!.noData,
+                              textAlign: TextAlign.left,
+                            ),
+                          );
                         }
                       },
                     );
@@ -243,5 +271,6 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
         ),
       ),
     );
+
   }
 }

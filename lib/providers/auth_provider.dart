@@ -3,7 +3,6 @@ import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/services/analytics_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
