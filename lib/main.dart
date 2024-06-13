@@ -106,7 +106,8 @@ void main() async {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
-  runApp(ProviderScope(parent: container, child: const MyApp()));
+  runApp(UncontrolledProviderScope(container: container,
+  child: const MyApp()));
 
   // remove splash screen
   FlutterNativeSplash.remove();

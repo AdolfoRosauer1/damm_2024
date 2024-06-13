@@ -152,7 +152,7 @@ class CustomNavigationHelper {
     router = GoRouter(
       navigatorKey: parentNavigatorKey,
       routes: routes,
-      initialLocation: "/",
+      initialLocation: "/apply",
       redirect: (context, state) {
         // Get the current route location
         final currentLocation = state.uri.path;
@@ -163,7 +163,6 @@ class CustomNavigationHelper {
         final container = ProviderContainer();
         final authState =
             container.read(firebaseAuthenticationProvider).currentUser;
-
         // Print statements for debugging
         // print('authState = $authState');
         print('Current location: $currentLocation');

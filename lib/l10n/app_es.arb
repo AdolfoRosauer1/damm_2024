@@ -15,6 +15,10 @@
 
   "no_internet": "Sin conexión a Internet. Verifica tu conexión y vuelve a intentarlo.",
 
+  "finish_setup_fav": "Para guardar tus favoritos primero debes completar tus datos.",
+  "finish_setup_apply": "Para postularte debes primero completar tus datos.",
+  "confirm_finish_setup": "Completar datos",
+
   "news": "Novedades",
   "newsNotFound": "No se encontró la noticia",
   "shareThisNote": "Comparte esta nota",

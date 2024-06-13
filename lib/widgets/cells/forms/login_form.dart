@@ -196,33 +196,39 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                               password,
                                             );
                                             if (user != null) {
-                                              context.go('/apply');
+                                              if (context.mounted) {
+                                                context.go('/apply');
+                                              }
                                             }
                                           } on FirebaseAuthException catch (e) {
                                             if (e.code == "user-not-found" ||
                                                 e.code == "wrong-password" ||
                                                 e.code ==
                                                     "invalid-credential") {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      elevation: 0,
-                                                      behavior: SnackBarBehavior
-                                                          .floating,
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      content:
-                                                          AwesomeSnackbarContent(
-                                                        title: "Error",
-                                                        message:
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .error_noUser,
-                                                        contentType:
-                                                            ContentType.failure,
-                                                      )));
+                                              if (context.mounted){
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                    elevation: 0,
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    backgroundColor:
+                                                    Colors.transparent,
+                                                    content:
+                                                    AwesomeSnackbarContent(
+                                                      title: "Error",
+                                                      message:
+                                                      AppLocalizations.of(
+                                                          context)!
+                                                          .error_noUser,
+                                                      contentType:
+                                                      ContentType.failure,
+                                                    )));
+                                              }
+
                                             }
                                           } catch (e) {
-                                            ScaffoldMessenger.of(context)
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                                     elevation: 0,
                                                     behavior: SnackBarBehavior
@@ -239,6 +245,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                                       contentType:
                                                           ContentType.failure,
                                                     )));
+                                            }
                                             print(e);
                                           } finally {
                                             setState(() {

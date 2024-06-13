@@ -1,5 +1,6 @@
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
+import 'package:damm_2024/widgets/cells/modals/finish_setup_modal.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
@@ -94,11 +95,20 @@ class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
                         children: [
                           InkWell(
                             onTap: (){
-                              if (isFav){
-                                profileController.removeFavoriteVolunteering(widget.id);
-                              } else{
-                                profileController.addFavoriteVolunteering(widget.id);
-
+                              if (user.hasCompletedProfile()) {
+                                if (isFav) {
+                                  profileController
+                                      .removeFavoriteVolunteering(widget.id);
+                                } else {
+                                  profileController
+                                      .addFavoriteVolunteering(widget.id);
+                                }
+                              }else{
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const FinishSetupModal(favAction: true);
+                                    });
                               }
                             },
                             child: isFav? ProjectIcons.favoriteFilledActivated :

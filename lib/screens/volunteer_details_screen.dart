@@ -6,6 +6,7 @@ import 'package:damm_2024/utils/localization_utils.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
 import 'package:damm_2024/widgets/cells/modals/apply_confirmation_modal.dart';
 import 'package:damm_2024/widgets/cells/modals/cancel_volunteer_modal.dart';
+import 'package:damm_2024/widgets/cells/modals/finish_setup_modal.dart';
 import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/cells/modals/unapply_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
@@ -42,6 +43,8 @@ class VolunteerDetailsScreenState
     final currentUser = ref.watch(currentUserProvider);
     final FirestoreController firestoreController =
         ref.watch(firestoreControllerProvider);
+
+    final finishedSetup = currentUser.hasCompletedProfile();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -212,20 +215,26 @@ class VolunteerDetailsScreenState
                         CtaButton(
                           enabled: true,
                           onPressed: () {
-                            if (!internet) {
+                            if (finishedSetup) {
+                              if (!internet) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const NoInternetModal();
+                                    });
+                                return;
+                              }
                               showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const NoInternetModal();
-                                  });
-                              return;
+                                context: context,
+                                builder: (context) => CancelVolunteerModal(
+                                    title: volunteerDetails.title,
+                                    oppId: volunteerDetails.id),
+                              );
+                            }else{
+                              showDialog(context: context, builder: (context){
+                                return const FinishSetupModal(favAction: false);
+                              });
                             }
-                            showDialog(
-                              context: context,
-                              builder: (context) => CancelVolunteerModal(
-                                  title: volunteerDetails.title,
-                                  oppId: volunteerDetails.id),
-                            );
                           },
                           filled: false,
                           actionStr:
@@ -249,20 +258,26 @@ class VolunteerDetailsScreenState
                         CtaButton(
                           enabled: true,
                           onPressed: () {
-                            if (!internet) {
+                            if (finishedSetup) {
+                              if (!internet) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const NoInternetModal();
+                                    });
+                                return;
+                              }
                               showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const NoInternetModal();
-                                  });
-                              return;
+                                context: context,
+                                builder: (context) => UnApplyModal(
+                                    title: volunteerDetails.title,
+                                    oppId: volunteerDetails.id),
+                              );
+                            }else{
+                              showDialog(context: context, builder: (context){
+                                return const FinishSetupModal(favAction: false);
+                              });
                             }
-                            showDialog(
-                              context: context,
-                              builder: (context) => UnApplyModal(
-                                  title: volunteerDetails.title,
-                                  oppId: volunteerDetails.id),
-                            );
                           },
                           filled: false,
                           actionStr: AppLocalizations.of(context)!.un_apply,
@@ -276,20 +291,26 @@ class VolunteerDetailsScreenState
                     child: CtaButton(
                       enabled: true,
                       onPressed: () {
-                        if (!internet) {
+                        if(finishedSetup) {
+                          if (!internet) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const NoInternetModal();
+                                });
+                            return;
+                          }
                           showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const NoInternetModal();
-                              });
-                          return;
+                            context: context,
+                            builder: (context) => ApplyConfirmationModal(
+                                title: volunteerDetails.title,
+                                oppId: volunteerDetails.id),
+                          );
+                        }else{
+                          showDialog(context: context, builder: (context){
+                            return const FinishSetupModal(favAction: false);
+                          });
                         }
-                        showDialog(
-                          context: context,
-                          builder: (context) => ApplyConfirmationModal(
-                              title: volunteerDetails.title,
-                              oppId: volunteerDetails.id),
-                        );
                       },
                       filled: true,
                       actionStr: AppLocalizations.of(context)!.apply_now,

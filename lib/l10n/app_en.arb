@@ -14,6 +14,9 @@
   "noData": "No data available",
 
   "no_internet": "No internet connection. Check your connection and try again.",
+  "finish_setup_fav": "To save your favorites you must first complete your information.",
+  "finish_setup_apply": "To apply you must first complete your information.",
+  "confirm_finish_setup": "Finish setup",
 
   "news": "News",
   "newsNotFound": "News not found",
