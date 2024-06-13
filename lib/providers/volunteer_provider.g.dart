@@ -36,7 +36,7 @@ final firebaseStorageProvider = Provider<FirebaseStorage>.internal(
 );
 
 typedef FirebaseStorageRef = ProviderRef<FirebaseStorage>;
-String _$profileRepositoryHash() => r'8b4158ec48f73c3bac2c4c4541a80a32225b5e22';
+String _$profileRepositoryHash() => r'bb015424e55f48e4af262faea94e9d54bfa7cfc2';
 
 /// See also [profileRepository].
 @ProviderFor(profileRepository)

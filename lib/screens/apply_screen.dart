@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/location_provider.dart';
-import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/current_volunteer.dart';
@@ -31,6 +30,7 @@ class ApplyScreen extends ConsumerStatefulWidget {
 class ApplyScreenState extends ConsumerState<ApplyScreen> {
   // TODO: MAINTAIN _searchController, DO NOT use a Provider
   final TextEditingController _searchController = TextEditingController();
+
   // TODO: use firestoreControllerProvider for all service methods
   // final VolunteerDetailsService _volunteerDetailsService =
   //     VolunteerDetailsService();
@@ -40,7 +40,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
   GeoPoint? _userPosition;
 
   // TODO: maintain getUserLocation method. DO NOT USE A PROVIDER
- /* Future<void> _getUserLocation() async {
+  /* Future<void> _getUserLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -71,7 +71,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
 
 */
   void _askForNotificationPermission() async {
-    FirebaseMessaging.instance.requestPermission(
+    await FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -81,6 +81,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
       sound: false,
     );
   }
+
   void _askForLocationPermission() async {
     await Geolocator.requestPermission();
   }
@@ -90,15 +91,15 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     super.initState();
     _askForNotificationPermission();
     _askForLocationPermission();
-
   }
 
-  
   @override
   Widget build(BuildContext context) {
-
     final firestoreController = ref.read(firestoreControllerProvider);
-    final locationAsyncValue = ref.watch(locationProvider);
+    final userLocation = ref.watch(userLocationProvider);
+
+    final locationController = ref.read(locationControllerProvider);
+    locationController.updateUserLocation();
 
     void loadVolunteers() {
       setState(() {
@@ -107,29 +108,32 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
         _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
       });
     }
-    locationAsyncValue.when(
-      data: (location) {
-        if (location != null) {
-          setState(() {
-            _userPosition = location;
-          });
-     
-        }
-            _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
-    _volunteers =
-        firestoreController.getVolunteers(query: _searchController.text,userPosition: _userPosition);
 
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
-    );
-
-
+    setState(() {
+      _userPosition = userLocation;
+    });
+    _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
+    _volunteers = firestoreController.getVolunteers(
+        query: _searchController.text, userPosition: _userPosition);
+    // locationAsyncValue.when(
+    //   data: (location) {
+    //     if (location != null) {
+    //       setState(() {
+    //         _userPosition = location;
+    //       });
+    //
+    //     }
+    //         _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
+    // _volunteers =
+    //     firestoreController.getVolunteers(query: _searchController.text,userPosition: _userPosition);
+    //
+    //   },
+    //   loading: () => const Center(child: CircularProgressIndicator()),
+    //   error: (error, stack) => Center(child: Text('Error: $error')),
+    // );
 
     // USER
     // final user = ref.watch(currentUserProvider);
-
-
 
     return Container(
       decoration: const BoxDecoration(
@@ -151,7 +155,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                 onChanged: (_) => loadVolunteers(),
                 decoration: InputDecoration(
                   contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   hintText: AppLocalizations.of(context)!.search,
                   hintStyle: ProjectFonts.subtitle1
                       .copyWith(color: ProjectPalette.neutral6),
@@ -161,12 +165,12 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                   suffixIcon: _searchController.text.isEmpty
                       ? ProjectIcons.mapFilledActivated
                       : IconButton(
-                    icon: ProjectIcons.closeFilledEnabled,
-                    onPressed: () {
-                      _searchController.clear();
-                      loadVolunteers();
-                    },
-                  ),
+                          icon: ProjectIcons.closeFilledEnabled,
+                          onPressed: () {
+                            _searchController.clear();
+                            loadVolunteers();
+                          },
+                        ),
                 ),
               ),
             ),
@@ -181,7 +185,8 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                   } else if (availabilitySnapshot.hasError) {
                     return Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // Ensure alignment
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start, // Ensure alignment
                         children: [
                           Text(
                             AppLocalizations.of(context)!.volunteerings,
@@ -198,7 +203,8 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                   } else if (availabilitySnapshot.hasData &&
                       !availabilitySnapshot.data!) {
                     return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Ensure alignment
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // Ensure alignment
                       children: [
                         Text(
                           AppLocalizations.of(context)!.volunteerings,
@@ -216,8 +222,10 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                     return FutureBuilder<List<VolunteerDetails>>(
                       future: _volunteers,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else if (snapshot.hasError) {
                           return Center(
                             child: Text(
@@ -226,10 +234,12 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                             ),
                           );
                         } else if (snapshot.hasData) {
-                          List<VolunteerDetails> volunteerDetails = snapshot.data!;
+                          List<VolunteerDetails> volunteerDetails =
+                              snapshot.data!;
                           if (volunteerDetails.isEmpty) {
                             return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start, // Ensure alignment
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start, // Ensure alignment
                               children: [
                                 Text(
                                   AppLocalizations.of(context)!.volunteerings,
@@ -239,15 +249,18 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                                 const SizedBox(height: 16),
                                 NoVolunteersCard(
                                   size: NoVolunteersCardSize.medium,
-                                  message: AppLocalizations.of(context)!.noVolunteersSearch,
+                                  message: AppLocalizations.of(context)!
+                                      .noVolunteersSearch,
                                 ),
                               ],
                             );
                           }
                           return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start, // Ensure alignment
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start, // Ensure alignment
                             children: [
-                              CurrentVolunteerSection(detailsList: volunteerDetails),
+                              CurrentVolunteerSection(
+                                  detailsList: volunteerDetails),
                               Text(
                                 AppLocalizations.of(context)!.volunteerings,
                                 style: ProjectFonts.headline1,
@@ -256,21 +269,27 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                               Expanded(
                                 child: ListView.separated(
                                   padding: const EdgeInsets.only(top: 24),
-                                  separatorBuilder: (_, __) => const SizedBox(height: 24),
+                                  separatorBuilder: (_, __) =>
+                                      const SizedBox(height: 24),
                                   itemCount: volunteerDetails.length,
                                   itemBuilder: (context, index) {
                                     return VolunteeringCard(
                                       id: volunteerDetails[index].id,
                                       onPressedLocation: () {
-                                        firestoreController.openLocationInMap(volunteerDetails[index].location);
+                                        firestoreController.openLocationInMap(
+                                            volunteerDetails[index].location);
                                       },
                                       onPressed: () {
-                                        context.go(VolunteerDetailsScreen.routeFromId(volunteerDetails[index].id));
+                                        context.go(
+                                            VolunteerDetailsScreen.routeFromId(
+                                                volunteerDetails[index].id));
                                       },
                                       type: volunteerDetails[index].type,
                                       title: volunteerDetails[index].title,
-                                      vacancies: volunteerDetails[index].remainingVacancies,
-                                      imageUrl: volunteerDetails[index].imageUrl,
+                                      vacancies: volunteerDetails[index]
+                                          .remainingVacancies,
+                                      imageUrl:
+                                          volunteerDetails[index].imageUrl,
                                     );
                                   },
                                 ),
@@ -296,6 +315,5 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
         ),
       ),
     );
-
   }
 }
