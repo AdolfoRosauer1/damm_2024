@@ -228,34 +228,40 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 await authController.signOut();
                                 await authController.registerUser(
                                     email, password, name, lastName);
-                                context.go(ApplyScreen.route);
+                                if (context.mounted) {
+                                  context.go(ApplyScreen.route);
+                                }
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == "email-already-in-use") {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    elevation: 0,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    content: AwesomeSnackbarContent(
-                                      title: "Error",
-                                      message: AppLocalizations.of(context)!
-                                          .error_emailAlreadyExists,
-                                      contentType: ContentType.failure,
-                                    ),
-                                  ));
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      elevation: 0,
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.transparent,
+                                      content: AwesomeSnackbarContent(
+                                        title: "Error",
+                                        message: AppLocalizations.of(context)!
+                                            .error_emailAlreadyExists,
+                                        contentType: ContentType.failure,
+                                      ),
+                                    ));
+                                  }
                                 } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    elevation: 0,
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.transparent,
-                                    content: AwesomeSnackbarContent(
-                                      title: "Error",
-                                      message: AppLocalizations.of(context)!
-                                          .error_generic,
-                                      contentType: ContentType.failure,
-                                    ),
-                                  ));
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      elevation: 0,
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.transparent,
+                                      content: AwesomeSnackbarContent(
+                                        title: "Error",
+                                        message: AppLocalizations.of(context)!
+                                            .error_generic,
+                                        contentType: ContentType.failure,
+                                      ),
+                                    ));
+                                  }
                                 }
                                 print(e);
                               } catch (e) {
