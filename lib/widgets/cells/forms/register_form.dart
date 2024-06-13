@@ -66,7 +66,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 31),
+              const SizedBox(height:31),
               Image.asset('assets/images/logo_cuadrado.png'),
               const SizedBox(height: 16),
               FormBuilder(
@@ -80,12 +80,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         FormBuilderValidators.required(),
                         FormBuilderValidators.match(r'^[a-zA-Z ]+$')
                       ]),
-                      onChanged: (_) => onFormChanged,
+                      onChanged: (_) => onFormChanged(),
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: ProjectPalette.neutral6),
+                          borderSide: const BorderSide(color: ProjectPalette.neutral6),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -95,8 +94,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           backgroundColor: ProjectPalette.neutral3,
                         ),
                         hintText: 'Ej: Juan',
-                        hintStyle: ProjectFonts.subtitle1
-                            .copyWith(color: ProjectPalette.neutral5),
+                        hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -107,12 +105,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         FormBuilderValidators.required(),
                         FormBuilderValidators.match(r'^[a-zA-Z ]+$')
                       ]),
-                      onChanged: (_) => onFormChanged,
+                      onChanged: (_) => onFormChanged(),
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: ProjectPalette.neutral6),
+                          borderSide: const BorderSide(color: ProjectPalette.neutral6),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -122,8 +119,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           backgroundColor: ProjectPalette.neutral3,
                         ),
                         hintText: 'Ej: Barcena',
-                        hintStyle: ProjectFonts.subtitle1
-                            .copyWith(color: ProjectPalette.neutral5),
+                        hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -134,12 +130,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         FormBuilderValidators.required(),
                         FormBuilderValidators.email()
                       ]),
-                      onChanged: (_) => onFormChanged,
+                      onChanged: (_) => onFormChanged(),
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: ProjectPalette.neutral6),
+                          borderSide: const BorderSide(color: ProjectPalette.neutral6),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -149,23 +144,22 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           backgroundColor: ProjectPalette.neutral3,
                         ),
                         hintText: 'Ej: juanbarcena@mail.com',
-                        hintStyle: ProjectFonts.subtitle1
-                            .copyWith(color: ProjectPalette.neutral5),
+                        hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5),
                       ),
                     ),
                     const SizedBox(height: 24),
                     FormBuilderTextField(
                       name: 'password',
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()]),
-                      onChanged: (_) => onFormChanged,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required()
+                      ]),
+                      onChanged: (_) => onFormChanged(),
                       obscureText: _hidePassword,
                       keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: ProjectPalette.neutral6),
+                          borderSide: const BorderSide(color: ProjectPalette.neutral6),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -186,8 +180,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           backgroundColor: ProjectPalette.neutral3,
                         ),
                         hintText: 'Ej: ABCD1234',
-                        hintStyle: ProjectFonts.subtitle1
-                            .copyWith(color: ProjectPalette.neutral5),
+                        hintStyle: ProjectFonts.subtitle1.copyWith(color: ProjectPalette.neutral5),
                       ),
                     ),
                   ],
@@ -214,8 +207,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                               );
                               return;
                             }
-                            if (formKey.currentState?.saveAndValidate() ??
-                                false) {
+                            if (formKey.currentState?.saveAndValidate() ?? false) {
                               final formValues = formKey.currentState?.value;
                               final email = formValues?['email'];
                               final password = formValues?['password'];
@@ -226,42 +218,31 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                   isLoading = true;
                                 });
                                 await authController.signOut();
-                                await authController.registerUser(
-                                    email, password, name, lastName);
-                                if (context.mounted) {
-                                  context.go(ApplyScreen.route);
-                                }
+                                await authController.registerUser(email, password, name, lastName);
+                                context.go(ApplyScreen.route);
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == "email-already-in-use") {
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      elevation: 0,
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Colors.transparent,
-                                      content: AwesomeSnackbarContent(
-                                        title: "Error",
-                                        message: AppLocalizations.of(context)!
-                                            .error_emailAlreadyExists,
-                                        contentType: ContentType.failure,
-                                      ),
-                                    ));
-                                  }
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    elevation: 0,
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.transparent,
+                                    content: AwesomeSnackbarContent(
+                                      title: "Error",
+                                      message: AppLocalizations.of(context)!.error_emailAlreadyExists,
+                                      contentType: ContentType.failure,
+                                    ),
+                                  ));
                                 } else {
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      elevation: 0,
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Colors.transparent,
-                                      content: AwesomeSnackbarContent(
-                                        title: "Error",
-                                        message: AppLocalizations.of(context)!
-                                            .error_generic,
-                                        contentType: ContentType.failure,
-                                      ),
-                                    ));
-                                  }
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    elevation: 0,
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.transparent,
+                                    content: AwesomeSnackbarContent(
+                                      title: "Error",
+                                      message: AppLocalizations.of(context)!.error_generic,
+                                      contentType: ContentType.failure,
+                                    ),
+                                  ));
                                 }
                                 print(e);
                               } catch (e) {
@@ -281,8 +262,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 },
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 child: CtaButton(
                   enabled: true,
                   onPressed: () => context.go(LoginForm.route),
