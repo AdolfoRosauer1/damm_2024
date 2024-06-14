@@ -13,6 +13,7 @@ class Volunteer {
   final List<String?> favoriteVolunteerings;
   String? currentVolunteering;
   String? currentApplication;
+  String? fcmToken;
 
   Volunteer({
     required this.firstName,
@@ -26,10 +27,10 @@ class Volunteer {
     required this.uid,
     this.currentVolunteering,
     this.currentApplication,
+    this.fcmToken,
   });
 
   bool hasCompletedProfile() {
-
     return gender != null &&
         phoneNumber.isNotEmpty &&
         dateOfBirth != null &&
@@ -38,35 +39,35 @@ class Volunteer {
 
   factory Volunteer.fromJson(Map<String, dynamic> data) {
     return Volunteer(
-      firstName: data['firstName'] as String,
-      lastName: data['lastName'] as String,
-      email: data['email'] as String,
-      gender: genderFromString(data['gender']),
-      profileImageURL: data['profileImageURL'] as String,
-      dateOfBirth: (data['dateOfBirth'] as DateTime?),
-      phoneNumber: data['phoneNumber'] as String,
-      uid: data['uid'] as String,
-      favoriteVolunteerings:
-          List<String?>.from(data['favoriteVolunteerings'] as List),
-      currentVolunteering: data['currentVolunteering'] as String?,
-      currentApplication: data['currentApplication'] as String?,
-    );
+        firstName: data['firstName'] as String,
+        lastName: data['lastName'] as String,
+        email: data['email'] as String,
+        gender: genderFromString(data['gender']),
+        profileImageURL: data['profileImageURL'] as String,
+        dateOfBirth: (data['dateOfBirth'] as DateTime?),
+        phoneNumber: data['phoneNumber'] as String,
+        uid: data['uid'] as String,
+        favoriteVolunteerings:
+            List<String?>.from(data['favoriteVolunteerings'] as List),
+        currentVolunteering: data['currentVolunteering'] as String?,
+        currentApplication: data['currentApplication'] as String?,
+        fcmToken: data['fcmToken'] as String?);
   }
 
   factory Volunteer.empty() {
     return Volunteer(
-      firstName: '',
-      lastName: '',
-      email: '',
-      gender: null,
-      profileImageURL: '',
-      dateOfBirth: null,
-      phoneNumber: '',
-      favoriteVolunteerings: [],
-      uid: '',
-      currentVolunteering: null,
-      currentApplication: null,
-    );
+        firstName: '',
+        lastName: '',
+        email: '',
+        gender: null,
+        profileImageURL: '',
+        dateOfBirth: null,
+        phoneNumber: '',
+        favoriteVolunteerings: [],
+        uid: '',
+        currentVolunteering: null,
+        currentApplication: null,
+        fcmToken: null);
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +84,7 @@ class Volunteer {
       'favoriteVolunteerings': favoriteVolunteerings,
       'currentVolunteering': currentVolunteering,
       'currentApplication': currentApplication,
+      'fcmToken': fcmToken,
     };
   }
 
@@ -100,12 +102,13 @@ class Volunteer {
       uid: volunteer.uid,
       currentVolunteering: volunteer.currentVolunteering,
       currentApplication: volunteer.currentApplication,
+      fcmToken: volunteer.fcmToken,
     );
   }
 
   @override
   String toString() {
-    return 'Volunteer{firstName: $firstName, lastName: $lastName, email: $email, gender: $gender, profileImageURL: $profileImageURL, dateOfBirth: $dateOfBirth, phoneNumber: $phoneNumber, uid: $uid, favoriteVolunteerings: $favoriteVolunteerings, currentVolunteering: $currentVolunteering, currentApplication: $currentApplication}';
+    return 'Volunteer{firstName: $firstName, lastName: $lastName, email: $email, gender: $gender, profileImageURL: $profileImageURL, dateOfBirth: $dateOfBirth, phoneNumber: $phoneNumber, uid: $uid, favoriteVolunteerings: $favoriteVolunteerings, currentVolunteering: $currentVolunteering, currentApplication: $currentApplication, fcmToken: $fcmToken}';
   }
 
   bool hasFavorite(String opportunityId) {

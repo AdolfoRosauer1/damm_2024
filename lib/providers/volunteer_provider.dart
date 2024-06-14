@@ -39,7 +39,8 @@ FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
 
 @Riverpod(keepAlive: true)
 ProfileRepository profileRepository(ProfileRepositoryRef ref) {
-  return ProfileRepository(ref.watch(firebaseFirestoreProvider), ref.watch(storageDataSourceProvider));
+  return ProfileRepository(ref.watch(firebaseFirestoreProvider),
+      ref.watch(storageDataSourceProvider));
 }
 
 @Riverpod(keepAlive: true)
@@ -74,9 +75,8 @@ class ProfileController {
         if (toSet != null) {
           _userNotifier.set(toSet);
         }
-
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
   }
@@ -86,6 +86,9 @@ class ProfileController {
     if (user != null) {
       Volunteer? toSet = await getVolunteerById(user.uid);
       if (toSet != null) {
+        // make sure this is the correct device token
+        final token = await FirebaseMessaging.instance.getToken();
+        toSet.fcmToken = token;
         _userNotifier.set(toSet);
       }
     }
@@ -96,10 +99,10 @@ class ProfileController {
   }
 
   Future<void> addFavoriteVolunteering(String opportunityId) async {
-    if (_firebaseAuth.currentUser == null ) {
+    if (_firebaseAuth.currentUser == null) {
       return;
     }
-    try{
+    try {
       // get current user
       // Volunteer toSet = _currentUser;
       // // addFavorite
@@ -114,10 +117,9 @@ class ProfileController {
       // store in Firestore async
       // _repository.addFavoriteVolunteering(_currentUser.uid, opportunityId);
       _repository.setVolunteerFromJson(toSet.toJson());
-    }catch(e,stackTrace){
+    } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
-
 
     // await _repository.addFavoriteVolunteering(
     //     _firebaseAuth.currentUser!.uid, opportunityId);
@@ -131,7 +133,7 @@ class ProfileController {
       return;
     }
 
-    try{
+    try {
       // get current user
       // Volunteer toSet = _currentUser;
       // // addFavorite
@@ -147,11 +149,9 @@ class ProfileController {
       // store in Firestore async
       // _repository.removeFavoriteVolunteering(_currentUser.uid, opportunityId);
       _repository.setVolunteerFromJson(toSet.toJson());
-    }catch(e,stackTrace){
+    } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
-
-
 
     // await _repository.removeFavoriteVolunteering(
     //     _firebaseAuth.currentUser!.uid, opportunityId);
@@ -174,13 +174,14 @@ class ProfileController {
         "dateOfBirth": null,
         "phoneNumber": '',
         "favoriteVolunteerings": [],
+        "fcmToken": null
       };
       try {
         Volunteer? toSet = await _repository.createVolunteerFromJSON(json);
         if (toSet != null) {
           _userNotifier.set(toSet);
         }
-      } catch (e,stackTrace) {
+      } catch (e, stackTrace) {
         FirebaseCrashlytics.instance.recordError(e, stackTrace);
       }
       return _firebaseAuth.currentUser;
@@ -210,7 +211,7 @@ class StorageDataSource {
         return imageRef.getDownloadURL();
       } catch (e, stackTrace) {
         FirebaseCrashlytics.instance.recordError(e, stackTrace);
-        
+
         return null;
       }
     }
@@ -231,16 +232,20 @@ class ProfileRepository {
           .collection('volunteer')
           .doc(data['uid'])
           .set(data)
-          .onError((e, _) => FirebaseCrashlytics.instance.recordError(e,_));
+          .onError((e, _) => FirebaseCrashlytics.instance.recordError(e, _));
       return Volunteer.fromJson(data);
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
     return null;
   }
 
-  Future<void> setVolunteerFromJson(Map<String, dynamic> data)async {
-    await _firestore.collection('volunteer').doc(data['uid']).set(data).onError((e, _) => FirebaseCrashlytics.instance.recordError(e,_));
+  Future<void> setVolunteerFromJson(Map<String, dynamic> data) async {
+    await _firestore
+        .collection('volunteer')
+        .doc(data['uid'])
+        .set(data)
+        .onError((e, _) => FirebaseCrashlytics.instance.recordError(e, _));
   }
 
   Future<Volunteer?> editVolunteer(
@@ -248,13 +253,12 @@ class ProfileRepository {
     try {
       // CREATE A USER DOCUMENT IN FIREBASE
       // SET riverpod volunteer
-      Map<String,dynamic> cuJson = user.toJson();
+      Map<String, dynamic> cuJson = user.toJson();
       cuJson['profileImageURL'] = data['profilePicture'];
       cuJson['email'] = data['email'];
       cuJson['phoneNumber'] = data['phoneNumber'];
       cuJson['gender'] = data['gender'];
       cuJson['dateOfBirth'] = data['dateOfBirth'];
-
 
       if (cuJson['profileImageURL'] != user.profileImageURL) {
         cuJson['profileImageURL'] =
@@ -267,8 +271,8 @@ class ProfileRepository {
           .collection('volunteer')
           .doc(user.uid)
           .set(cuJson)
-          .onError((e, _) => FirebaseCrashlytics.instance.recordError(e,_));
-      
+          .onError((e, _) => FirebaseCrashlytics.instance.recordError(e, _));
+
       _analyticsService.logCompleteVolunteerProfile(user.uid);
 
       // Persist in Riverpod

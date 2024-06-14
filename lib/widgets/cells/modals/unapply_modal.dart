@@ -33,7 +33,9 @@ class UnApplyModal extends ConsumerWidget {
           builder: (context, snapshot) {
             String displayTitle = title ?? '';
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const SizedBox(
+                  height: 36,
+                  child: Center(child: CircularProgressIndicator()));
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
@@ -73,8 +75,9 @@ class UnApplyModal extends ConsumerWidget {
                           if (context.mounted) {
                             Navigator.of(context).pop();
                           }
-                        } catch (e,stackTrace) {
-                          FirebaseCrashlytics.instance.recordError(e, stackTrace);
+                        } catch (e, stackTrace) {
+                          FirebaseCrashlytics.instance
+                              .recordError(e, stackTrace);
                         }
                       },
                       style: TextButton.styleFrom(
