@@ -53,6 +53,11 @@ las notificaciones.
 
 Decidimos que el contador cambie solo cuando las solicitudes son confirmadas, por lo que para ver
 cambios realtime habría que confirmar aplicaciones, como se explica más adelante en este informe.
+##### Decisiones de seguridad
+Decidimos agregar reglas al Firestore para limitar el acceso. Dichas reglas son:
+- Reglas para la colección news: solo usuarios autenticados pueden leer. Escritura denegada.
+- Reglas para la coleccion volunteerOpportunities: solo usuarios autenticados pueden leer y escribir.
+- Reglas para la colección volunteer: solo el usuario autenticado con ese uid puede leer y escribir en el registro volunteer correspondiente a este id
 
 ### Problemas encontrados
 
