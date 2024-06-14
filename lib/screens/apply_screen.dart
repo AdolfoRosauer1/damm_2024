@@ -14,10 +14,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 
-// TODO: refactor to ConsumerStatefulWidget
 class ApplyScreen extends ConsumerStatefulWidget {
   static const route = "/apply";
 
@@ -28,48 +26,15 @@ class ApplyScreen extends ConsumerStatefulWidget {
 }
 
 class ApplyScreenState extends ConsumerState<ApplyScreen> {
-  // TODO: MAINTAIN _searchController, DO NOT use a Provider
   final TextEditingController _searchController = TextEditingController();
 
-  // TODO: use firestoreControllerProvider for all service methods
-  // final VolunteerDetailsService _volunteerDetailsService =
-  //     VolunteerDetailsService();
+  
 
   late Future<List<VolunteerDetails>> _volunteers;
   late Future<bool> _areVolunteersAvailable;
   GeoPoint? _userPosition;
 
-  // TODO: maintain getUserLocation method. DO NOT USE A PROVIDER
-  /* Future<void> _getUserLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      _userPosition = position;
-    });
-  }
-
-*/
 
   void _askForNotificationPermission() {
     FirebaseMessaging.instance.requestPermission(
@@ -83,15 +48,12 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     );
   }
 
-  // void _askForLocationPermission() {
-  //   Geolocator.requestPermission();
-  // }
+ 
 
   @override
   void initState() {
     super.initState();
     _askForNotificationPermission();
-    // _askForLocationPermission();
   }
 
   @override
@@ -116,25 +78,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
     _volunteers = firestoreController.getVolunteers(
         query: _searchController.text, userPosition: _userPosition);
-    // locationAsyncValue.when(
-    //   data: (location) {
-    //     if (location != null) {
-    //       setState(() {
-    //         _userPosition = location;
-    //       });
-    //
-    //     }
-    //         _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
-    // _volunteers =
-    //     firestoreController.getVolunteers(query: _searchController.text,userPosition: _userPosition);
-    //
-    //   },
-    //   loading: () => const Center(child: CircularProgressIndicator()),
-    //   error: (error, stack) => Center(child: Text('Error: $error')),
-    // );
-
-    // USER
-    // final user = ref.watch(currentUserProvider);
+   
 
     return Container(
       decoration: const BoxDecoration(

@@ -18,17 +18,6 @@ FirebaseAuth firebaseAuthentication(FirebaseAuthenticationRef ref) {
   return FirebaseAuth.instance;
 }
 
-// @Riverpod(keepAlive: true)
-// class FirebaseAuthentication extends _$FirebaseAuthentication {
-//   @override
-//   FirebaseAuth build() {
-//     return FirebaseAuth.instance;
-//   }
-//
-//   void reset() {
-//     state = FirebaseAuth.instance;
-//   }
-// }
 
 @Riverpod(keepAlive: true)
 AuthController authController(AuthControllerRef ref) {

@@ -103,7 +103,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         keyboardType: TextInputType.visiblePassword,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required()
-                          //    FormBuilderValidators.minLength(8),
                         ]),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(

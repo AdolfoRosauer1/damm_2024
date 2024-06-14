@@ -53,7 +53,6 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data == null) {
-            //TODO Redirigir para atras?
             return Center(child: Text(AppLocalizations.of(context)!.newsNotFound));
           } else {
             News news = snapshot.data!;

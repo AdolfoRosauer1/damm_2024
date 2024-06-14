@@ -102,30 +102,22 @@ class ProfileController {
     if (_firebaseAuth.currentUser == null) {
       return;
     }
-    try {
-      // get current user
-      // Volunteer toSet = _currentUser;
-      // // addFavorite
-      // toSet.addFavoriteVolunteer(opportunityId);
+    try{
+      
 
       Volunteer toSet = Volunteer.fromVolunteer(_currentUser);
       toSet.addFavoriteVolunteer(opportunityId);
       // set notifier
       _userNotifier.set(toSet);
 
-      // _currentUser.addFavoriteVolunteer(opportunityId);
-      // store in Firestore async
-      // _repository.addFavoriteVolunteering(_currentUser.uid, opportunityId);
+      
       _repository.setVolunteerFromJson(toSet.toJson());
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
 
-    // await _repository.addFavoriteVolunteering(
-    //     _firebaseAuth.currentUser!.uid, opportunityId);
-    // Volunteer updatedUser =
-    //     (await _repository.getVolunteerById(_firebaseAuth.currentUser!.uid))!;
-    // _userNotifier.set(updatedUser);
+
+    
   }
 
   Future<void> removeFavoriteVolunteering(String opportunityId) async {
@@ -133,31 +125,19 @@ class ProfileController {
       return;
     }
 
-    try {
-      // get current user
-      // Volunteer toSet = _currentUser;
-      // // addFavorite
-      // print('original User: $_currentUser');
-      // toSet.removeFavoriteVolunteer(opportunityId);
-      // // set notifier
-      // print('toSet: $toSet');
+    try{
+     
       Volunteer toSet = Volunteer.fromVolunteer(_currentUser);
       toSet.removeFavoriteVolunteer(opportunityId);
       _userNotifier.set(toSet);
 
-      // _currentUser.removeFavoriteVolunteer(opportunityId);
-      // store in Firestore async
-      // _repository.removeFavoriteVolunteering(_currentUser.uid, opportunityId);
       _repository.setVolunteerFromJson(toSet.toJson());
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
 
-    // await _repository.removeFavoriteVolunteering(
-    //     _firebaseAuth.currentUser!.uid, opportunityId);
-    // Volunteer updatedUser =
-    //     (await _repository.getVolunteerById(_firebaseAuth.currentUser!.uid))!;
-    // _userNotifier.set(updatedUser);
+
+
   }
 
   Future<User?> registerVolunteer(String name, String lastName) async {
@@ -265,6 +245,7 @@ class ProfileRepository {
             await _storageDataSource.uploadPFP(cuJson['profileImageURL']);
       }
 
+      
       cuJson['fcmToken'] = await FirebaseMessaging.instance.getToken();
 
       await _firestore

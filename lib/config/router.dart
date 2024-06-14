@@ -152,19 +152,18 @@ class CustomNavigationHelper {
     router = GoRouter(
       navigatorKey: parentNavigatorKey,
       routes: routes,
-      initialLocation: "/apply",
+      initialLocation: ApplyScreen.route,
       redirect: (context, state) {
         // Get the current route location
         final currentLocation = state.uri.path;
         // Define the routes where you don't want to redirect even if the user is not authenticated
-        const nonAuthRoutes = ['/login', '/register', '/access', '/'];
+        const nonAuthRoutes = [LoginForm.route, RegisterForm.route, AccessScreen.route, '/'];
 
         // Access the auth state from a provider
         final container = ProviderContainer();
         final authState =
             container.read(firebaseAuthenticationProvider).currentUser;
-        // Print statements for debugging
-        // print('authState = $authState');
+
 
         // If the user is not authenticated and the current location is not in the non-auth routes, redirect to '/access'
         if (authState == null && !nonAuthRoutes.contains(currentLocation)) {
