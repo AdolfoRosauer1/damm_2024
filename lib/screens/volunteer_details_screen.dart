@@ -39,7 +39,6 @@ class VolunteerDetailsScreenState
     final internetStatus = ref.watch(internetConnectionProvider);
     final internet = internetStatus.value! == InternetStatus.connected;
 
-    print(widget.id);
     final volunteerDetailsAsyncValue =
         ref.watch(volunteerDetailsProviderProvider(widget.id));
     final currentUser = ref.watch(currentUserProvider);
