@@ -85,12 +85,10 @@ class FirestoreController {
         user.applyToVolunteer(oppId);
         await _firestoreRepository.applyToOpportunity(user.uid, oppId);
         notifier.set(Volunteer.fromVolunteer(user));
-        print(
-            'FirestoreController.applyToOpportunity: Finished applying to opportunity: $oppId');
+       
       }
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error in FirestoreController.applyToOpportunity: $e');
     }
   }
 
@@ -101,12 +99,10 @@ class FirestoreController {
         user.unApplyToVolunteer();
         await _firestoreRepository.unApplyToOpportunity(user.uid, oppId);
         notifier.set(Volunteer.fromVolunteer(user));
-        print(
-            'FirestoreController.unApplyToOpportunity: Finished un-applying from opportunity: $oppId');
+      
       }
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error in FirestoreController.unApplyToOpportunity: $e');
     }
   }
 
@@ -117,8 +113,8 @@ class FirestoreController {
         await _firestoreRepository.cancelOpportunity(user.uid, oppId);
         notifier.set(Volunteer.fromVolunteer(user));
       }
-    } catch (e) {
-      print('Error in FirestoreController.cancelOpportunity: $e');
+    } catch (e,stackTrace){
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
     }
   }
 
@@ -126,12 +122,10 @@ class FirestoreController {
   Future<VolunteerDetails?> getVolunteerById(String id) async {
     try {
       var result = await _firestoreRepository.getVolunteerById(id);
-      print(
-          'FirestoreController.getVolunteerById: Finished getting volunteer details for ID: $id');
+    
       return result;
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error in FirestoreController.getVolunteerById: $e');
       return null;
     }
   }
@@ -142,11 +136,9 @@ class FirestoreController {
     try {
       var result = await _firestoreRepository.getVolunteers(
           query: query, userPosition: userPosition);
-      print('FirestoreController.getVolunteers: Finished getting volunteers');
       return result;
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error in FirestoreController.getVolunteers: $e');
       return [];
     }
   }
@@ -172,13 +164,11 @@ class FirestoreRepository {
           opportunity.pendingApplicants.add(userId);
           await _dataSource.updateVolunteerById(opportunity);
           _analyticsService.logApplyToVolunteer(oppId, userId);
-          print(
-              'FirestoreRepository.applyToOpportunity: User $userId applied to opportunity $oppId');
+        
         }
       }
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error in FirestoreRepository.applyToOpportunity: $e');
     }
   }
 
@@ -192,13 +182,10 @@ class FirestoreRepository {
           await _dataSource.updateVolunteerById(opportunity);
           _analyticsService.logUnapplyToVolunteer(oppId, userId);
 
-          print(
-              'FirestoreRepository.unApplyToOpportunity: User $userId un-applied from opportunity $oppId');
         }
       }
     } catch (e, stacTrace) {
       FirebaseCrashlytics.instance.recordError(e, stacTrace);
-      print('Error in FirestoreRepository.unApplyToOpportunity: $e');
     }
   }
 
@@ -209,12 +196,11 @@ class FirestoreRepository {
         if (opportunity.isUserConfirmed(userId)) {
           opportunity.confirmedApplicants.remove(userId);
           await _dataSource.updateVolunteerById(opportunity);
-          print(
-              'FirestoreRepository.cancelOpportunity: User $userId canceled opportunity $oppId');
+        
         }
       }
-    } catch (e) {
-      print('Error in FirestoreRepository.cancelOpportunity: $e');
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
     }
   }
 
@@ -224,12 +210,10 @@ class FirestoreRepository {
     try {
       var result = await _dataSource.getVolunteers(
           query: query, userPosition: userPosition);
-      print(
-          'FirestoreRepository.getVolunteers: Fetched volunteers from data source');
+
       return result;
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error in FirestoreRepository.getVolunteers: $e');
       return [];
     }
   }
@@ -238,12 +222,10 @@ class FirestoreRepository {
   Future<VolunteerDetails?> getVolunteerById(String id) async {
     try {
       var result = await _dataSource.getVolunteerById(id);
-      print(
-          'FirestoreRepository.getVolunteerById: Fetched volunteer details for ID: $id');
+
       return result;
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error in FirestoreRepository.getVolunteerById: $e');
       return null;
     }
   }
@@ -269,8 +251,7 @@ class FirestoreDataSource {
       List<VolunteerDetails> volunteers = [];
       QuerySnapshot snapshot =
           await _firestore.collection('volunteerOpportunities').get();
-      print(
-          'FirestoreDataSource.getVolunteers: Fetched volunteer opportunities from Firestore');
+
 
       for (var element in snapshot.docs) {
         try {
@@ -300,8 +281,7 @@ class FirestoreDataSource {
           }
         } catch (e, stackTrace) {
           FirebaseCrashlytics.instance.recordError(e, stackTrace);
-          print(
-              'Error in FirestoreDataSource.getVolunteers (processing document): $e');
+
         }
       }
 
@@ -328,12 +308,9 @@ class FirestoreDataSource {
         volunteers.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       }
 
-      print(
-          'FirestoreDataSource.getVolunteers: Sorted and filtered volunteer opportunities');
       return volunteers;
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error in FirestoreDataSource.getVolunteers: $e');
       return [];
     }
   }
@@ -346,11 +323,9 @@ class FirestoreDataSource {
           .collection('volunteerOpportunities')
           .doc(volunteer.id)
           .update(data);
-      print(
-          'FirestoreDataSource.updateVolunteerById: Updated volunteer opportunity: ${volunteer.id}');
+
     } catch (e, stacTrace) {
       FirebaseCrashlytics.instance.recordError(e, stacTrace);
-      print('Error in FirestoreDataSource.updateVolunteerById: $e');
     }
   }
 
@@ -375,15 +350,14 @@ class FirestoreDataSource {
             List<String>.from(data['confirmedApplicants'] as List).length;
         data['cost'] ??= 0.0;
 
-        print(
-            'FirestoreDataSource.getVolunteerById: Fetched volunteer details for ID: $id');
+
         return VolunteerDetails.fromJson(data);
       } else {
         return null;
       }
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print("Error in FirestoreDataSource.getVolunteerById: $e");
+     
       return null;
     }
   }

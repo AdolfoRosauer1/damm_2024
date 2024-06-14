@@ -51,12 +51,7 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
   void onFormChanged() {
     isFormValidNotifier.value =
         formKey.currentState!.validate(focusOnInvalid: false);
-    final errors = formKey.currentState?.errors;
-    if (errors != null) {
-      errors.forEach((key, value) {
-        print('Error en el campo $key: $value');
-      });
-    }
+
   }
 
   @override
@@ -274,8 +269,7 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                             enabled: valid,
                             onPressed: () async {
                               if (!valid) {
-                                print(
-                                    'Form validity: $valid, Internet: $_internet');
+                            
                                 return;
                               }
                               if (!_internet) {
@@ -296,16 +290,13 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                                           .fields['gender']
                                           ?.value]);
 
-                                  print(formData?["gender"]);
-                                  print('Form Data: $formData');
+               
 
                                   var gender = formData?["gender"];
                                   final updatedFormData =
                                       Map<String, dynamic>.from(formData ?? {});
                                   updatedFormData["gender"] = genderMap[gender];
-                                  print("----------------");
-                                  print(updatedFormData["gender"]);
-                                  print('UpdatedForm Data: $updatedFormData');
+                   
                                   isLoadingNotifier.value = true;
                                   await profileController
                                       .finishSetup(updatedFormData);
@@ -313,12 +304,9 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                                   if (context.mounted) {
                                     context.go('/profileScreen');
                                   }
-                                } else {
-                                  print('Validation failed');
-                                }
+                                } 
                               } catch (e) {
                                 isLoadingNotifier.value = false;
-                                print('Error saving form: $e');
                               }
                             },
                             filled: true,

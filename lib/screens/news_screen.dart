@@ -3,6 +3,7 @@ import 'package:damm_2024/screens/news_details_screen.dart';
 import 'package:damm_2024/services/news_service.dart';
 import 'package:damm_2024/widgets/cells/cards/news_card.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -40,7 +41,7 @@ class _NewsScreenState extends State<NewsScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              print(snapshot.error);
+              FirebaseCrashlytics.instance.recordError(snapshot.error, StackTrace.current);
               return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text(AppLocalizations.of(context)!.noNewsAvailable));

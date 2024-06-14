@@ -56,7 +56,6 @@ class AuthRepository {
           email: email, password: password);
       return result.user;
     } catch (e) {
-      print(e.toString());
       rethrow;
     }
   }
@@ -77,7 +76,6 @@ class AuthRepository {
       }
       return user;
     } catch (e) {
-      print(e);
       rethrow;
     }
   }
@@ -86,8 +84,8 @@ class AuthRepository {
   Future<void> signOut() async {
     try {
       return await _auth.signOut();
-    } catch (e) {
-      print(e.toString());
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e,stackTrace);
       return;
     }
   }
@@ -111,19 +109,16 @@ class AuthController {
   Future<User?> registerUser(
       String email, String password, String name, String lastName) async {
     try {
-      print('AuthRepo currentUser before register: ${_authRepo.currentUser}');
       await _authRepo.registerUser(email, password, name, lastName);
-      print('AuthRepo currentUser after register: ${_authRepo.currentUser}');
       return await _profileController.registerVolunteer(name, lastName);
-    } catch (e) {
-      print('Error AuthController.registerUser: $e');
+    } catch (e,stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
     }
     return null;
   }
 
   Future<void> signOut() async {
     _currentUserNotifier.set(Volunteer.empty());
-    print('Current User should be empty: $_currentUser');
     await _authRepo.signOut();
     return;
   }
@@ -139,7 +134,6 @@ Future<void> initializeProviders(ProviderContainer container) async {
   final authProvider = container.read(firebaseAuthenticationProvider);
   final authUser = authProvider.currentUser;
 
-  print('Initializing the authStateProvider: $authUser');
   // Restore connection if needed
   if (authUser != null) {
     try {
@@ -147,8 +141,6 @@ Future<void> initializeProviders(ProviderContainer container) async {
       await authUser.getIdToken(true);
     } catch (error,stackTrace) {
       FirebaseCrashlytics.instance.recordError(error, stackTrace);
-      print('Error getting the refresh Token: $error');
     }
   }
-  print('Initialized authStateProvider');
 }

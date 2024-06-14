@@ -51,8 +51,6 @@ void main() async {
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
     ),
     onDidReceiveNotificationResponse: (details) {
-      print('Notification received');
-      print(details.payload);
       if (details.payload != null) {
         CustomNavigationHelper.parentNavigatorKey.currentState?.context
             .go(details.payload!);

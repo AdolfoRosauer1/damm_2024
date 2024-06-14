@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/news.dart';
 import 'package:damm_2024/services/analytics_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
@@ -27,8 +29,8 @@ void shareNews(News news) async {
       text: "${news.description}'\n\n'serManos.com/news/${news.id}",
     );
     _analyticsService.logShareNews(news.id, FirebaseAuth.instance.currentUser!.uid);
-  } catch (e) {
-    print('Error sharing news: $e');
+  } catch (e,stackTrace) {
+    FirebaseCrashlytics.instance.recordError(e, stackTrace);
   }
 }
 
@@ -44,8 +46,8 @@ void shareNews(News news) async {
       } else {
         return null;
       }
-    } catch (e) {
-      print("Error getting news by id: $e");
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       return null;
     }
   }

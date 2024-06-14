@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -71,8 +72,8 @@ class LocationRepository {
   Future<void> getPermission() async {
     try {
       await Geolocator.requestPermission();
-    } catch (e) {
-      print('ERROR locationRepository.getPermission: $e');
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
   }
 

@@ -29,8 +29,7 @@ class Volunteer {
   });
 
   bool hasCompletedProfile() {
-    print(
-        'Volunteer: $this finishedSetup(${gender != null && phoneNumber.isNotEmpty && dateOfBirth != null && profileImageURL.isNotEmpty})');
+
     return gender != null &&
         phoneNumber.isNotEmpty &&
         dateOfBirth != null &&

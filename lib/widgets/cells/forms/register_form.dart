@@ -42,12 +42,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
   void onFormChanged() {
     formValid.value = formKey.currentState!.validate(focusOnInvalid: false);
-    final errors = formKey.currentState?.errors;
-    if (errors != null) {
-      errors.forEach((key, value) {
-        print('Error en el campo $key: $value');
-      });
-    }
+ 
   }
 
   @override
@@ -263,17 +258,12 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                     ));
                                   }
                                 }
-                                print(e);
-                              } catch (e) {
-                                print(e);
                               } finally {
                                 setState(() {
                                   isLoading = false;
                                 });
                               }
-                            } else {
-                              print("Validation failed");
-                            }
+                            } 
                           },
                           filled: true,
                           actionStr: AppLocalizations.of(context)!.register,

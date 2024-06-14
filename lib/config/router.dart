@@ -165,16 +165,14 @@ class CustomNavigationHelper {
             container.read(firebaseAuthenticationProvider).currentUser;
         // Print statements for debugging
         // print('authState = $authState');
-        print('Current location: $currentLocation');
 
         // If the user is not authenticated and the current location is not in the non-auth routes, redirect to '/access'
         if (authState == null && !nonAuthRoutes.contains(currentLocation)) {
-          print('Not authenticated, redirecting to /access');
-          return '/access';
+          
+          return AccessScreen.route;
         }
 
         // If no redirect is needed, return null
-        print('No redirect needed!');
         return null;
       },
     );

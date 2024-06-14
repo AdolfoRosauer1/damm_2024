@@ -4,6 +4,7 @@ import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,8 +75,8 @@ class CancelVolunteerModal extends ConsumerWidget {
                           if (context.mounted) {
                             Navigator.of(context).pop();
                           }
-                        } catch (e) {
-                          print('Error canceling volunteer modal: $e');
+                        } catch (e,stackTrace) {
+                          FirebaseCrashlytics.instance.recordError(e, stackTrace);
                         }
                       },
                       style: TextButton.styleFrom(

@@ -68,7 +68,6 @@ class ProfileController {
 
   Future<void> finishSetup(Map<String, dynamic> data) async {
     User? user = _firebaseAuth.currentUser;
-    print('Starting finishSetup!: $user, $data');
     try {
       if (user != null) {
         Volunteer? toSet = await _repository.editVolunteer(_currentUser, data);
@@ -77,17 +76,15 @@ class ProfileController {
         }
 
       }
-    } catch (e) {
-      print('Error in ProfileController.finishSetup: $e');
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
   }
 
   void initUser() async {
     User? user = _firebaseAuth.currentUser;
-    print('initUSer: FirebaseUser = $user');
     if (user != null) {
       Volunteer? toSet = await getVolunteerById(user.uid);
-      print('initUser: getVolunteerById=$toSet');
       if (toSet != null) {
         _userNotifier.set(toSet);
       }
@@ -115,12 +112,10 @@ class ProfileController {
 
       // _currentUser.addFavoriteVolunteer(opportunityId);
       // store in Firestore async
-      print('About to store in Firestore');
       // _repository.addFavoriteVolunteering(_currentUser.uid, opportunityId);
       _repository.setVolunteerFromJson(toSet.toJson());
-      print('Stored in Firestore');
-    }catch(e){
-      print('Error in profileController.addFavoriteVolunteering: $e');
+    }catch(e,stackTrace){
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
 
 
@@ -152,8 +147,8 @@ class ProfileController {
       // store in Firestore async
       // _repository.removeFavoriteVolunteering(_currentUser.uid, opportunityId);
       _repository.setVolunteerFromJson(toSet.toJson());
-    }catch(e){
-      print('Error in profileController.removeFavoriteVolunteering: $e');
+    }catch(e,stackTrace){
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
 
 
@@ -168,7 +163,6 @@ class ProfileController {
   Future<User?> registerVolunteer(String name, String lastName) async {
     _firebaseAuth.currentUser?.reload();
     final user = _firebaseAuth.currentUser;
-    print('registerVolunteer: user = $user');
     if (user != null) {
       final json = {
         "firstName": name,
@@ -185,10 +179,9 @@ class ProfileController {
         Volunteer? toSet = await _repository.createVolunteerFromJSON(json);
         if (toSet != null) {
           _userNotifier.set(toSet);
-          print('Set volunteer: $_currentUser');
         }
-      } catch (e) {
-        print('Error in profileController.registerVolunteer: $e');
+      } catch (e,stackTrace) {
+        FirebaseCrashlytics.instance.recordError(e, stackTrace);
       }
       return _firebaseAuth.currentUser;
     }
@@ -205,7 +198,6 @@ class StorageDataSource {
   // Upload PFP to FirestoreStorage. Returns URL
   Future<String?> uploadPFP(String filePath) async {
     User? user = _firebaseAuth.currentUser;
-    print('Uploading PFP!');
     if (user != null) {
       final rootRef = _storage.ref();
       String uid = user.uid;
@@ -215,11 +207,10 @@ class StorageDataSource {
 
       try {
         await imageRef.putFile(file);
-        print('PFP uploaded correctly!');
         return imageRef.getDownloadURL();
       } catch (e, stackTrace) {
         FirebaseCrashlytics.instance.recordError(e, stackTrace);
-        print('Error uploading PFP: $e');
+        
         return null;
       }
     }
@@ -236,22 +227,20 @@ class ProfileRepository {
 
   Future<Volunteer?> createVolunteerFromJSON(Map<String, dynamic> data) async {
     try {
-      print('About to createVolunteer from JSON: $data');
       await _firestore
           .collection('volunteer')
           .doc(data['uid'])
           .set(data)
-          .onError((e, _) => print("Error writing document: $e"));
+          .onError((e, _) => FirebaseCrashlytics.instance.recordError(e,_));
       return Volunteer.fromJson(data);
-    } catch (e) {
-      print('Error in ProfileRepository.createVolunteerFromJSON: $e');
+    } catch (e,stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
     return null;
   }
 
   Future<void> setVolunteerFromJson(Map<String, dynamic> data)async {
-    print('About to set VolunteerFromJson in Firestore');
-    await _firestore.collection('volunteer').doc(data['uid']).set(data).onError((e, _) => print('Error setting Volunteer from Json: $e'));
+    await _firestore.collection('volunteer').doc(data['uid']).set(data).onError((e, _) => FirebaseCrashlytics.instance.recordError(e,_));
   }
 
   Future<Volunteer?> editVolunteer(
@@ -273,22 +262,19 @@ class ProfileRepository {
       }
 
       cuJson['fcmToken'] = await FirebaseMessaging.instance.getToken();
-      print("TOKEN = ${cuJson['fcmToken']}");
 
       await _firestore
           .collection('volunteer')
           .doc(user.uid)
           .set(cuJson)
-          .onError((e, _) => print("Error writing document: $e"));
+          .onError((e, _) => FirebaseCrashlytics.instance.recordError(e,_));
       
       _analyticsService.logCompleteVolunteerProfile(user.uid);
 
       // Persist in Riverpod
-      print('editProfile: about to createVolunteer from JSON: $cuJson');
       return Volunteer.fromJson(cuJson);
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error finishing setup: $e');
     }
     return null;
   }
@@ -306,16 +292,13 @@ class ProfileRepository {
       }
     } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
-      print('Error adding favorite volunteering: $e');
     }
   }
 
   Future<Volunteer?> getVolunteerById(String id) async {
     try {
-      print('Fetching Volunteer by ID: $id');
       DocumentSnapshot doc =
           await _firestore.collection('volunteer').doc(id).get();
-      print('Fetched Firestore Document: $doc');
       if (doc.exists) {
         var data = doc.data() as Map<String, dynamic>;
         Timestamp ts = data['dateOfBirth'] as Timestamp;
@@ -325,7 +308,6 @@ class ProfileRepository {
       }
       return null;
     } catch (e, stackTrace) {
-      print('Error getting user by id: $e');
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
       return null;
     }
@@ -345,7 +327,6 @@ class ProfileRepository {
         }
       }
     } catch (e, stackTrace) {
-      print('Error removing favorite volunteering: $e');
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
     }
   }

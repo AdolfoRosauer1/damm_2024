@@ -39,12 +39,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   void onFormChanged() {
     formValid.value = formKey.currentState!.validate(focusOnInvalid: false);
-    final errors = formKey.currentState?.errors;
-    if (errors != null) {
-      errors.forEach((key, value) {
-        print('Error en el campo $key: $value');
-      });
-    }
   }
 
   @override
@@ -244,14 +238,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                                           ContentType.failure,
                                                     )));
                                             }
-                                            print(e);
                                           } finally {
                                             setState(() {
                                               isLoading = false;
                                             });
                                           }
-                                        } else {
-                                          print("Validation failed");
                                         }
                                       });
                             })),
