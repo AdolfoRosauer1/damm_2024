@@ -56,18 +56,20 @@ cambios realtime habría que confirmar aplicaciones, como se explica más adelan
 
 ##### Decisiones de seguridad
 
-Decidimos agregar reglas al Firestore para limitar el acceso. Dichas reglas son:
+En un principio, las reglas de Firestore permitían cualquier request. Hicimos todo el desarrollo de ese modo. Sin embargo, más para el final tratamos de agregar las siguientes reglas
 
 - Reglas para la colección news: solo usuarios autenticados pueden leer. Escritura denegada.
 - Reglas para la coleccion volunteerOpportunities: solo usuarios autenticados pueden leer y
   escribir.
 - Reglas para la colección volunteer: solo el usuario autenticado con ese uid puede leer y escribir
   en el registro volunteer correspondiente a este id
-
-Ademas consideramos que la presencia del firebase_options.dart dentro del proyecto no es una falla
+  
+Lamentablemente, tras agregar estas reglas notamos que algunos flujos de nuestra app dejaban de funcionar, por lo que, por una cuestión de tiempo restante, tuvimos que dejar la regla anterior, cosa que no es ideal.
+  
+Por otra parte, consideramos que la presencia del firebase_options.dart dentro del proyecto no es una falla
 en mantener la seguridad. Esto es porque aunque contenga llaves publicas, que pueden ser expuestas
 por la plataforma movil y Flutter, el flow de datos de Firebase permite que no sea un riesgo hacia
-la integridad del proyecto y la configuracion.
+la integridad del proyecto y la configuración.
 
 ##### Implementacion del real-time para el usuario
 
