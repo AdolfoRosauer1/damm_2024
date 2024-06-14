@@ -12,6 +12,7 @@ class Volunteer {
   final String uid;
   final List<String?> favoriteVolunteerings;
   String? currentVolunteering;
+  String? currentApplication;
 
   Volunteer({
     required this.firstName,
@@ -24,6 +25,7 @@ class Volunteer {
     required this.favoriteVolunteerings,
     required this.uid,
     this.currentVolunteering,
+    this.currentApplication,
   });
 
   bool hasCompletedProfile() {
@@ -40,7 +42,7 @@ class Volunteer {
       firstName: data['firstName'] as String,
       lastName: data['lastName'] as String,
       email: data['email'] as String,
-      gender: genderFromString(data['gender'])?? null,
+      gender: genderFromString(data['gender']),
       profileImageURL: data['profileImageURL'] as String,
       dateOfBirth: (data['dateOfBirth'] as DateTime?),
       phoneNumber: data['phoneNumber'] as String,
@@ -48,6 +50,7 @@ class Volunteer {
       favoriteVolunteerings:
           List<String?>.from(data['favoriteVolunteerings'] as List),
       currentVolunteering: data['currentVolunteering'] as String?,
+      currentApplication: data['currentApplication'] as String?,
     );
   }
 
@@ -63,6 +66,7 @@ class Volunteer {
       favoriteVolunteerings: [],
       uid: '',
       currentVolunteering: null,
+      currentApplication: null,
     );
   }
 
@@ -73,11 +77,13 @@ class Volunteer {
       'email': email,
       'gender': gender?.value,
       'profileImageURL': profileImageURL,
-      'dateOfBirth': dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null,
+      'dateOfBirth':
+          dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null,
       'phoneNumber': phoneNumber,
       'uid': uid,
       'favoriteVolunteerings': favoriteVolunteerings,
       'currentVolunteering': currentVolunteering,
+      'currentApplication': currentApplication,
     };
   }
 
@@ -90,15 +96,17 @@ class Volunteer {
       profileImageURL: volunteer.profileImageURL,
       dateOfBirth: volunteer.dateOfBirth,
       phoneNumber: volunteer.phoneNumber,
-      favoriteVolunteerings: List<String?>.from(volunteer.favoriteVolunteerings),
+      favoriteVolunteerings:
+          List<String?>.from(volunteer.favoriteVolunteerings),
       uid: volunteer.uid,
       currentVolunteering: volunteer.currentVolunteering,
+      currentApplication: volunteer.currentApplication,
     );
   }
 
   @override
   String toString() {
-    return 'Volunteer{firstName: $firstName, lastName: $lastName, email: $email, gender: $gender, profileImageURL: $profileImageURL, dateOfBirth: $dateOfBirth, phoneNumber: $phoneNumber, uid: $uid, favoriteVolunteerings: $favoriteVolunteerings, currentVolunteering: $currentVolunteering}';
+    return 'Volunteer{firstName: $firstName, lastName: $lastName, email: $email, gender: $gender, profileImageURL: $profileImageURL, dateOfBirth: $dateOfBirth, phoneNumber: $phoneNumber, uid: $uid, favoriteVolunteerings: $favoriteVolunteerings, currentVolunteering: $currentVolunteering, currentApplication: $currentApplication}';
   }
 
   bool hasFavorite(String opportunityId) {
@@ -106,27 +114,22 @@ class Volunteer {
   }
 
   void applyToVolunteer(String volunteeringId) {
-    if (currentVolunteering != null) {
-      throw Exception('Volunteer is already enrolled in a volunteering');
-    }
-    currentVolunteering = volunteeringId;
+    currentApplication = volunteeringId;
+  }
+
+  void unApplyToVolunteer() {
+    currentApplication = null;
   }
 
   void addFavoriteVolunteer(String volunteeringId) {
-    if (!hasFavorite(volunteeringId)){
+    if (!hasFavorite(volunteeringId)) {
       favoriteVolunteerings.add(volunteeringId);
     }
   }
 
-  void removeFavoriteVolunteer(String volunteeringId){
-    if (hasFavorite(volunteeringId)){
+  void removeFavoriteVolunteer(String volunteeringId) {
+    if (hasFavorite(volunteeringId)) {
       favoriteVolunteerings.remove(volunteeringId);
     }
   }
 }
-
-
-// un volunteer tiene un unico voluntariado en el que esta participando.
-// un voluntariado tiene una cantidad de vacantes, una lista de aplicantes y una lista de confirmados
-// el volunteer apretara postularme -> su voluntariado asociado no cambia, pero si aparece en la lista de aplicantes
-// el voluntariado lo acepta -> se tiene que settear su main voluntariado al volunteer

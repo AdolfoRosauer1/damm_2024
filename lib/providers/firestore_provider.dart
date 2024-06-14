@@ -56,15 +56,19 @@ FirestoreRepository firestoreRepository(FirestoreRepositoryRef ref) {
 @Riverpod(keepAlive: true)
 FirestoreController firestoreController(FirestoreControllerRef ref) {
   return FirestoreController(
-      ref.watch(firestoreRepositoryProvider), ref.watch(currentUserProvider));
+    ref.watch(firestoreRepositoryProvider),
+    ref.watch(currentUserProvider),
+    ref.watch(currentUserProvider.notifier),
+  );
 }
 
 // Controller class to handle higher-level business logic
 class FirestoreController {
   final FirestoreRepository _firestoreRepository;
   final Volunteer user;
+  final CurrentUser notifier;
 
-  FirestoreController(this._firestoreRepository, this.user);
+  FirestoreController(this._firestoreRepository, this.user, this.notifier);
 
   Future<bool> areVolunteersAvailable() async {
     return _firestoreRepository.areVolunteersAvailable();
@@ -77,10 +81,14 @@ class FirestoreController {
   // Method to apply to a volunteer opportunity
   Future<void> applyToOpportunity(String oppId) async {
     try {
-      await _firestoreRepository.applyToOpportunity(user.uid, oppId);
-      print(
-          'FirestoreController.applyToOpportunity: Finished applying to opportunity: $oppId');
-    } catch (e,stackTrace){
+      if (user.currentApplication == null) {
+        user.applyToVolunteer(oppId);
+        await _firestoreRepository.applyToOpportunity(user.uid, oppId);
+        notifier.set(Volunteer.fromVolunteer(user));
+        print(
+            'FirestoreController.applyToOpportunity: Finished applying to opportunity: $oppId');
+      }
+    } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreController.applyToOpportunity: $e');
     }
@@ -89,10 +97,14 @@ class FirestoreController {
   // Method to un-apply from a volunteer opportunity
   Future<void> unApplyToOpportunity(String oppId) async {
     try {
-      await _firestoreRepository.unApplyToOpportunity(user.uid, oppId);
-      print(
-          'FirestoreController.unApplyToOpportunity: Finished un-applying from opportunity: $oppId');
-    } catch (e,stackTrace) {
+      if (user.currentApplication != null) {
+        user.unApplyToVolunteer();
+        await _firestoreRepository.unApplyToOpportunity(user.uid, oppId);
+        notifier.set(Volunteer.fromVolunteer(user));
+        print(
+            'FirestoreController.unApplyToOpportunity: Finished un-applying from opportunity: $oppId');
+      }
+    } catch (e, stackTrace) {
       FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreController.unApplyToOpportunity: $e');
     }
@@ -100,7 +112,11 @@ class FirestoreController {
 
   Future<void> cancelOpportunity(String oppId) async {
     try {
-      await _firestoreRepository.cancelOpportunity(user.uid, oppId);
+      if (user.currentVolunteering != null) {
+        user.currentVolunteering = null;
+        await _firestoreRepository.cancelOpportunity(user.uid, oppId);
+        notifier.set(Volunteer.fromVolunteer(user));
+      }
     } catch (e) {
       print('Error in FirestoreController.cancelOpportunity: $e');
     }
@@ -113,8 +129,8 @@ class FirestoreController {
       print(
           'FirestoreController.getVolunteerById: Finished getting volunteer details for ID: $id');
       return result;
-    } catch (e,stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stackTrace);
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreController.getVolunteerById: $e');
       return null;
     }
@@ -122,14 +138,14 @@ class FirestoreController {
 
   // Method to get a list of volunteers, optionally filtered by a query or user position
   Future<List<VolunteerDetails>> getVolunteers(
-      {String? query, Position? userPosition}) async {
+      {String? query, GeoPoint? userPosition}) async {
     try {
       var result = await _firestoreRepository.getVolunteers(
           query: query, userPosition: userPosition);
       print('FirestoreController.getVolunteers: Finished getting volunteers');
       return result;
-    } catch (e,stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stackTrace);
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreController.getVolunteers: $e');
       return [];
     }
@@ -160,8 +176,8 @@ class FirestoreRepository {
               'FirestoreRepository.applyToOpportunity: User $userId applied to opportunity $oppId');
         }
       }
-    } catch (e,stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stackTrace);
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreRepository.applyToOpportunity: $e');
     }
   }
@@ -180,8 +196,8 @@ class FirestoreRepository {
               'FirestoreRepository.unApplyToOpportunity: User $userId un-applied from opportunity $oppId');
         }
       }
-    } catch (e,stacTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stacTrace);
+    } catch (e, stacTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stacTrace);
       print('Error in FirestoreRepository.unApplyToOpportunity: $e');
     }
   }
@@ -204,15 +220,15 @@ class FirestoreRepository {
 
   // Method to get a list of volunteers from the data source
   Future<List<VolunteerDetails>> getVolunteers(
-      {String? query, Position? userPosition}) async {
+      {String? query, GeoPoint? userPosition}) async {
     try {
       var result = await _dataSource.getVolunteers(
           query: query, userPosition: userPosition);
       print(
           'FirestoreRepository.getVolunteers: Fetched volunteers from data source');
       return result;
-    } catch (e,stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stackTrace);
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreRepository.getVolunteers: $e');
       return [];
     }
@@ -225,8 +241,8 @@ class FirestoreRepository {
       print(
           'FirestoreRepository.getVolunteerById: Fetched volunteer details for ID: $id');
       return result;
-    } catch (e,stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stackTrace);
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreRepository.getVolunteerById: $e');
       return null;
     }
@@ -248,7 +264,7 @@ class FirestoreDataSource {
 
   // Method to get a list of volunteers from Firestore, optionally filtered by a query or user position
   Future<List<VolunteerDetails>> getVolunteers(
-      {String? query, Position? userPosition}) async {
+      {String? query, GeoPoint? userPosition}) async {
     try {
       List<VolunteerDetails> volunteers = [];
       QuerySnapshot snapshot =
@@ -282,8 +298,8 @@ class FirestoreDataSource {
           } else {
             volunteers.add(VolunteerDetails.fromJson(data));
           }
-        } catch (e,stackTrace) {
-          FirebaseCrashlytics.instance.recordError(e,stackTrace);
+        } catch (e, stackTrace) {
+          FirebaseCrashlytics.instance.recordError(e, stackTrace);
           print(
               'Error in FirestoreDataSource.getVolunteers (processing document): $e');
         }
@@ -315,8 +331,8 @@ class FirestoreDataSource {
       print(
           'FirestoreDataSource.getVolunteers: Sorted and filtered volunteer opportunities');
       return volunteers;
-    } catch (e,stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stackTrace);
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print('Error in FirestoreDataSource.getVolunteers: $e');
       return [];
     }
@@ -332,8 +348,8 @@ class FirestoreDataSource {
           .update(data);
       print(
           'FirestoreDataSource.updateVolunteerById: Updated volunteer opportunity: ${volunteer.id}');
-    } catch (e,stacTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stacTrace);
+    } catch (e, stacTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stacTrace);
       print('Error in FirestoreDataSource.updateVolunteerById: $e');
     }
   }
@@ -365,8 +381,8 @@ class FirestoreDataSource {
       } else {
         return null;
       }
-    } catch (e,stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e,stackTrace);
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
       print("Error in FirestoreDataSource.getVolunteerById: $e");
       return null;
     }

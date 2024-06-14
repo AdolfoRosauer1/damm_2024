@@ -7,6 +7,7 @@
   "start": "Start",
 
   "search": "Search",
+  "my_volunteerings": "Your activity",
   "volunteerings": "Volunteerings",
   "error": "Error",
   "noVolunteers": "There are currently no active volunteer opportunities. New ones will be added soon.",
@@ -49,6 +50,8 @@
   "confirmed_title": "You are participating",
   "confirmed_body": "The organization confirmed that you are already participating in this volunteering",
   "cancel_volunteer": "Withdraw from volunteering",
+  "must_cancel_title": "You are already participating in another volunteer program, you must leave it first to apply for this one.",
+  "must_cancel_body": "Leave current volunteer program",
   "applied_title": "You have applied",
   "applied_body": "The organization will contact you soon and enroll you as a participant",
   "un_apply": "Withdraw application",

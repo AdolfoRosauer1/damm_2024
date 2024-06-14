@@ -55,6 +55,8 @@
 		<false/>
 		<key>FlutterDeepLinkingEnabled</key>
 		<true/>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>Te pedimos este permiso para poder brindarte un mejor servicio</string>
 		<key>CFBundleURLTypes</key>
 		<array>
 			<dict>

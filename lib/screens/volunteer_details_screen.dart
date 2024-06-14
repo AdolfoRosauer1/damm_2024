@@ -21,7 +21,9 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 
 class VolunteerDetailsScreen extends ConsumerStatefulWidget {
   const VolunteerDetailsScreen({super.key, required this.id});
+
   static const route = ":id";
+
   static String routeFromId(String id) => "${ApplyScreen.route}/$id";
 
   final String id;
@@ -200,7 +202,109 @@ class VolunteerDetailsScreenState
                   ),
                 ),
                 const SizedBox(height: 24),
-                if (volunteerDetails.isUserConfirmed(currentUser.uid))
+                if (currentUser.currentVolunteering != null &&
+                    currentUser.currentVolunteering != volunteerDetails.id)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.must_cancel_title,
+                          style: ProjectFonts.body1,
+                          textAlign: TextAlign.center,
+                        ),
+                        CtaButton(
+                          enabled: false,
+                          onPressed: () {
+                            if (finishedSetup) {
+                              if (!internet) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const NoInternetModal();
+                                    });
+                                return;
+                              }
+                              showDialog(
+                                context: context,
+                                builder: (context) => CancelVolunteerModal(
+                                    title: null,
+                                    oppId: currentUser.currentVolunteering!),
+                              );
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const FinishSetupModal(
+                                        favAction: false);
+                                  });
+                            }
+                          },
+                          filled: false,
+                          actionStr:
+                              AppLocalizations.of(context)!.must_cancel_body,
+                        ),
+                        CtaButton(
+                          enabled: false,
+                          onPressed: () {},
+                          filled: false,
+                          actionStr: AppLocalizations.of(context)!.apply_now,
+                        ),
+                      ],
+                    ),
+                  )
+                else if (currentUser.currentApplication != null &&
+                    currentUser.currentApplication != volunteerDetails.id)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.must_cancel_title,
+                          style: ProjectFonts.body1,
+                          textAlign: TextAlign.center,
+                        ),
+                        CtaButton(
+                          enabled: false,
+                          onPressed: () {
+                            if (finishedSetup) {
+                              if (!internet) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const NoInternetModal();
+                                    });
+                                return;
+                              }
+                              showDialog(
+                                context: context,
+                                builder: (context) => UnApplyModal(
+                                    title: null,
+                                    oppId: currentUser.currentApplication!),
+                              );
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const FinishSetupModal(
+                                        favAction: false);
+                                  });
+                            }
+                          },
+                          filled: false,
+                          actionStr:
+                              AppLocalizations.of(context)!.must_cancel_body,
+                        ),
+                        CtaButton(
+                          enabled: false,
+                          onPressed: () {},
+                          filled: false,
+                          actionStr: AppLocalizations.of(context)!.apply_now,
+                        ),
+                      ],
+                    ),
+                  )
+                else if (currentUser.currentVolunteering == volunteerDetails.id)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
@@ -230,10 +334,13 @@ class VolunteerDetailsScreenState
                                     title: volunteerDetails.title,
                                     oppId: volunteerDetails.id),
                               );
-                            }else{
-                              showDialog(context: context, builder: (context){
-                                return const FinishSetupModal(favAction: false);
-                              });
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const FinishSetupModal(
+                                        favAction: false);
+                                  });
                             }
                           },
                           filled: false,
@@ -243,7 +350,7 @@ class VolunteerDetailsScreenState
                       ],
                     ),
                   )
-                else if (volunteerDetails.isUserPending(currentUser.uid))
+                else if (currentUser.currentApplication == volunteerDetails.id)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
@@ -273,10 +380,13 @@ class VolunteerDetailsScreenState
                                     title: volunteerDetails.title,
                                     oppId: volunteerDetails.id),
                               );
-                            }else{
-                              showDialog(context: context, builder: (context){
-                                return const FinishSetupModal(favAction: false);
-                              });
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const FinishSetupModal(
+                                        favAction: false);
+                                  });
                             }
                           },
                           filled: false,
@@ -291,7 +401,7 @@ class VolunteerDetailsScreenState
                     child: CtaButton(
                       enabled: true,
                       onPressed: () {
-                        if(finishedSetup) {
+                        if (finishedSetup) {
                           if (!internet) {
                             showDialog(
                                 context: context,
@@ -306,10 +416,12 @@ class VolunteerDetailsScreenState
                                 title: volunteerDetails.title,
                                 oppId: volunteerDetails.id),
                           );
-                        }else{
-                          showDialog(context: context, builder: (context){
-                            return const FinishSetupModal(favAction: false);
-                          });
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const FinishSetupModal(favAction: false);
+                              });
                         }
                       },
                       filled: true,

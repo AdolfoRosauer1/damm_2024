@@ -1,4 +1,3 @@
-import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
@@ -16,7 +15,6 @@ class FinishSetupModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(authControllerProvider);
 
     return Dialog(
       child: Container(

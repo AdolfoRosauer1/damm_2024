@@ -68,6 +68,7 @@ dependencies:
 
 #  connectivity
   internet_connection_checker_plus: ^2.3.0
+  app_tracking_transparency: ^2.0.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
