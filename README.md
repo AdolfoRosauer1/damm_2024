@@ -64,6 +64,11 @@ Decidimos agregar reglas al Firestore para limitar el acceso. Dichas reglas son:
 - Reglas para la colección volunteer: solo el usuario autenticado con ese uid puede leer y escribir
   en el registro volunteer correspondiente a este id
 
+Ademas consideramos que la presencia del firebase_options.dart dentro del proyecto no es una falla
+en mantener la seguridad. Esto es porque aunque contenga llaves publicas, que pueden ser expuestas
+por la plataforma movil y Flutter, el flow de datos de Firebase permite que no sea un riesgo hacia
+la integridad del proyecto y la configuracion.
+
 ##### Implementacion del real-time para el usuario
 
 Para asegurarnos que acciones como dar favorito sean rapidas y respondan bien al input del usuario,
