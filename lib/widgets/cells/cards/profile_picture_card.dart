@@ -27,9 +27,9 @@ class ProfilePictureCardState extends State<ProfilePictureCard> {
 
   _getButtonText(){
     if (widget.imageUrl == null || widget.imageUrl!.isEmpty){
-      return 'Subir foto';
+      return AppLocalizations.of(context)!.uploadPhoto; 
     }
-      return 'Cambiar foto'; 
+      return AppLocalizations.of(context)!.changePhoto; 
   }
   Future<void> _pickImage() async {
     setState(() {
