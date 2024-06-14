@@ -54,6 +54,14 @@ las notificaciones.
 Decidimos que el contador cambie solo cuando las solicitudes son confirmadas, por lo que para ver
 cambios realtime habría que confirmar aplicaciones, como se explica más adelante en este informe.
 
+##### Implementacion del real-time para el usuario
+
+Para asegurarnos que acciones como dar favorito sean rapidas y respondan bien al input del usuario,
+decidimos que a lo largo de la aplicacion, las actualizaciones de datos del usuario con el backend
+se hagan durante cargas o interacciones con el mismo. De esta manera, al realizar una accion
+mandamos el estado actual local del usuario, y durante la iniciacion sincronizamos con el servidor.
+Es por esto que al confirmar la aplicacion en Firebase, no se refleja en la aplicacion al instante.
+
 ### Problemas encontrados
 
 ##### Versiones de librerías conflictivas
@@ -93,6 +101,13 @@ Como ninguno de los miembros del grupo desarrolla en MAC, no nos resultó posibl
 IOS, sobre todo a la hora de agregar cosas exclusivas, como el pedido de permisos para tracking (app
 tracking transparency). También para ver si los deep links funcionan, si el logo y el nombre se
 están mostrando bien o si llegan las notificaciones.
+
+##### Busqueda con actualizacion inmediata
+
+Decidimos actualizar la busqueda de voluntariados en forma directa al input del teclado. No estamos
+preocupados por la creacion de un gran numero de requests, por lo que parecio sensato para generar
+un buen desarrollo inicial. Unicamente en el celular fisico de Adolfo vimos un problema donde la
+actualizacion automatica quita el foco del teclado y vuelve dificil la interaccion.
 
 ### Métricas
 
