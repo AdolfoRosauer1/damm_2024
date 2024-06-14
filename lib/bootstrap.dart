@@ -21,7 +21,6 @@ Future<ProviderContainer> bootstrap() async {
   await volunteer_provider.initializeProvider(container);
   connectivity_provider.init(container);
   location_provider.init(container);
-  // sleep(const Duration(seconds: 5));
 
   return container;
 }

@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:go_router/go_router.dart';
 
-//import 'package:flutter_localization/flutter_localization.dart';
 import 'widgets/tokens/colors.dart';
 
 void main() async {
@@ -65,13 +64,6 @@ void main() async {
 
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
-
-    if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}');
-    }
-
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
 
@@ -89,7 +81,6 @@ void main() async {
               channel.name,
               channelDescription: channel.description,
               icon: android.smallIcon,
-              // other properties...
             ),
           ));
     }
@@ -113,7 +104,6 @@ void main() async {
 
   // remove splash screen
   FlutterNativeSplash.remove();
-  // print('Splash Screen DOWN!');
 }
 
 class MyApp extends StatelessWidget {
@@ -125,7 +115,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
         localizationsDelegates: const [
           AppLocalizations
-              .delegate, //Comentar esto si no funciona. Y hacer flutter run. Ahi debería funcionar
+              .delegate, 
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,

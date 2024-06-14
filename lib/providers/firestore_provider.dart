@@ -362,7 +362,6 @@ class FirestoreDataSource {
     }
   }
 
-  // TODO: implement using the snapshots in order to provide real-time data to app
   Stream<QuerySnapshot<Map<String, dynamic>>> getVolunteersSnapshot() {
     return _firestore.collection('volunteerOpportunities').snapshots();
   }

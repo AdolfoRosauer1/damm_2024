@@ -18,11 +18,9 @@ class VolunteeringCard extends ConsumerStatefulWidget {
     required this.title,
     required this.vacancies,
     required this.imageUrl,
-    // required this.onPressedFav,
   });
 
   final VoidCallback onPressed;
-  // final VoidCallback onPressedFav;
   final VoidCallback onPressedLocation;
   final String type;
   final String title;

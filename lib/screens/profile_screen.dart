@@ -1,4 +1,3 @@
-//TODO conectar con riverpod y statemanagement
 import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
