@@ -53,11 +53,16 @@ las notificaciones.
 
 Decidimos que el contador cambie solo cuando las solicitudes son confirmadas, por lo que para ver
 cambios realtime habría que confirmar aplicaciones, como se explica más adelante en este informe.
+
 ##### Decisiones de seguridad
+
 Decidimos agregar reglas al Firestore para limitar el acceso. Dichas reglas son:
+
 - Reglas para la colección news: solo usuarios autenticados pueden leer. Escritura denegada.
-- Reglas para la coleccion volunteerOpportunities: solo usuarios autenticados pueden leer y escribir.
-- Reglas para la colección volunteer: solo el usuario autenticado con ese uid puede leer y escribir en el registro volunteer correspondiente a este id
+- Reglas para la coleccion volunteerOpportunities: solo usuarios autenticados pueden leer y
+  escribir.
+- Reglas para la colección volunteer: solo el usuario autenticado con ese uid puede leer y escribir
+  en el registro volunteer correspondiente a este id
 
 ##### Implementacion del real-time para el usuario
 
@@ -66,6 +71,8 @@ decidimos que a lo largo de la aplicacion, las actualizaciones de datos del usua
 se hagan durante cargas o interacciones con el mismo. De esta manera, al realizar una accion
 mandamos el estado actual local del usuario, y durante la iniciacion sincronizamos con el servidor.
 Es por esto que al confirmar la aplicacion en Firebase, no se refleja en la aplicacion al instante.
+Como el flujo de confirmacion termina con la creacion de una notificacion, igualmente el usuario
+tiene una manera de enterarse de cambios.
 
 ### Problemas encontrados
 
