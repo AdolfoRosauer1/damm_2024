@@ -103,7 +103,10 @@
   "error_invalidPhoneFormat" : "El formato debe ser '+<CODIGO_PAIS><NUMERO>'",
 
   
-  "volunteerExtraInfo" : "Información adicional"
+  "volunteerExtraInfo" : "Información adicional",
+
+  "gallery": "Galeria",
+  "camera": "Camara"
 
 
 

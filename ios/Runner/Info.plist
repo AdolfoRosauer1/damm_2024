@@ -70,5 +70,13 @@
 			</array>
 			</dict>
 		</array>
+
+		<!-- Permisos de cámara y galería -->
+		<key>NSCameraUsageDescription</key>
+		<string>Necesitamos acceso a la cámara para que puedas actualizar tu foto de perfil.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Necesitamos acceso a tu galería para que puedas seleccionar una foto de perfil.</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>Necesitamos acceso a tu galería para que puedas guardar la foto de perfil.</string>
 	</dict>
 </plist>
