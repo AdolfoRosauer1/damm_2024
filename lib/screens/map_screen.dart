@@ -108,6 +108,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    void _moveCamera(){
+      if (_initialPosition != null ){
+
+        _mapController.animateCamera(CameraUpdate.newCameraPosition(
+          _initialPosition!
+        ));
+      }
+    }
     final fireStoreController = ref.read(firestoreControllerProvider);
     return Stack(
       children: [
@@ -133,12 +142,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           
               onSubmitted: (_) async => {
                 await _loadVolunteers(),
-                if (_initialPosition != null ){
-        
-                  _mapController.animateCamera(CameraUpdate.newCameraPosition(
-                    _initialPosition!
-                  ))
-                }
+                _moveCamera()
 
               },
               decoration: InputDecoration(
@@ -159,9 +163,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     )
                     : IconButton(
                         icon: ProjectIcons.closeFilledEnabled,
-                        onPressed: () {
+                        onPressed: () async {
                           _searchController.clear();
-                          _loadVolunteers();
+                          await _loadVolunteers();
+                          _moveCamera();
                         },
                       ),
               ),
