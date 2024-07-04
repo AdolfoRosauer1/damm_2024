@@ -1,6 +1,7 @@
 import 'package:damm_2024/providers/auth_provider.dart';
 import 'package:damm_2024/screens/access_screen.dart';
 import 'package:damm_2024/screens/apply_screen.dart';
+import 'package:damm_2024/screens/map_screen.dart';
 import 'package:damm_2024/screens/news_details_screen.dart';
 import 'package:damm_2024/screens/news_screen.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
@@ -58,6 +59,14 @@ class CustomNavigationHelper {
             navigatorKey: applyTabNavigatorKey,
             routes: [
               GoRoute(
+                path: MapScreen.route,
+                parentNavigatorKey: applyTabNavigatorKey,
+                pageBuilder: (context, state) => getPage(
+                  child: const MapScreen(),
+                  state: state,
+                )
+              ),
+              GoRoute(
                 path: ApplyScreen.route,
                 parentNavigatorKey: applyTabNavigatorKey,
                 routes: [
@@ -71,7 +80,7 @@ class CustomNavigationHelper {
                         state: state,
                       );
                     },
-                  )
+                  ),
                 ],
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/location_provider.dart';
+import 'package:damm_2024/screens/map_screen.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/current_volunteer.dart';
@@ -108,7 +109,12 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                       ? ProjectIcons.searchFilledEnabled
                       : null,
                   suffixIcon: _searchController.text.isEmpty
-                      ? ProjectIcons.mapFilledActivated
+                      ? IconButton(
+                        icon: ProjectIcons.mapFilledActivated,
+                        onPressed: () {
+                          context.go(MapScreen.route);
+                        },
+                      )
                       : IconButton(
                           icon: ProjectIcons.closeFilledEnabled,
                           onPressed: () {
