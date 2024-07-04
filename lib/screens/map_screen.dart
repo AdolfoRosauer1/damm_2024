@@ -95,6 +95,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     _mapController = controller;
   }
 
+  void _onCarouselPageChanged(int index, CarouselPageChangedReason reason) {
+    setState(() {
+      _currentVolunteerDetails = _volunteers[index];
+    });
+    final newPosition = CameraPosition(
+      target: LatLng(_currentVolunteerDetails!.location.latitude, _currentVolunteerDetails!.location.longitude),
+      zoom: 15.0,
+    );
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
+  }
+
   @override
   Widget build(BuildContext context) {
     final fireStoreController = ref.read(firestoreControllerProvider);
@@ -182,6 +193,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                             )
                           : CarouselSlider.builder(
                               options: CarouselOptions(
+                                onPageChanged: _onCarouselPageChanged,
                                 enlargeCenterPage: true,
                                 enableInfiniteScroll: false,
                                 height: 138 + 97,
