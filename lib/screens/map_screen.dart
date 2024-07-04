@@ -80,8 +80,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 target: LatLng(_currentVolunteerDetails!.location.latitude, _currentVolunteerDetails!.location.longitude),
                 zoom: 15.0,
               )
-            : const CameraPosition(
-                target: LatLng(0, 0), 
+            : CameraPosition(
+                target: _userPosition != null ? LatLng(_userPosition!.latitude,_userPosition!.longitude) 
+                 : const LatLng(0, 0), 
                 zoom: 15.0,
               );
         _isLoading = false;
@@ -141,8 +142,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       );
       _circles.add(circle);
     }
-    void moveCamera(){
-      if (_initialPosition != null ){
+    void moveCamera({bool moveToUserLocation = false}){
+      if (moveToUserLocation){
+        if (_userPosition != null){
+          _mapController.animateCamera(CameraUpdate.newLatLng(LatLng(_userPosition!.latitude, _userPosition!.longitude)));
+        }
+      }
+      else if (_initialPosition != null ){
 
         _mapController.animateCamera(CameraUpdate.newCameraPosition(
           _initialPosition!
@@ -210,51 +216,79 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           bottom: 16,
           left: 16,
           right: 16,
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _errorMessage != null
-                  ? Center(
-                      child: Text(
-                        '${AppLocalizations.of(context)!.error}: $_errorMessage',
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  : !_areVolunteersAvailable
-                      ? NoVolunteersCard(
-                          size: NoVolunteersCardSize.small,
-                          message: AppLocalizations.of(context)!.noVolunteers,
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: ProjectPalette.primary2,
+                    boxShadow: ProjectShadows.shadow3,
+                  ),
+                  child: IconButton(
+                    icon: ProjectIcons.nearMeFilledActivated,
+                    onPressed: () => moveCamera(moveToUserLocation: true),
+                    ),
+                )
+              ),
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _errorMessage != null
+                      ? Center(
+                          child: Text(
+                            '${AppLocalizations.of(context)!.error}: $_errorMessage',
+                            textAlign: TextAlign.center,
+                          ),
                         )
-                      : _volunteers.isEmpty
-                          ? NoVolunteersCard(
-                              size: NoVolunteersCardSize.medium,
-                              message: AppLocalizations.of(context)!.noVolunteersSearch,
-                            )
-                          : CarouselSlider.builder(
-                              options: CarouselOptions(
-                                onPageChanged: _onCarouselPageChanged,
-                                enlargeCenterPage: true,
-                                enableInfiniteScroll: false,
-                                height: 138 + 97,
+                      : !_areVolunteersAvailable
+                          ? Padding(
+                            padding: const EdgeInsets.only(top:16),
+                            child: NoVolunteersCard(
+                                size: NoVolunteersCardSize.small,
+                                message: AppLocalizations.of(context)!.noVolunteers,
                               ),
-                              itemCount: _volunteers.length,
-                              itemBuilder: (context, index, realIdx) {
-                                final volunteer = _volunteers[index];
-                                return VolunteeringCard(
-                                  id: volunteer.id,
-                                  onPressedLocation: () {
-                                    fireStoreController.openLocationInMap(volunteer.location);
-                                  },
-                                  onPressed: () {
-                                    context.go(VolunteerDetailsScreen.routeFromId(volunteer.id));
-                                  },
-                                  type: volunteer.type,
-                                  title: volunteer.title,
-                                  vacancies: volunteer.remainingVacancies,
-                                  imageUrl: volunteer.imageUrl,
-                                );
-                              },
-                            ),
+                          )
+                          : _volunteers.isEmpty
+                              ? Padding(
+                                padding: const EdgeInsets.only(top:40),
+                                child: NoVolunteersCard(
+                                    size: NoVolunteersCardSize.medium,
+                                    message: AppLocalizations.of(context)!.noVolunteersSearch,
+                                  ),
+                              )
+                              : Padding(
+                                padding: const EdgeInsets.only(top:16),
+                                child: CarouselSlider.builder(
+                                    options: CarouselOptions(
+                                      onPageChanged: _onCarouselPageChanged,
+                                      enlargeCenterPage: true,
+                                      enableInfiniteScroll: false,
+                                      height: 138 + 97,
+                                    ),
+                                    itemCount: _volunteers.length,
+                                    itemBuilder: (context, index, realIdx) {
+                                      final volunteer = _volunteers[index];
+                                      return VolunteeringCard(
+                                        id: volunteer.id,
+                                        onPressedLocation: () {
+                                          fireStoreController.openLocationInMap(volunteer.location);
+                                        },
+                                        onPressed: () {
+                                          context.go(VolunteerDetailsScreen.routeFromId(volunteer.id));
+                                        },
+                                        type: volunteer.type,
+                                        title: volunteer.title,
+                                        vacancies: volunteer.remainingVacancies,
+                                        imageUrl: volunteer.imageUrl,
+                                      );
+                                    },
+                                  ),
+                              ),
+            ],
+          ),
         ),
+       
       ],
     );
   }
