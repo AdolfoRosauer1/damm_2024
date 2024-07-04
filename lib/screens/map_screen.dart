@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
+import 'package:damm_2024/providers/location_provider.dart';
 import 'package:damm_2024/screens/apply_screen.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
@@ -37,11 +39,25 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   final TextEditingController _searchController = TextEditingController();
   Set<Marker> _markers = {};
   CameraPosition? _initialPosition;
+  GeoPoint? _userPosition;
+  final Set<Circle> _circles = {};
+
+
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+   final userLocation = ref.watch(userLocationProvider);
+
+    final locationController = ref.read(locationControllerProvider);
+    locationController.updateUserLocation();
+
+    setState(() {
+      _userPosition = userLocation;
+    });  
     _loadVolunteers();
+
+    
   }
 
   Future<void> _loadVolunteers() async {
@@ -52,7 +68,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     });
 
     try {
-      final volunteers = await firestoreController.getVolunteers(query: _searchController.text);
+      final volunteers = await firestoreController.getVolunteers(query: _searchController.text,
+                                                    userPosition: _userPosition); 
       final areAvailable = await firestoreController.areVolunteersAvailable();
       setState(() {
         _volunteers = volunteers;
@@ -109,7 +126,22 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   Widget build(BuildContext context) {
 
-    void _moveCamera(){
+
+    if (_userPosition != null){
+    
+      //TODO ver si se puede mejorar el estilo
+      Circle circle = Circle(
+        circleId: const CircleId('current_location'),
+        center: LatLng(_userPosition!.latitude, _userPosition!.longitude),
+        radius: 33,  
+        fillColor: ProjectPalette.secondary5,
+        strokeColor: const Color.fromRGBO(255, 255, 255, 1),
+        strokeWidth: 4,
+        
+      );
+      _circles.add(circle);
+    }
+    void moveCamera(){
       if (_initialPosition != null ){
 
         _mapController.animateCamera(CameraUpdate.newCameraPosition(
@@ -126,6 +158,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: _initialPosition!,
                 markers: _markers,
+                circles: _circles,
               ),
         Positioned(
           top: 24,
@@ -142,7 +175,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           
               onSubmitted: (_) async => {
                 await _loadVolunteers(),
-                _moveCamera()
+                moveCamera()
 
               },
               decoration: InputDecoration(
@@ -166,7 +199,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         onPressed: () async {
                           _searchController.clear();
                           await _loadVolunteers();
-                          _moveCamera();
+                          moveCamera();
                         },
                       ),
               ),
