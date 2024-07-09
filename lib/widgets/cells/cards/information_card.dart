@@ -39,25 +39,27 @@ class InformationCard extends StatelessWidget{
             ),
           ),
           if (hasMap && center != null) ... [
-            Container(
+            SizedBox(
               height: 155,
-              decoration: BoxDecoration(
+      
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(6),
-              ),
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: center!,
-                  zoom: 15
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: center!,
+                    zoom: 15
+                  ),
+                  scrollGesturesEnabled: false,
+                  zoomGesturesEnabled: false,
+                  zoomControlsEnabled: false,
+                  mapToolbarEnabled: true,
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId('Ubicación del voluntariado'),
+                      position: center!
+                    )
+                  },
                 ),
-                scrollGesturesEnabled: false,
-                zoomGesturesEnabled: false,
-                zoomControlsEnabled: false,
-                markers: {
-                  Marker(
-                    markerId: const MarkerId('Ubicación del voluntariado'),
-                    position: center!
-                  )
-                },
               ),
             )
           ],

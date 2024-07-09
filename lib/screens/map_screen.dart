@@ -39,7 +39,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Set<Marker> _markers = {};
   CameraPosition? _initialPosition;
   GeoPoint? _userPosition;
-  final Set<Circle> _circles = {};
 
   @override
   void didChangeDependencies() {
@@ -125,20 +124,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Widget build(BuildContext context) {
 
 
-    if (_userPosition != null){
     
-      //TODO ver si se puede mejorar el estilo
-      Circle circle = Circle(
-        circleId: const CircleId('current_location'),
-        center: LatLng(_userPosition!.latitude, _userPosition!.longitude),
-        radius: 33,  
-        fillColor: ProjectPalette.secondary5,
-        strokeColor: const Color.fromRGBO(255, 255, 255, 1),
-        strokeWidth: 4,
-        
-      );
-      _circles.add(circle);
-    }
     void moveCamera({bool moveToUserLocation = false}){
       if (moveToUserLocation){
         if (_userPosition != null){
@@ -158,10 +144,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         _initialPosition == null
             ? const Center(child: CircularProgressIndicator())
             : GoogleMap(
+                myLocationEnabled: true,
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: _initialPosition!,
                 markers: _markers,
-                circles: _circles,
               ),
         Positioned(
           top: 24,
