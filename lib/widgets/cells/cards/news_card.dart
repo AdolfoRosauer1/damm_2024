@@ -3,29 +3,36 @@ import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:damm_2024/widgets/tokens/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:damm_2024/providers/remote_config_provider.dart'; // Importa el provider de Remote Config
+import 'package:share_plus/share_plus.dart'; // Importa el paquete para compartir
 
-class NewsCard extends StatelessWidget {
+class NewsCard extends ConsumerWidget {
   final VoidCallback onPressed;
   final String media;
   final String imageUrl;
   final String title;
   final String description;
 
-  const NewsCard(
-      {super.key,
-      required this.media,
-      required this.imageUrl,
-      required this.title,
-      required this.description,
-      required this.onPressed});
+  const NewsCard({
+    super.key,
+    required this.media,
+    required this.imageUrl,
+    required this.title,
+    required this.description,
+    required this.onPressed,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shareNewsEnabledAsyncValue = ref.watch(shareNewsEnabledProvider);
+
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2),
-          boxShadow: ProjectShadows.shadow2,
-          color: ProjectPalette.neutral1),
+        borderRadius: BorderRadius.circular(2),
+        boxShadow: ProjectShadows.shadow2,
+        color: ProjectPalette.neutral1,
+      ),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -34,7 +41,6 @@ class NewsCard extends StatelessWidget {
               imageUrl,
               width: 118,
               fit: BoxFit.cover,
-              // Error builder para utilzar una imagen stock para fallback
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset(
                   'assets/images/news_card.png',
@@ -73,13 +79,32 @@ class NewsCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Align(
                       alignment: Alignment.bottomRight,
-                      child: TextButton(
-                        onPressed: onPressed,
-                        style: TextButton.styleFrom(
-                          textStyle: ProjectFonts.button,
-                          foregroundColor: ProjectPalette.primary1,
-                        ),
-                        child: Text(AppLocalizations.of(context)!.readMore), //TEXTO A CAMBIAR
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: onPressed,
+                            style: TextButton.styleFrom(
+                              textStyle: ProjectFonts.button,
+                              foregroundColor: ProjectPalette.primary1,
+                            ),
+                            child: Text(AppLocalizations.of(context)!.readMore),
+                          ),
+                          shareNewsEnabledAsyncValue.when(
+                            data: (enabled) {
+                              if (!enabled) return Container(); // Si compartir noticias está deshabilitado, no muestra el botón
+                              return IconButton(
+                                icon: Icon(Icons.share),
+                                onPressed: () {
+                                  // Lógica para compartir la noticia
+                                  Share.share('Mira esta noticia: $title\n\n$imageUrl');
+                                },
+                              );
+                            },
+                            loading: () => CircularProgressIndicator(),
+                            error: (error, stack) => Text('Error: $error'),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -92,3 +117,5 @@ class NewsCard extends StatelessWidget {
     );
   }
 }
+
+

@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ProfilePictureCard extends StatefulWidget {
+class ProfilePictureCard extends StatefulWidget{
   final String? imageUrl;
   final FormFieldState field;
 
@@ -27,7 +27,7 @@ class ProfilePictureCardState extends State<ProfilePictureCard> {
     _imageUrl = widget.imageUrl;
   }
 
-  String _getButtonText() {
+  _getButtonText() {
     if (widget.imageUrl == null || widget.imageUrl!.isEmpty) {
       return AppLocalizations.of(context)!.uploadPhoto;
     }
@@ -39,7 +39,7 @@ class ProfilePictureCardState extends State<ProfilePictureCard> {
       _isLoading = true;
     });
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedImage = await picker.pickImage(source: source);
+    final XFile? pickedImage = await picker.pickImage(source: source); //ImageSource.camera
     if (pickedImage != null) {
       setState(() {
         _imageUrl = pickedImage.path;

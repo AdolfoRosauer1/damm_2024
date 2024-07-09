@@ -1,4 +1,5 @@
 import 'package:damm_2024/providers/volunteer_provider.dart';
+import 'package:damm_2024/providers/remote_config_provider.dart'; // Importa el provider de Remote Config
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/modals/finish_setup_modal.dart';
 import 'package:damm_2024/widgets/molecules/components/vacancies_chip.dart';
@@ -32,15 +33,14 @@ class VolunteeringCard extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() {
     return _VolunteeringCardState();
   }
-
 }
 
 class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
   @override
   Widget build(BuildContext context) {
-
     final user = ref.watch(currentUserProvider);
     final profileController = ref.watch(profileControllerProvider);
+    final favoritesEnabledAsyncValue = ref.watch(favoritesEnabledProvider);
 
     bool isFav = user.hasFavorite(widget.id);
 
@@ -48,26 +48,26 @@ class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
       decoration: BoxDecoration(
         color: ProjectPalette.neutral1,
         borderRadius: BorderRadius.circular(2),
-        boxShadow: ProjectShadows.shadow2
+        boxShadow: ProjectShadows.shadow2,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(2),
         child: Column(
           children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: widget.onPressed,
-                      child: Image.network(
-                        widget.imageUrl,
-                        height: 138,
-                        fit: BoxFit.fitWidth,
-                      ),
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: widget.onPressed,
+                    child: Image.network(
+                      widget.imageUrl,
+                      height: 138,
+                      fit: BoxFit.fitWidth,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
               child: Column(
@@ -91,33 +91,36 @@ class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
                       VacanciesChip(vacancies: widget.vacancies, enabled: true),
                       Row(
                         children: [
-                          InkWell(
-                            onTap: (){
-                              if (user.hasCompletedProfile()) {
-                                if (isFav) {
-                                  profileController
-                                      .removeFavoriteVolunteering(widget.id);
-                                } else {
-                                  profileController
-                                      .addFavoriteVolunteering(widget.id);
-                                }
-                              }else{
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return const FinishSetupModal(favAction: true);
-                                    });
-                              }
+                          favoritesEnabledAsyncValue.when(
+                            data: (enabled) {
+                              if (!enabled) return Container();
+                              return InkWell(
+                                onTap: () {
+                                  if (user.hasCompletedProfile()) {
+                                    if (isFav) {
+                                      profileController.removeFavoriteVolunteering(widget.id);
+                                    } else {
+                                      profileController.addFavoriteVolunteering(widget.id);
+                                    }
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const FinishSetupModal(favAction: true);
+                                      },
+                                    );
+                                  }
+                                },
+                                child: isFav ? ProjectIcons.favoriteFilledActivated : ProjectIcons.favoriteOutlinedActivated,
+                              );
                             },
-                            child: isFav? ProjectIcons.favoriteFilledActivated :
-                             ProjectIcons.favoriteOutlinedActivated,
+                            loading: () => CircularProgressIndicator(),
+                            error: (error, stack) => Text('Error: $error'),
                           ),
-                          const SizedBox(
-                            width: 16,
-                          ),
+                          const SizedBox(width: 16),
                           InkWell(
                             onTap: widget.onPressedLocation,
-                            child: ProjectIcons.locationFilledActivated
+                            child: ProjectIcons.locationFilledActivated,
                           ),
                         ],
                       ),

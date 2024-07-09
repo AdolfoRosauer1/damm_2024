@@ -12,6 +12,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 import 'widgets/tokens/colors.dart';
 
@@ -26,7 +27,6 @@ void main() async {
 
   //para el tracking en ios
   await AppTrackingTransparency.requestTrackingAuthorization();
-
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true, // Required to display a heads up notification
@@ -62,7 +62,6 @@ void main() async {
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
-
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
@@ -86,21 +85,30 @@ void main() async {
     }
   });
 
+  // Inicializar Firebase y Remote Config
+  //await Firebase.initializeApp();
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(minutes: 1),
+    minimumFetchInterval: const Duration(minutes: 5),
+  ));
+  await remoteConfig.fetchAndActivate();
+
   // router
   CustomNavigationHelper.instance;
 
+  // Pass all uncaught "fatal" errors from the framework to Crashlytics
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
-    // Pass all uncaught "fatal" errors from the framework to Crashlytics
-    FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    };
-    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
-  runApp(UncontrolledProviderScope(container: container,
-  child: const MyApp()));
+  runApp(UncontrolledProviderScope(
+      container: container, child: const MyApp()));
 
   // remove splash screen
   FlutterNativeSplash.remove();
@@ -113,41 +121,43 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-        localizationsDelegates: const [
-          AppLocalizations
-              .delegate, 
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          FormBuilderLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en'),
-          Locale('es'),
-        ],
-        localeResolutionCallback: (locale, supportedLocales) {
-          for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale?.languageCode) {
-              return supportedLocale;
-            }
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        FormBuilderLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('es'),
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode) {
+            return supportedLocale;
           }
-          return supportedLocales.first;
-        },
-        theme: ThemeData(
-          useMaterial3: true,
-          tabBarTheme: TabBarTheme(
-            overlayColor: WidgetStateProperty.all(
-                ProjectPalette.neutral2.withOpacity(0.1)),
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicator: const BoxDecoration(
-                border: Border(
-                    bottom:
-                        BorderSide(width: 3.0, color: ProjectPalette.neutral1)),
-                color: ProjectPalette.secondary6),
-            labelColor: ProjectPalette.neutral1,
-            unselectedLabelColor: ProjectPalette.neutral4,
+        }
+        return supportedLocales.first;
+      },
+      theme: ThemeData(
+        useMaterial3: true,
+        tabBarTheme: TabBarTheme(
+          overlayColor:
+              MaterialStateProperty.all(ProjectPalette.neutral2.withOpacity(0.1)),
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 3.0, color: ProjectPalette.neutral1),
+            ),
+            color: ProjectPalette.secondary6,
           ),
+          labelColor: ProjectPalette.neutral1,
+          unselectedLabelColor: ProjectPalette.neutral4,
         ),
-        routerConfig: CustomNavigationHelper.router);
+      ),
+      routerConfig: CustomNavigationHelper.router,
+    );
   }
 }
+
