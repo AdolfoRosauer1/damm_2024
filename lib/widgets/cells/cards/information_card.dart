@@ -1,6 +1,7 @@
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class InformationCard extends StatelessWidget{
   final String title;
@@ -8,10 +9,13 @@ class InformationCard extends StatelessWidget{
   final String content1;
   final String label2;
   final String content2;
+  final bool hasMap;
+  final LatLng? center;
+
 
   const InformationCard({super.key, required this.title, 
   required this.label1, required this.content1, required this.label2,
-   required this.content2});
+   required this.content2, this.hasMap=false, this.center});
 
 
 
@@ -34,6 +38,29 @@ class InformationCard extends StatelessWidget{
               style: ProjectFonts.subtitle1,
             ),
           ),
+          if (hasMap && center != null) ... [
+            Container(
+              height: 155,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: center!,
+                  zoom: 15
+                ),
+                scrollGesturesEnabled: false,
+                zoomGesturesEnabled: false,
+                zoomControlsEnabled: false,
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('Ubicación del voluntariado'),
+                    position: center!
+                  )
+                },
+              ),
+            )
+          ],
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
             child: Column(
