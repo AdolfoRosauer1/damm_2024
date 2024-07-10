@@ -231,7 +231,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                                             volunteerDetails[index].location);
                                       },
                                       onPressed: () {
-                                        context.go(
+                                        context.push(
                                             VolunteerDetailsScreen.routeFromId(
                                                 volunteerDetails[index].id));
                                       },

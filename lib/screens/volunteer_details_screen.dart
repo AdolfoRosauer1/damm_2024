@@ -1,3 +1,4 @@
+import 'package:damm_2024/config/router.dart';
 import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
@@ -50,6 +51,12 @@ class VolunteerDetailsScreenState
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            CustomNavigationHelper.parentNavigatorKey.currentState?.pop(context);
+          },
+        ),
         iconTheme: const IconThemeData(color: ProjectPalette.neutral1),
         elevation: 0,
         backgroundColor: Colors.transparent,

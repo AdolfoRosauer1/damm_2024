@@ -257,7 +257,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                                             fireStoreController.openLocationInMap(volunteer.location);
                                           },
                                           onPressed: () {
-                                            context.go(VolunteerDetailsScreen.routeFromId(volunteer.id));
+                                            context.push(VolunteerDetailsScreen.routeFromId(volunteer.id));
+                                           // context.go(VolunteerDetailsScreen.routeFromId(volunteer.id));
                                           },
                                           type: volunteer.type,
                                           title: volunteer.title,
