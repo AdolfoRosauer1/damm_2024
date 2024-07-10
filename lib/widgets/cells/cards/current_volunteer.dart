@@ -1,6 +1,8 @@
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
+import 'package:damm_2024/screens/apply_screen.dart';
+import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
@@ -64,9 +66,9 @@ class CurrentVolunteerSectionState
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
-                        context.go('/apply/${data.id}');
+                        context.go(VolunteerDetailsScreen.routeFromId(data.id));
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

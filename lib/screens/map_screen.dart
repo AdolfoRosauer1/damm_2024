@@ -251,19 +251,22 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                                       return Container(
                                         margin: const EdgeInsets.symmetric(horizontal: 8),
                                         width: 300, // Adjust width as needed
-                                        child: VolunteeringCard(
-                                          id: volunteer.id,
-                                          onPressedLocation: () {
-                                            fireStoreController.openLocationInMap(volunteer.location);
+                                        child: InkWell(
+                                          onTap: () {
+                                            context.push(
+                                                VolunteerDetailsScreen.routeFromId(
+                                                    volunteer.id));
                                           },
-                                          onPressed: () {
-                                            context.push(VolunteerDetailsScreen.routeFromId(volunteer.id));
-                                           // context.go(VolunteerDetailsScreen.routeFromId(volunteer.id));
-                                          },
-                                          type: volunteer.type,
-                                          title: volunteer.title,
-                                          vacancies: volunteer.remainingVacancies,
-                                          imageUrl: volunteer.imageUrl,
+                                          child: VolunteeringCard(
+                                            id: volunteer.id,
+                                            onPressedLocation: () {
+                                              fireStoreController.openLocationInMap(volunteer.location);
+                                            },
+                                            type: volunteer.type,
+                                            title: volunteer.title,
+                                            vacancies: volunteer.remainingVacancies,
+                                            imageUrl: volunteer.imageUrl,
+                                          ),
                                         ),
                                       );
                                     },

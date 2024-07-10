@@ -13,7 +13,6 @@ class VolunteeringCard extends ConsumerStatefulWidget {
   const VolunteeringCard({
     super.key, 
     required this.id,
-    required this.onPressed,
     required this.onPressedLocation,
     required this.type,
     required this.title,
@@ -21,7 +20,6 @@ class VolunteeringCard extends ConsumerStatefulWidget {
     required this.imageUrl,
   });
 
-  final VoidCallback onPressed;
   final VoidCallback onPressedLocation;
   final String type;
   final String title;
@@ -57,13 +55,10 @@ class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
             Row(
               children: [
                 Expanded(
-                  child: InkWell(
-                    onTap: widget.onPressed,
-                    child: Image.network(
-                      widget.imageUrl,
-                      height: 138,
-                      fit: BoxFit.fitWidth,
-                    ),
+                  child: Image.network(
+                    widget.imageUrl,
+                    height: 138,
+                    fit: BoxFit.fitWidth,
                   ),
                 ),
               ],

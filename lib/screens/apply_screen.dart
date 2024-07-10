@@ -224,23 +224,25 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                                       const SizedBox(height: 24),
                                   itemCount: volunteerDetails.length,
                                   itemBuilder: (context, index) {
-                                    return VolunteeringCard(
-                                      id: volunteerDetails[index].id,
-                                      onPressedLocation: () {
-                                        firestoreController.openLocationInMap(
-                                            volunteerDetails[index].location);
-                                      },
-                                      onPressed: () {
+                                    return InkWell(
+                                      onTap: () {
                                         context.push(
                                             VolunteerDetailsScreen.routeFromId(
                                                 volunteerDetails[index].id));
                                       },
-                                      type: volunteerDetails[index].type,
-                                      title: volunteerDetails[index].title,
-                                      vacancies: volunteerDetails[index]
-                                          .remainingVacancies,
-                                      imageUrl:
-                                          volunteerDetails[index].imageUrl,
+                                      child: VolunteeringCard(
+                                        id: volunteerDetails[index].id,
+                                        onPressedLocation: () {
+                                          firestoreController.openLocationInMap(
+                                              volunteerDetails[index].location);
+                                        },
+                                        type: volunteerDetails[index].type,
+                                        title: volunteerDetails[index].title,
+                                        vacancies: volunteerDetails[index]
+                                            .remainingVacancies,
+                                        imageUrl:
+                                            volunteerDetails[index].imageUrl,
+                                      ),
                                     );
                                   },
                                 ),
