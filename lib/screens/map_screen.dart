@@ -145,6 +145,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ? const Center(child: CircularProgressIndicator())
             : GoogleMap(
                 myLocationEnabled: true,
+                zoomControlsEnabled: false,
+                myLocationButtonEnabled: false,
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: _initialPosition!,
                 markers: _markers,
@@ -197,7 +199,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ),
         Positioned(
           bottom: 16,
-          left: 16,
+          left: 30,
           right: 16,
           child: Column(
             children: [
@@ -240,35 +242,40 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                                     message: AppLocalizations.of(context)!.noVolunteersSearch,
                                   ),
                               )
-                              : Padding(
-                                padding: const EdgeInsets.only(top:16),
-                                child: CarouselSlider.builder(
-                                    options: CarouselOptions(
-                                      onPageChanged: _onCarouselPageChanged,
-                                      enlargeCenterPage: true,
-                                      enableInfiniteScroll: false,
-                                      height: 138 + 97,
-                                    ),
+                            : Padding(
+                                  padding: const EdgeInsets.only(top: 16),
+                                  child: CarouselSlider.builder(
                                     itemCount: _volunteers.length,
-                                    itemBuilder: (context, index, realIdx) {
+                                    itemBuilder: (context, index, realIndex) {
                                       final volunteer = _volunteers[index];
-                                      return VolunteeringCard(
-                                        id: volunteer.id,
-                                        onPressedLocation: () {
-                                          fireStoreController.openLocationInMap(volunteer.location);
-                                        },
-                                        onPressed: () {
-                                          context.go(VolunteerDetailsScreen.routeFromId(volunteer.id));
-                                        },
-                                        type: volunteer.type,
-                                        title: volunteer.title,
-                                        vacancies: volunteer.remainingVacancies,
-                                        imageUrl: volunteer.imageUrl,
+                                      return Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                                        width: 300, // Adjust width as needed
+                                        child: VolunteeringCard(
+                                          id: volunteer.id,
+                                          onPressedLocation: () {
+                                            fireStoreController.openLocationInMap(volunteer.location);
+                                          },
+                                          onPressed: () {
+                                            context.go(VolunteerDetailsScreen.routeFromId(volunteer.id));
+                                          },
+                                          type: volunteer.type,
+                                          title: volunteer.title,
+                                          vacancies: volunteer.remainingVacancies,
+                                          imageUrl: volunteer.imageUrl,
+                                        ),
                                       );
                                     },
+                                    options: CarouselOptions(
+                                      height: 235, // Adjust height as needed
+                                      enableInfiniteScroll: false,
+                                      enlargeCenterPage: false, // Keep cards same size
+                                      viewportFraction: 0.8267, // Adjust fraction to control card size
+                                      onPageChanged: _onCarouselPageChanged,
+                                    ),
                                   ),
-                              ),
-            ],
+                                ),
+                        ],
           ),
         ),
        
