@@ -84,6 +84,9 @@ class ProfilePictureCardState extends State<ProfilePictureCard> {
 
   @override
   Widget build(BuildContext context) {
+    final errorStyle = Theme.of(context).inputDecorationTheme.errorStyle ??
+    const TextStyle(color: ProjectPalette.error, fontSize: 12);
+
     if (_isLoading) {
       return Container(
         height: 100,
@@ -93,72 +96,107 @@ class ProfilePictureCardState extends State<ProfilePictureCard> {
     }
 
     if (_imageUrl == null || _imageUrl!.isEmpty) {
-      return Container(
-        decoration: BoxDecoration(
-          color: ProjectPalette.secondary2,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
-                child: Text(
-                  AppLocalizations.of(context)!.profilePhoto,
-                  style: ProjectFonts.subtitle1,
-                ),
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: ProjectPalette.secondary2,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: widget.field.hasError ? ProjectPalette.error : Colors.transparent,
+                width: 1.0
+              )        
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
-              child: ShortButton(
-                onPressed: () => _selectImageSource(),
-                small: true,
-                buttonText: _getButtonText(),
-                activated: true,
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Container(
-        decoration: BoxDecoration(
-          color: ProjectPalette.secondary2,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 0, 14),
+                    child: Text(
                       AppLocalizations.of(context)!.profilePhoto,
                       style: ProjectFonts.subtitle1,
                     ),
-                    const SizedBox(height: 8),
-                    ShortButton(
-                      onPressed: () => _selectImageSource(),
-                      small: true,
-                      buttonText: _getButtonText(),
-                      activated: true,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
+                  child: ShortButton(
+                    onPressed: () => _selectImageSource(),
+                    small: true,
+                    buttonText: _getButtonText(),
+                    activated: true,
+                  ),
+                ),
+              ],
             ),
+          ),
+          if (widget.field.errorText != null)
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 19, 8),
-              child: ProfilePicture(
-                imageUrl: _imageUrl!,
-                size: ProfilePictureSize.small,
+              padding: const EdgeInsets.only(left: 8, top: 8),
+              child: Text(
+                widget.field.errorText!,
+                style: errorStyle,
               ),
             ),
-          ],
-        ),
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.field.hasError ? ProjectPalette.error : Colors.transparent,
+                width: 1.0
+              ),
+              color: ProjectPalette.secondary2,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.profilePhoto,
+                          style: ProjectFonts.subtitle1,
+                        ),
+                        const SizedBox(height: 8),
+                        ShortButton(
+                          onPressed: () => _selectImageSource(),
+                          small: true,
+                          buttonText: _getButtonText(),
+                          activated: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 19, 8),
+                  child: ProfilePicture(
+                    imageUrl: _imageUrl!,
+                    size: ProfilePictureSize.small,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (widget.field.errorText != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 8, top: 8),
+              child: Text(
+                widget.field.errorText!,
+                style: errorStyle,
+              ),
+            ),
+        ],
       );
     }
   }

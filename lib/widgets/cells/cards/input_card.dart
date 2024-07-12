@@ -11,59 +11,85 @@ class InputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: ProjectPalette.neutral3,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: const BoxDecoration(
-              color: ProjectPalette.secondary2,
-            ),
+    final errorStyle = Theme.of(context).inputDecorationTheme.errorStyle ??
+        const TextStyle(color: ProjectPalette.error, fontSize: 12);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        
+        Container(
+          decoration:  BoxDecoration(
+            color: ProjectPalette.neutral3,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: state.hasError ? ProjectPalette.error : Colors.transparent,
+              width: 1.0
+            )
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: const BoxDecoration(
+                  color: ProjectPalette.secondary2,
+                  borderRadius: BorderRadius.vertical(top:Radius.circular(4))
+                ),
+                child: Text(
+                  title,
+                  style: ProjectFonts.subtitle1,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: 
+                    labels.map((label) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          radioTheme: Theme.of(context).radioTheme.copyWith(
+                            fillColor: MaterialStateProperty.all(ProjectPalette.primary1),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Radio<String>(
+                              visualDensity: VisualDensity.comfortable,
+                              value: label,
+                              groupValue: state.value,
+                              onChanged: (String? value) {
+                                state.didChange(value);
+                              },
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            Text(
+                              label,
+                              style: ProjectFonts.body1.copyWith(
+                                color: ProjectPalette.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+
+                ),
+              ),
+            ]
+          ),
+        ),
+        if (state.errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0,left: 8.0),
             child: Text(
-              title,
-              style: ProjectFonts.subtitle1,
+              state.errorText!,
+              style: errorStyle,
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: labels.map((label) {
-                return Theme(
-                  data: Theme.of(context).copyWith(
-                    radioTheme:Theme.of(context).radioTheme.copyWith(
-                      fillColor: WidgetStateProperty.all(ProjectPalette.primary1)
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Radio<String>(
-                        visualDensity: VisualDensity.comfortable,
-                        value: label,
-                        groupValue: state.value,
-                        onChanged: (String? value) {
-                          state.didChange(value);
-                        },
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      Text(
-                        label,
-                        style: ProjectFonts.body1.copyWith(
-                          color: ProjectPalette.black,
-                      ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
+          
+      ],
     );
   }
 }
