@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
@@ -34,8 +36,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
   late Future<List<VolunteerDetails>> _volunteers;
   late Future<bool> _areVolunteersAvailable;
   GeoPoint? _userPosition;
-
-
+  Timer? _debounce;
 
   void _askForNotificationPermission() {
     FirebaseMessaging.instance.requestPermission(
@@ -58,6 +59,13 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
   }
 
   @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final firestoreController = ref.read(firestoreControllerProvider);
     final userLocation = ref.watch(userLocationProvider);
@@ -73,6 +81,10 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
       });
     }
 
+    void onSearchChanged(){
+      if(_debounce?.isActive ?? false) _debounce?.cancel();
+      _debounce = Timer(const Duration(milliseconds: 500), loadVolunteers);
+    }
     setState(() {
       _userPosition = userLocation;
     });
@@ -98,7 +110,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
               ),
               child: TextField(
                 controller: _searchController,
-                onChanged: (_) => loadVolunteers(),
+                onChanged: (_) => onSearchChanged(),
                 decoration: InputDecoration(
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
