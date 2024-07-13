@@ -77,369 +77,379 @@ class VolunteerDetailsScreenState
           }
 
           return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Image.network(volunteerDetails.imageUrl),
-                const SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    volunteerDetails.type.toUpperCase(),
-                    style: ProjectFonts.overline
-                        .copyWith(color: ProjectPalette.neutral6),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(volunteerDetails.title,
-                      style: ProjectFonts.headline1),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    volunteerDetails.mission,
-                    style: ProjectFonts.body1
-                        .copyWith(color: ProjectPalette.secondary6),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(AppLocalizations.of(context)!.about_activity,
-                      style: ProjectFonts.headline2),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child:
-                      Text(volunteerDetails.details, style: ProjectFonts.body1),
-                ),
-                const SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: InkWell(
-                    onTap: () {
-                      firestoreController
-                          .openLocationInMap(volunteerDetails.location);
-                    },
-                    child: InformationCard(
-                      title: AppLocalizations.of(context)!.location,
-                      label1: AppLocalizations.of(context)!.address,
-                      content1: volunteerDetails.address,
-                      label2: '',
-                      content2: '',
-                      hasMap: true,
-                      center: LatLng(volunteerDetails.location.latitude,
-                          volunteerDetails.location.longitude),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                      AppLocalizations.of(context)!.participate_in_volunteer,
-                      style: ProjectFonts.headline2),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(AppLocalizations.of(context)!.requirements,
-                      style: ProjectFonts.subtitle1),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: MarkdownBody(
-                    data: volunteerDetails.requirements,
-                    styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                        .copyWith(
-                      p: ProjectFonts.body1,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(AppLocalizations.of(context)!.availability,
-                      style: ProjectFonts.subtitle1),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: MarkdownBody(
-                    data: volunteerDetails.timeAvailability,
-                    styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                        .copyWith(
-                      p: ProjectFonts.body1,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(AppLocalizations.of(context)!.volunteerExtraInfo,
-                      style: ProjectFonts.subtitle1),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Padding(
+            child: Container(
+              color: ProjectPalette.neutral1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Image.network(volunteerDetails.imageUrl),
+                  const SizedBox(height: 24),
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      "${AppLocalizations.of(context)!.cost}: ${localizeCurrency(volunteerDetails.cost, context)}",
-                      style: ProjectFonts.body1,
-                    )),
-                const SizedBox(height: 8),
-                Padding(
+                      volunteerDetails.type.toUpperCase(),
+                      style: ProjectFonts.overline
+                          .copyWith(color: ProjectPalette.neutral6),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(volunteerDetails.title,
+                        style: ProjectFonts.headline1),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      "${AppLocalizations.of(context)!.createdAtDate}: ${localizeDate(volunteerDetails.createdAt, context)}",
-                      style: ProjectFonts.body1,
-                    )),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      VacanciesChip(
-                          vacancies: volunteerDetails.remainingVacancies,
-                          enabled: true),
-                    ],
+                      volunteerDetails.mission,
+                      style: ProjectFonts.body1
+                          .copyWith(color: ProjectPalette.secondary6),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                if (currentUser.currentVolunteering != null &&
-                    currentUser.currentVolunteering != volunteerDetails.id)
+                  const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
+                    child: Text(AppLocalizations.of(context)!.about_activity,
+                        style: ProjectFonts.headline2),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child:
+                        Text(volunteerDetails.details, style: ProjectFonts.body1),
+                  ),
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: InkWell(
+                      onTap: () {
+                        firestoreController
+                            .openLocationInMap(volunteerDetails.location);
+                      },
+                      child: InformationCard(
+                        title: AppLocalizations.of(context)!.location,
+                        label1: AppLocalizations.of(context)!.address,
+                        content1: volunteerDetails.address,
+                        label2: '',
+                        content2: '',
+                        hasMap: true,
+                        center: LatLng(volunteerDetails.location.latitude,
+                            volunteerDetails.location.longitude),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                        AppLocalizations.of(context)!.participate_in_volunteer,
+                        style: ProjectFonts.headline2),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(AppLocalizations.of(context)!.requirements,
+                        style: ProjectFonts.subtitle1),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: MarkdownBody(
+                      data: volunteerDetails.requirements,
+                      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                          .copyWith(
+                        p: ProjectFonts.body1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(AppLocalizations.of(context)!.availability,
+                        style: ProjectFonts.subtitle1),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: MarkdownBody(
+                      data: volunteerDetails.timeAvailability,
+                      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                          .copyWith(
+                        p: ProjectFonts.body1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(AppLocalizations.of(context)!.volunteerExtraInfo,
+                        style: ProjectFonts.subtitle1),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        "${AppLocalizations.of(context)!.cost}: ${localizeCurrency(volunteerDetails.cost, context)}",
+                        style: ProjectFonts.body1,
+                      )),
+                  const SizedBox(height: 8),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        "${AppLocalizations.of(context)!.createdAtDate}: ${localizeDate(volunteerDetails.createdAt, context)}",
+                        style: ProjectFonts.body1,
+                      )),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          AppLocalizations.of(context)!.must_cancel_title,
-                          style: ProjectFonts.body1,
-                          textAlign: TextAlign.center,
-                        ),
-                        CtaButton(
-                          enabled: false,
-                          onPressed: () {
-                            if (finishedSetup) {
-                              if (!internet) {
+                        VacanciesChip(
+                            vacancies: volunteerDetails.remainingVacancies,
+                            enabled: true),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  if (currentUser.currentVolunteering != null &&
+                      currentUser.currentVolunteering != volunteerDetails.id)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.must_cancel_title,
+                            style: ProjectFonts.body1,
+                            textAlign: TextAlign.center,
+                          ),
+                          CtaButton(
+                            enabled: true,
+                            onPressed: () {
+                              if (finishedSetup) {
+                                if (!internet) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const NoInternetModal();
+                                      });
+                                  return;
+                                }
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CancelVolunteerModal(
+                                      title: null,
+                                      oppId: currentUser.currentVolunteering!),
+                                );
+                              } else {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return const NoInternetModal();
+                                      return const FinishSetupModal(
+                                          favAction: false);
                                     });
-                                return;
                               }
-                              showDialog(
-                                context: context,
-                                builder: (context) => CancelVolunteerModal(
-                                    title: null,
-                                    oppId: currentUser.currentVolunteering!),
-                              );
-                            } else {
-                              showDialog(
+                            },
+                            filled: false,
+                            actionStr:
+                                AppLocalizations.of(context)!.must_cancel_body,
+                          ),
+                          CtaButton(
+                            enabled: false,
+                            onPressed: () {},
+                            filled: true,
+                            actionStr: AppLocalizations.of(context)!.apply_now,
+                          ),
+                        ],
+                      ),
+                    )
+                  else if (currentUser.currentApplication != null &&
+                      currentUser.currentApplication != volunteerDetails.id)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.must_cancel_title,
+                            style: ProjectFonts.body1,
+                            textAlign: TextAlign.center,
+                          ),
+                          CtaButton(
+                            enabled: true,
+                            onPressed: () {
+                              if (finishedSetup) {
+                                if (!internet) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const NoInternetModal();
+                                      });
+                                  return;
+                                }
+                                showDialog(
                                   context: context,
-                                  builder: (context) {
-                                    return const FinishSetupModal(
-                                        favAction: false);
-                                  });
-                            }
-                          },
-                          filled: false,
-                          actionStr:
-                              AppLocalizations.of(context)!.must_cancel_body,
-                        ),
-                        CtaButton(
-                          enabled: false,
-                          onPressed: () {},
-                          filled: false,
-                          actionStr: AppLocalizations.of(context)!.apply_now,
-                        ),
-                      ],
-                    ),
-                  )
-                else if (currentUser.currentApplication != null &&
-                    currentUser.currentApplication != volunteerDetails.id)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.must_cancel_title,
-                          style: ProjectFonts.body1,
-                          textAlign: TextAlign.center,
-                        ),
-                        CtaButton(
-                          enabled: false,
-                          onPressed: () {
-                            if (finishedSetup) {
-                              if (!internet) {
+                                  builder: (context) => UnApplyModal(
+                                      title: null,
+                                      oppId: currentUser.currentApplication!),
+                                );
+                              } else {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return const NoInternetModal();
+                                      return const FinishSetupModal(
+                                          favAction: false);
                                     });
-                                return;
                               }
-                              showDialog(
-                                context: context,
-                                builder: (context) => UnApplyModal(
-                                    title: null,
-                                    oppId: currentUser.currentApplication!),
-                              );
-                            } else {
-                              showDialog(
+                            },
+                            filled: false,
+                            actionStr:
+                                AppLocalizations.of(context)!.must_cancel_body,
+                          ),
+                          CtaButton(
+                            enabled: false,
+                            onPressed: () {},
+                            filled: true,
+                            actionStr: AppLocalizations.of(context)!.apply_now,
+                          ),
+                        ],
+                      ),
+                    )
+                  else if (currentUser.currentVolunteering == volunteerDetails.id)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+
+                        children: [
+                          Text(AppLocalizations.of(context)!.confirmed_title,
+                              style: ProjectFonts.headline2),
+                          Text(
+                            AppLocalizations.of(context)!.confirmed_body,
+                            style: ProjectFonts.body1,
+                            textAlign: TextAlign.center,
+                          ),
+                          CtaButton(
+                            enabled: true,
+                            onPressed: () {
+                              if (finishedSetup) {
+                                if (!internet) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const NoInternetModal();
+                                      });
+                                  return;
+                                }
+                                showDialog(
                                   context: context,
-                                  builder: (context) {
-                                    return const FinishSetupModal(
-                                        favAction: false);
-                                  });
-                            }
-                          },
-                          filled: false,
-                          actionStr:
-                              AppLocalizations.of(context)!.must_cancel_body,
-                        ),
-                        CtaButton(
-                          enabled: false,
-                          onPressed: () {},
-                          filled: false,
-                          actionStr: AppLocalizations.of(context)!.apply_now,
-                        ),
-                      ],
-                    ),
-                  )
-                else if (currentUser.currentVolunteering == volunteerDetails.id)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        Text(AppLocalizations.of(context)!.confirmed_title,
-                            style: ProjectFonts.headline2),
-                        Text(
-                          AppLocalizations.of(context)!.confirmed_body,
-                          style: ProjectFonts.body1,
-                          textAlign: TextAlign.center,
-                        ),
-                        CtaButton(
-                          enabled: true,
-                          onPressed: () {
-                            if (finishedSetup) {
-                              if (!internet) {
+                                  builder: (context) => CancelVolunteerModal(
+                                      title: volunteerDetails.title,
+                                      oppId: volunteerDetails.id),
+                                );
+                              } else {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return const NoInternetModal();
+                                      return const FinishSetupModal(
+                                          favAction: false);
                                     });
-                                return;
                               }
-                              showDialog(
-                                context: context,
-                                builder: (context) => CancelVolunteerModal(
-                                    title: volunteerDetails.title,
-                                    oppId: volunteerDetails.id),
-                              );
-                            } else {
-                              showDialog(
+                            },
+                            filled: false,
+                            actionStr:
+                                AppLocalizations.of(context)!.cancel_volunteer,
+                          ),
+                        ],
+                      ),
+                    )
+                  else if (currentUser.currentApplication == volunteerDetails.id)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+
+                        children: [
+                          Text(AppLocalizations.of(context)!.applied_title,
+                              style: ProjectFonts.headline2),
+                          Text(
+                            AppLocalizations.of(context)!.applied_body,
+                            style: ProjectFonts.body1,
+                            textAlign: TextAlign.center,
+                          ),
+                          CtaButton(
+                            enabled: true,
+                            onPressed: () {
+                              if (finishedSetup) {
+                                if (!internet) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const NoInternetModal();
+                                      });
+                                  return;
+                                }
+                                showDialog(
                                   context: context,
-                                  builder: (context) {
-                                    return const FinishSetupModal(
-                                        favAction: false);
-                                  });
-                            }
-                          },
-                          filled: false,
-                          actionStr:
-                              AppLocalizations.of(context)!.cancel_volunteer,
-                        ),
-                      ],
-                    ),
-                  )
-                else if (currentUser.currentApplication == volunteerDetails.id)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        Text(AppLocalizations.of(context)!.applied_title,
-                            style: ProjectFonts.headline2),
-                        Text(
-                          AppLocalizations.of(context)!.applied_body,
-                          style: ProjectFonts.body1,
-                          textAlign: TextAlign.center,
-                        ),
-                        CtaButton(
-                          enabled: true,
-                          onPressed: () {
-                            if (finishedSetup) {
-                              if (!internet) {
+                                  builder: (context) => UnApplyModal(
+                                      title: volunteerDetails.title,
+                                      oppId: volunteerDetails.id),
+                                );
+                              } else {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return const NoInternetModal();
+                                      return const FinishSetupModal(
+                                          favAction: false);
                                     });
-                                return;
                               }
-                              showDialog(
-                                context: context,
-                                builder: (context) => UnApplyModal(
-                                    title: volunteerDetails.title,
-                                    oppId: volunteerDetails.id),
-                              );
-                            } else {
+                            },
+                            filled: false,
+                            actionStr: AppLocalizations.of(context)!.un_apply,
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: CtaButton(
+                        enabled: true,
+                        onPressed: () {
+                          if (finishedSetup) {
+                            if (!internet) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return const FinishSetupModal(
-                                        favAction: false);
+                                    return const NoInternetModal();
                                   });
+                              return;
                             }
-                          },
-                          filled: false,
-                          actionStr: AppLocalizations.of(context)!.un_apply,
-                        ),
-                      ],
-                    ),
-                  )
-                else
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: CtaButton(
-                      enabled: true,
-                      onPressed: () {
-                        if (finishedSetup) {
-                          if (!internet) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ApplyConfirmationModal(
+                                  title: volunteerDetails.title,
+                                  oppId: volunteerDetails.id),
+                            );
+                          } else {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return const NoInternetModal();
+                                  return const FinishSetupModal(favAction: false);
                                 });
-                            return;
                           }
-                          showDialog(
-                            context: context,
-                            builder: (context) => ApplyConfirmationModal(
-                                title: volunteerDetails.title,
-                                oppId: volunteerDetails.id),
-                          );
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const FinishSetupModal(favAction: false);
-                              });
-                        }
-                      },
-                      filled: true,
-                      actionStr: AppLocalizations.of(context)!.apply_now,
+                        },
+                        filled: true,
+                        actionStr: AppLocalizations.of(context)!.apply_now,
+                      ),
                     ),
-                  ),
-                const SizedBox(height: 32),
-              ],
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
           );
         },

@@ -95,7 +95,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
 
     return Container(
       decoration: const BoxDecoration(
-        color: ProjectPalette.secondary1,
+        color: ProjectPalette.secondary7,
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),

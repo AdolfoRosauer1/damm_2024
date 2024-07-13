@@ -43,34 +43,34 @@ class CurrentVolunteerSectionState
             volunteer.id == user.currentVolunteering ||
             volunteer.id == user.currentApplication,
       );
-      return Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(AppLocalizations.of(context)!.my_volunteerings,
-                style: ProjectFonts.headline1),
-          ),
-          const SizedBox(height: 24),
-          Container(
-            decoration: BoxDecoration(
-              color: ProjectPalette.primary3,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: ProjectShadows.shadow2,
-              border: Border.all(color: ProjectPalette.primary1, width: 2),
+      return InkWell(
+        onTap: () {
+          context.go(VolunteerDetailsScreen.routeFromId(data.id));
+        },
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(AppLocalizations.of(context)!.my_volunteerings,
+                  style: ProjectFonts.headline1),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        context.go(VolunteerDetailsScreen.routeFromId(data.id));
-                      },
-                      child: Column(
+            const SizedBox(height: 24),
+            Container(
+              decoration: BoxDecoration(
+                color: ProjectPalette.primary3,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: ProjectShadows.shadow2,
+                border: Border.all(color: ProjectPalette.primary1, width: 2),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -86,20 +86,20 @@ class CurrentVolunteerSectionState
                           const SizedBox(height: 4),
                         ],
                       ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        firestoreController.openLocationInMap(data.location);
-                      },
-                      child: ProjectIcons.locationFilledActivated,
-                    ),
-                  ],
+                      InkWell(
+                        onTap: () {
+                          firestoreController.openLocationInMap(data.location);
+                        },
+                        child: ProjectIcons.locationFilledActivated,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-        ],
+            const SizedBox(height: 24),
+          ],
+        ),
       );
     }
 
