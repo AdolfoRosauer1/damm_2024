@@ -70,13 +70,13 @@ dependencies:
   flutter_local_notifications: ^17.1.2
   firebase_crashlytics: ^3.5.7
   carousel_slider: ^4.2.1
-#  connectivity
+  #  connectivity
   internet_connection_checker_plus: ^2.3.0
   app_tracking_transparency: ^2.0.5
   google_maps_flutter: ^2.6.1
   flutter_dotenv: ^5.1.0
   flutter_config: ^2.0.2
-  flutter_gen: any
+#  flutter_gen: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -93,10 +93,10 @@ dev_dependencies:
   riverpod_lint: ^2.3.10
   mockito: ^5.4.4
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+  # For information on the generic Dart part of this file, see the
+  # following page: https://dart.dev/tools/pub/pubspec
 
-# The following section is specific to Flutter packages.
+  # The following section is specific to Flutter packages.
   firebase_core_platform_interface: any
   riverpod: any
   cloud_firestore_platform_interface: any
@@ -108,10 +108,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   generate: true
-  #l10n:
+    #l10n:
     #arb-dir: lib/l10n
     #template-arb-file: app_en.arb
-    #output-localization-file: app_localizations.dart
+  #output-localization-file: app_localizations.dart
   assets:
     - assets/images/logo_cuadrado.png
     - assets/images/logo_rectangular.png
