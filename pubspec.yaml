@@ -76,6 +76,7 @@ dependencies:
   google_maps_flutter: ^2.6.1
   flutter_dotenv: ^5.1.0
   flutter_config: ^2.0.2
+  flutter_gen: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -96,6 +97,10 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+  firebase_core_platform_interface: any
+  riverpod: any
+  cloud_firestore_platform_interface: any
+  firebase_storage_platform_interface: any
 flutter:
 
   # The following line ensures that the Material Icons font is

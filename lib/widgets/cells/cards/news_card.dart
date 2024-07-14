@@ -94,14 +94,14 @@ class NewsCard extends ConsumerWidget {
                             data: (enabled) {
                               if (!enabled) return Container(); // Si compartir noticias está deshabilitado, no muestra el botón
                               return IconButton(
-                                icon: Icon(Icons.share),
+                                icon: const Icon(Icons.share),
                                 onPressed: () {
                                   // Lógica para compartir la noticia
                                   Share.share('Mira esta noticia: $title\n\n$imageUrl');
                                 },
                               );
                             },
-                            loading: () => CircularProgressIndicator(),
+                            loading: () => const CircularProgressIndicator(),
                             error: (error, stack) => Text('Error: $error'),
                           ),
                         ],

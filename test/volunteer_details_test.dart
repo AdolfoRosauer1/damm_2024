@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:damm_2024/services/volunteer_details_service.dart';
 
 // Mocks para FirebaseFirestore y FirebaseStorage
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}

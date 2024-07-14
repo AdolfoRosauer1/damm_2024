@@ -50,7 +50,7 @@ class InputCard extends StatelessWidget {
                       return Theme(
                         data: Theme.of(context).copyWith(
                           radioTheme: Theme.of(context).radioTheme.copyWith(
-                            fillColor: MaterialStateProperty.all(ProjectPalette.primary1),
+                            fillColor: WidgetStateProperty.all(ProjectPalette.primary1),
                           ),
                         ),
                         child: Row(

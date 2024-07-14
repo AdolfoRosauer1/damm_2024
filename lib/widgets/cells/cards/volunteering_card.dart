@@ -109,7 +109,7 @@ class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
                                 child: isFav ? ProjectIcons.favoriteFilledActivated : ProjectIcons.favoriteOutlinedActivated,
                               );
                             },
-                            loading: () => CircularProgressIndicator(),
+                            loading: () => const CircularProgressIndicator(),
                             error: (error, stack) => Text('Error: $error'),
                           ),
                           const SizedBox(width: 16),

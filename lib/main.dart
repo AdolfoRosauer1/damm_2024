@@ -144,7 +144,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         tabBarTheme: TabBarTheme(
           overlayColor:
-              MaterialStateProperty.all(ProjectPalette.neutral2.withOpacity(0.1)),
+              WidgetStateProperty.all(ProjectPalette.neutral2.withOpacity(0.1)),
           indicatorSize: TabBarIndicatorSize.tab,
           indicator: const BoxDecoration(
             border: Border(

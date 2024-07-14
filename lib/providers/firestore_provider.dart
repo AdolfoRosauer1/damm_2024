@@ -8,9 +8,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:damm_2024/models/volunteer_details.dart';
-import 'package:damm_2024/services/analytics_service.dart';
-import 'package:geolocator/geolocator.dart';
 
 part 'firestore_provider.g.dart';
 
