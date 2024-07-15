@@ -36,7 +36,10 @@ extension GenderExtension on Gender {
 
 
 
-Gender? genderFromString(String genderStr) {
+Gender? genderFromString(String? genderStr) {
+  if (genderStr == null){
+    return null;
+  }
   if (genderStr == Gender.man.value) {
     return Gender.man;
   } else if (genderStr == Gender.woman.value) {

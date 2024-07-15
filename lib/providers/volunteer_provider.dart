@@ -289,8 +289,8 @@ class ProfileRepository {
         if (data['dateOfBirth'] != null){
           Timestamp ts = data['dateOfBirth'] as Timestamp;
           data['dateOfBirth'] = ts.toDate();
-          data['favoriteVolunteerings'] ??= [];
         }
+        data['favoriteVolunteerings'] ??= [];
         return Volunteer.fromJson(data);
       }
       return null;

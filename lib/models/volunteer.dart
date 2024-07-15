@@ -38,21 +38,23 @@ class Volunteer {
   }
 
   factory Volunteer.fromJson(Map<String, dynamic> data) {
+    print('-----Volunteer.fromJson: data: '+data.toString());
     return Volunteer(
-        firstName: data['firstName'] as String,
-        lastName: data['lastName'] as String,
-        email: data['email'] as String,
-        gender: genderFromString(data['gender']),
-        profileImageURL: data['profileImageURL'] as String,
-        dateOfBirth: (data['dateOfBirth'] as DateTime?),
-        phoneNumber: data['phoneNumber'] as String,
-        uid: data['uid'] as String,
-        favoriteVolunteerings:
-            List<String?>.from(data['favoriteVolunteerings'] as List),
-        currentVolunteering: data['currentVolunteering'] as String?,
-        currentApplication: data['currentApplication'] as String?,
-        fcmToken: data['fcmToken'] as String?);
+      firstName: data['firstName'] as String? ?? '',
+      lastName: data['lastName'] as String? ?? '',
+      email: data['email'] as String? ?? '',
+      gender: genderFromString(data['gender']),
+      profileImageURL: data['profileImageURL'] as String? ?? '',
+      dateOfBirth: (data['dateOfBirth'] as DateTime?),
+      phoneNumber: data['phoneNumber'] as String? ?? '',
+      uid: data['uid'] as String? ?? '',
+      favoriteVolunteerings: List<String?>.from(data['favoriteVolunteerings'] as List),
+      currentVolunteering: data['currentVolunteering'] as String?,
+      currentApplication: data['currentApplication'] as String?,
+      fcmToken: data['fcmToken'] as String?,
+    );
   }
+
 
   factory Volunteer.empty() {
     return Volunteer(
