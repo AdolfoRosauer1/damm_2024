@@ -286,9 +286,11 @@ class ProfileRepository {
           await _firestore.collection('volunteer').doc(id).get();
       if (doc.exists) {
         var data = doc.data() as Map<String, dynamic>;
-        Timestamp ts = data['dateOfBirth'] as Timestamp;
-        data['dateOfBirth'] = ts.toDate();
-        data['favoriteVolunteerings'] ??= [];
+        if (data['dateOfBirth'] != null){
+          Timestamp ts = data['dateOfBirth'] as Timestamp;
+          data['dateOfBirth'] = ts.toDate();
+          data['favoriteVolunteerings'] ??= [];
+        }
         return Volunteer.fromJson(data);
       }
       return null;

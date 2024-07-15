@@ -319,7 +319,8 @@ class VolunteerDetailsScreenState
                         ],
                       ),
                     )
-                  else if (currentUser.currentVolunteering == volunteerDetails.id)
+                  // else if (currentUser.currentVolunteering == volunteerDetails.id)
+                  else if (volunteerDetails.confirmedApplicants.contains(currentUser.uid))
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
@@ -367,7 +368,7 @@ class VolunteerDetailsScreenState
                         ],
                       ),
                     )
-                  else if (currentUser.currentApplication == volunteerDetails.id)
+                  else if (volunteerDetails.pendingApplicants.contains(currentUser.uid))
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(

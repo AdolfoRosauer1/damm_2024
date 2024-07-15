@@ -46,7 +46,11 @@ class _TabsState extends ConsumerState<Tabs>
   @override
   Widget build(BuildContext context) {
     final internetStatus = ref.watch(internetConnectionProvider);
-    final internet = internetStatus.value! == InternetStatus.connected;
+    bool internet = false;
+
+    internetStatus.whenData((data) {
+      internet = data == InternetStatus.connected;
+    });
 
     return DefaultTabController(
       length: 3,

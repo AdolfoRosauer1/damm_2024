@@ -16,6 +16,10 @@ class VolunteerDetailsProvider extends _$VolunteerDetailsProvider {
   @override
   Stream<VolunteerDetails?> build(String id) async* {
     final firestoreDataSource = ref.watch(firestoreDataSourceProvider);
+    final user = ref.watch(currentUserProvider);
+    final userNotifier = ref.watch(currentUserProvider.notifier);
+    final profileRepository = ref.watch(profileRepositoryProvider);
+
     await for (final snapshot in firestoreDataSource.getVolunteerByIdSnapshot(id)) {
       if (snapshot.exists) {
         var data = snapshot.data()!;
@@ -31,7 +35,27 @@ class VolunteerDetailsProvider extends _$VolunteerDetailsProvider {
         data['confirmedApplicants'] ??= [];
         data['remainingVacancies'] ??= data['vacancies'] -
             List<String>.from(data['confirmedApplicants'] as List).length;
-        yield VolunteerDetails.fromJson(data);
+        final volunteerDetails = VolunteerDetails.fromJson(data);
+
+        // final updatedUser = Volunteer.fromVolunteer(user);
+        //
+        // if (volunteerDetails.pendingApplicants.contains(user.uid)) {
+        //   updatedUser.currentApplication = volunteerDetails.id;
+        // } else {
+        //   updatedUser.currentApplication = null;
+        // }
+        //
+        // if (volunteerDetails.confirmedApplicants.contains(user.uid)) {
+        //   updatedUser.currentVolunteering = volunteerDetails.id;
+        // } else {
+        //   updatedUser.currentVolunteering = null;
+        // }
+        //
+        // userNotifier.set(updatedUser);
+        // // profileRepository.setVolunteerFromJson(updatedUser.toJson());
+
+
+        yield volunteerDetails;
       } else {
         yield null;
       }

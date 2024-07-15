@@ -91,20 +91,11 @@ class _VolunteeringCardState extends ConsumerState<VolunteeringCard> {
                               if (!enabled) return Container();
                               return InkWell(
                                 onTap: () {
-                                  if (user.hasCompletedProfile()) {
                                     if (isFav) {
                                       profileController.removeFavoriteVolunteering(widget.id);
                                     } else {
                                       profileController.addFavoriteVolunteering(widget.id);
                                     }
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return const FinishSetupModal(favAction: true);
-                                      },
-                                    );
-                                  }
                                 },
                                 child: isFav ? ProjectIcons.favoriteFilledActivated : ProjectIcons.favoriteOutlinedActivated,
                               );
