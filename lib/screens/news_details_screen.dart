@@ -1,4 +1,5 @@
 import 'package:damm_2024/models/news.dart';
+import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/screens/news_screen.dart';
 import 'package:damm_2024/services/news_service.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
@@ -7,7 +8,8 @@ import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:damm_2024/providers/remote_config_provider.dart'; // Importa el provider de Remote Config
+import 'package:damm_2024/providers/remote_config_provider.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart'; // Importa el provider de Remote Config
 
 class NewsDetailsScreen extends ConsumerStatefulWidget {
   const NewsDetailsScreen({super.key, required this.id});
@@ -36,6 +38,12 @@ class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final shareNewsEnabledAsyncValue = ref.watch(shareNewsEnabledProvider);
+    final internetStatus = ref.read(internetConnectionProvider);
+    bool internet = false;
+
+    internetStatus.whenData((data) {
+      internet = data == InternetStatus.connected;
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -53,11 +61,22 @@ class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
         future: _newsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: !internet
+                  ? Text(
+                      AppLocalizations.of(context)!.no_internet,
+                      style: ProjectFonts.body1,
+                      textAlign: TextAlign.center,
+                    )
+                  : const CircularProgressIndicator(),
+            );
           } else if (snapshot.hasError) {
-            return Center(child: Text('${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
+            return Center(
+                child: Text(
+                    '${AppLocalizations.of(context)!.error}: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text(AppLocalizations.of(context)!.newsNotFound));
+            return Center(
+                child: Text(AppLocalizations.of(context)!.newsNotFound));
           } else {
             News news = snapshot.data!;
             return SingleChildScrollView(
@@ -98,8 +117,8 @@ class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
                     ),
                     Text(
                       news.description,
-                      style: ProjectFonts.subtitle1.copyWith(
-                          color: ProjectPalette.secondary6),
+                      style: ProjectFonts.subtitle1
+                          .copyWith(color: ProjectPalette.secondary6),
                     ),
                     const SizedBox(
                       height: 16,
@@ -113,12 +132,14 @@ class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
                     ),
                     shareNewsEnabledAsyncValue.when(
                       data: (enabled) {
-                        if (!enabled) return Container(); // Si compartir noticias está deshabilitado, no muestra nada
+                        if (!enabled)
+                          return Container(); // Si compartir noticias está deshabilitado, no muestra nada
                         return Column(
                           children: [
                             Align(
                               alignment: Alignment.center,
-                              child: Text(AppLocalizations.of(context)!.shareThisNote,
+                              child: Text(
+                                  AppLocalizations.of(context)!.shareThisNote,
                                   style: ProjectFonts.headline2),
                             ),
                             const SizedBox(
@@ -133,7 +154,15 @@ class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
                           ],
                         );
                       },
-                      loading: () => const CircularProgressIndicator(),
+                      loading: () => Center(
+                        child: !internet
+                            ? Text(
+                                AppLocalizations.of(context)!.no_internet,
+                                style: ProjectFonts.body1,
+                                textAlign: TextAlign.center,
+                              )
+                            : const CircularProgressIndicator(),
+                      ),
                       error: (error, stack) => Text('Error: $error'),
                     ),
                   ],
@@ -146,4 +175,3 @@ class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
     );
   }
 }
-

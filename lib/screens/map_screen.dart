@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
+import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/location_provider.dart';
 import 'package:damm_2024/screens/apply_screen.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   static const route = "/map";
@@ -43,17 +45,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-   final userLocation = ref.watch(userLocationProvider);
+    final userLocation = ref.watch(userLocationProvider);
 
     final locationController = ref.read(locationControllerProvider);
     locationController.updateUserLocation();
 
     setState(() {
       _userPosition = userLocation;
-    });  
+    });
     _loadVolunteers();
-
-    
   }
 
   Future<void> _loadVolunteers() async {
@@ -64,32 +64,38 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     });
 
     try {
-      final volunteers = await firestoreController.getVolunteers(query: _searchController.text,
-                                                    userPosition: _userPosition); 
+      final volunteers = await firestoreController.getVolunteers(
+          query: _searchController.text, userPosition: _userPosition);
       final areAvailable = await firestoreController.areVolunteersAvailable();
       setState(() {
         _volunteers = volunteers;
         _areVolunteersAvailable = areAvailable;
-        _currentVolunteerDetails = volunteers.isNotEmpty ? volunteers.first : null;
+        _currentVolunteerDetails =
+            volunteers.isNotEmpty ? volunteers.first : null;
         _initialPosition = _currentVolunteerDetails != null
             ? CameraPosition(
-                target: LatLng(_currentVolunteerDetails!.location.latitude, _currentVolunteerDetails!.location.longitude),
+                target: LatLng(_currentVolunteerDetails!.location.latitude,
+                    _currentVolunteerDetails!.location.longitude),
                 zoom: 15.0,
               )
             : CameraPosition(
-                target: _userPosition != null ? LatLng(_userPosition!.latitude,_userPosition!.longitude) 
-                 : const LatLng(0, 0), 
+                target: _userPosition != null
+                    ? LatLng(_userPosition!.latitude, _userPosition!.longitude)
+                    : const LatLng(0, 0),
                 zoom: 15.0,
               );
         _isLoading = false;
-        _markers = volunteers.map((volunteer) => Marker(
-          markerId: MarkerId(volunteer.id),
-          position: LatLng(volunteer.location.latitude, volunteer.location.longitude),
-          infoWindow: InfoWindow(
-            title: volunteer.title,
-            snippet: volunteer.address,
-          ),
-        )).toSet();
+        _markers = volunteers
+            .map((volunteer) => Marker(
+                  markerId: MarkerId(volunteer.id),
+                  position: LatLng(volunteer.location.latitude,
+                      volunteer.location.longitude),
+                  infoWindow: InfoWindow(
+                    title: volunteer.title,
+                    snippet: volunteer.address,
+                  ),
+                ))
+            .toSet();
       });
     } catch (e) {
       setState(() {
@@ -114,7 +120,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       _currentVolunteerDetails = _volunteers[index];
     });
     final newPosition = CameraPosition(
-      target: LatLng(_currentVolunteerDetails!.location.latitude, _currentVolunteerDetails!.location.longitude),
+      target: LatLng(_currentVolunteerDetails!.location.latitude,
+          _currentVolunteerDetails!.location.longitude),
       zoom: 15.0,
     );
     _mapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
@@ -122,27 +129,38 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final internetStatus = ref.watch(internetConnectionProvider);
+    bool internet = false;
 
+    internetStatus.whenData((data) {
+      internet = data == InternetStatus.connected;
+    });
 
-    
-    void moveCamera({bool moveToUserLocation = false}){
-      if (moveToUserLocation){
-        if (_userPosition != null){
-          _mapController.animateCamera(CameraUpdate.newLatLng(LatLng(_userPosition!.latitude, _userPosition!.longitude)));
+    void moveCamera({bool moveToUserLocation = false}) {
+      if (moveToUserLocation) {
+        if (_userPosition != null) {
+          _mapController.animateCamera(CameraUpdate.newLatLng(
+              LatLng(_userPosition!.latitude, _userPosition!.longitude)));
         }
-      }
-      else if (_initialPosition != null ){
-
-        _mapController.animateCamera(CameraUpdate.newCameraPosition(
-          _initialPosition!
-        ));
+      } else if (_initialPosition != null) {
+        _mapController
+            .animateCamera(CameraUpdate.newCameraPosition(_initialPosition!));
       }
     }
+
     final fireStoreController = ref.read(firestoreControllerProvider);
     return Stack(
       children: [
         _initialPosition == null
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(
+                child: !internet
+                    ? Text(
+                        AppLocalizations.of(context)!.no_internet,
+                        style: ProjectFonts.body1,
+                        textAlign: TextAlign.center,
+                      )
+                    : const CircularProgressIndicator(),
+              )
             : GoogleMap(
                 myLocationEnabled: true,
                 zoomControlsEnabled: false,
@@ -163,12 +181,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ),
             child: TextField(
               controller: _searchController,
-          
-              onSubmitted: (_) async => {
-                await _loadVolunteers(),
-                moveCamera()
-
-              },
+              onSubmitted: (_) async => {await _loadVolunteers(), moveCamera()},
               decoration: InputDecoration(
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -180,11 +193,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     : null,
                 suffixIcon: _searchController.text.isEmpty
                     ? IconButton(
-                      icon: ProjectIcons.listFilledActivated,
-                      onPressed: () {
-                        context.go(ApplyScreen.route);
-                      },
-                    )
+                        icon: ProjectIcons.listFilledActivated,
+                        onPressed: () {
+                          context.go(ApplyScreen.route);
+                        },
+                      )
                     : IconButton(
                         icon: ProjectIcons.closeFilledEnabled,
                         onPressed: () async {
@@ -204,21 +217,28 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           child: Column(
             children: [
               Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: ProjectPalette.primary2,
-                    boxShadow: ProjectShadows.shadow3,
-                  ),
-                  child: IconButton(
-                    icon: ProjectIcons.nearMeFilledActivated,
-                    onPressed: () => moveCamera(moveToUserLocation: true),
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: ProjectPalette.primary2,
+                      boxShadow: ProjectShadows.shadow3,
                     ),
-                )
-              ),
+                    child: IconButton(
+                      icon: ProjectIcons.nearMeFilledActivated,
+                      onPressed: () => moveCamera(moveToUserLocation: true),
+                    ),
+                  )),
               _isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? Center(
+                      child: !internet
+                          ? Text(
+                              AppLocalizations.of(context)!.no_internet,
+                              style: ProjectFonts.body1,
+                              textAlign: TextAlign.center,
+                            )
+                          : const CircularProgressIndicator(),
+                    )
                   : _errorMessage != null
                       ? Center(
                           child: Text(
@@ -228,43 +248,48 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         )
                       : !_areVolunteersAvailable
                           ? Padding(
-                            padding: const EdgeInsets.only(top:16),
-                            child: NoVolunteersCard(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: NoVolunteersCard(
                                 size: NoVolunteersCardSize.small,
-                                message: AppLocalizations.of(context)!.noVolunteers,
+                                message:
+                                    AppLocalizations.of(context)!.noVolunteers,
                               ),
-                          )
+                            )
                           : _volunteers.isEmpty
                               ? Padding(
-                                padding: const EdgeInsets.only(top:40),
-                                child: NoVolunteersCard(
+                                  padding: const EdgeInsets.only(top: 40),
+                                  child: NoVolunteersCard(
                                     size: NoVolunteersCardSize.medium,
-                                    message: AppLocalizations.of(context)!.noVolunteersSearch,
+                                    message: AppLocalizations.of(context)!
+                                        .noVolunteersSearch,
                                   ),
-                              )
-                            : Padding(
+                                )
+                              : Padding(
                                   padding: const EdgeInsets.only(top: 16),
                                   child: CarouselSlider.builder(
                                     itemCount: _volunteers.length,
                                     itemBuilder: (context, index, realIndex) {
                                       final volunteer = _volunteers[index];
                                       return Container(
-                                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 8),
                                         width: 300, // Adjust width as needed
                                         child: InkWell(
                                           onTap: () {
-                                            context.push(
-                                                VolunteerDetailsScreen.routeFromId(
-                                                    volunteer.id));
+                                            context.push(VolunteerDetailsScreen
+                                                .routeFromId(volunteer.id));
                                           },
                                           child: VolunteeringCard(
                                             id: volunteer.id,
                                             onPressedLocation: () {
-                                              fireStoreController.openLocationInMap(volunteer.location);
+                                              fireStoreController
+                                                  .openLocationInMap(
+                                                      volunteer.location);
                                             },
                                             type: volunteer.type,
                                             title: volunteer.title,
-                                            vacancies: volunteer.remainingVacancies,
+                                            vacancies:
+                                                volunteer.remainingVacancies,
                                             imageUrl: volunteer.imageUrl,
                                           ),
                                         ),
@@ -273,16 +298,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                                     options: CarouselOptions(
                                       height: 235, // Adjust height as needed
                                       enableInfiniteScroll: false,
-                                      enlargeCenterPage: false, // Keep cards same size
-                                      viewportFraction: 0.8267, // Adjust fraction to control card size
+                                      enlargeCenterPage:
+                                          false, // Keep cards same size
+                                      viewportFraction:
+                                          0.8267, // Adjust fraction to control card size
                                       onPageChanged: _onCarouselPageChanged,
                                     ),
                                   ),
                                 ),
-                        ],
+            ],
           ),
         ),
-       
       ],
     );
   }

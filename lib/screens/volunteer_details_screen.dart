@@ -328,7 +328,8 @@ class VolunteerDetailsScreenState
 
                         children: [
                           Text(AppLocalizations.of(context)!.confirmed_title,
-                              style: ProjectFonts.headline2),
+                              style: ProjectFonts.headline2,
+                          textAlign: TextAlign.center,),
                           Text(
                             AppLocalizations.of(context)!.confirmed_body,
                             style: ProjectFonts.body1,
@@ -376,7 +377,8 @@ class VolunteerDetailsScreenState
 
                         children: [
                           Text(AppLocalizations.of(context)!.applied_title,
-                              style: ProjectFonts.headline2),
+                              style: ProjectFonts.headline2,
+                            textAlign: TextAlign.center,),
                           Text(
                             AppLocalizations.of(context)!.applied_body,
                             style: ProjectFonts.body1,

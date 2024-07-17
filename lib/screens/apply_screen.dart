@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
+import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/location_provider.dart';
 import 'package:damm_2024/providers/remote_config_provider.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class ApplyScreen extends ConsumerStatefulWidget {
   static const route = "/apply";
@@ -38,6 +40,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
   late Future<bool> _areVolunteersAvailable;
   GeoPoint? _userPosition;
   Timer? _debounce;
+  late FocusNode _searchFocusNode;
 
   void _askForNotificationPermission() {
     FirebaseMessaging.instance.requestPermission(
@@ -51,17 +54,17 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     );
   }
 
- 
-
   @override
   void initState() {
     super.initState();
+    _searchFocusNode = FocusNode();
     _askForNotificationPermission();
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
+    _searchFocusNode.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -72,6 +75,13 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
     final userLocation = ref.watch(userLocationProvider);
 
     final mapEnabledAsyncValue = ref.watch(mapEnabledProvider);
+
+    final internetStatus = ref.watch(internetConnectionProvider);
+    bool internet = false;
+
+    internetStatus.whenData((data) {
+      internet = data == InternetStatus.connected;
+    });
 
     mapEnabledAsyncValue.whenData((enabled) {
       _isMapEnabled = enabled;
@@ -86,19 +96,20 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
             query: _searchController.text, userPosition: _userPosition);
         _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
       });
+      _searchFocusNode.requestFocus();
     }
 
-    void onSearchChanged(){
-      if(_debounce?.isActive ?? false) _debounce?.cancel();
-      _debounce = Timer(const Duration(milliseconds: 500), loadVolunteers);
+    void onSearchChanged() {
+      if (_debounce?.isActive ?? false) _debounce?.cancel();
+      _debounce = Timer(const Duration(milliseconds: 1000), loadVolunteers);
     }
+
     setState(() {
       _userPosition = userLocation;
     });
     _areVolunteersAvailable = firestoreController.areVolunteersAvailable();
     _volunteers = firestoreController.getVolunteers(
         query: _searchController.text, userPosition: _userPosition);
-   
 
     return Container(
       decoration: const BoxDecoration(
@@ -116,6 +127,7 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                 boxShadow: ProjectShadows.shadow1,
               ),
               child: TextField(
+                focusNode: _searchFocusNode,
                 controller: _searchController,
                 onChanged: (_) => onSearchChanged(),
                 decoration: InputDecoration(
@@ -129,13 +141,13 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                       : null,
                   suffixIcon: _searchController.text.isEmpty
                       ? (_isMapEnabled
-                      ? IconButton(
-                    icon: ProjectIcons.mapFilledActivated,
-                    onPressed: () {
-                      context.go(MapScreen.route);
-                    },
-                  )
-                      : null)
+                          ? IconButton(
+                              icon: ProjectIcons.mapFilledActivated,
+                              onPressed: () {
+                                context.go(MapScreen.route);
+                              },
+                            )
+                          : null)
                       : IconButton(
                           icon: ProjectIcons.closeFilledEnabled,
                           onPressed: () {
@@ -153,7 +165,15 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                 builder: (context, availabilitySnapshot) {
                   if (availabilitySnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(
+                      child: !internet
+                          ? Text(
+                              AppLocalizations.of(context)!.no_internet,
+                              style: ProjectFonts.body1,
+                              textAlign: TextAlign.center,
+                            )
+                          : const CircularProgressIndicator(),
+                    );
                   } else if (availabilitySnapshot.hasError) {
                     return Center(
                       child: Column(
@@ -196,8 +216,15 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return Center(
+                            child: !internet
+                                ? Text(
+                                    AppLocalizations.of(context)!.no_internet,
+                                    style: ProjectFonts.body1,
+                                    textAlign: TextAlign.center,
+                                  )
+                                : const CircularProgressIndicator(),
+                          );
                         } else if (snapshot.hasError) {
                           return Center(
                             child: Text(
