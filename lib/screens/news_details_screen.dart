@@ -6,8 +6,10 @@ import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:damm_2024/providers/remote_config_provider.dart'; // Importa el provider de Remote Config
 
-class NewsDetailsScreen extends StatefulWidget {
+class NewsDetailsScreen extends ConsumerStatefulWidget {
   const NewsDetailsScreen({super.key, required this.id});
 
   final String id;
@@ -17,10 +19,10 @@ class NewsDetailsScreen extends StatefulWidget {
   static String routeFromId(String id) => "${NewsScreen.route}/$id";
 
   @override
-  State<NewsDetailsScreen> createState() => _NewsDetailsScreenState();
+  ConsumerState<NewsDetailsScreen> createState() => _NewsDetailsScreenState();
 }
 
-class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
+class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
   late Future<News?> _newsFuture;
   late NewsService _newsService;
 
@@ -33,6 +35,8 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final shareNewsEnabledAsyncValue = ref.watch(shareNewsEnabledProvider);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: ProjectPalette.neutral1),
@@ -79,7 +83,7 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                         child: Image.network(
                           news.imageUrl,
                           fit: BoxFit.cover,
-                          //Error builder para utilizar una imagen stock para fallback
+                          // Error builder para utilizar una imagen stock para fallback
                           errorBuilder: (context, error, stackTrace) {
                             return Image.asset(
                               'assets/images/news_card.png',
@@ -107,19 +111,30 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     const SizedBox(
                       height: 16,
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(AppLocalizations.of(context)!.shareThisNote,
-                          style: ProjectFonts.headline2),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    CtaButton(
-                      enabled: true,
-                      onPressed: () => _newsService.shareNews(news),
-                      filled: true,
-                      actionStr: AppLocalizations.of(context)!.share,
+                    shareNewsEnabledAsyncValue.when(
+                      data: (enabled) {
+                        if (!enabled) return Container(); // Si compartir noticias está deshabilitado, no muestra nada
+                        return Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(AppLocalizations.of(context)!.shareThisNote,
+                                  style: ProjectFonts.headline2),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            CtaButton(
+                              enabled: true,
+                              onPressed: () => _newsService.shareNews(news),
+                              filled: true,
+                              actionStr: AppLocalizations.of(context)!.share,
+                            ),
+                          ],
+                        );
+                      },
+                      loading: () => CircularProgressIndicator(),
+                      error: (error, stack) => Text('Error: $error'),
                     ),
                   ],
                 ),
@@ -131,3 +146,4 @@ class _NewsDetailsScreenState extends State<NewsDetailsScreen> {
     );
   }
 }
+
