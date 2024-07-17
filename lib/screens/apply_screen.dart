@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:damm_2024/models/volunteer_details.dart';
 import 'package:damm_2024/providers/firestore_provider.dart';
 import 'package:damm_2024/providers/location_provider.dart';
+import 'package:damm_2024/providers/remote_config_provider.dart';
 import 'package:damm_2024/screens/map_screen.dart';
 import 'package:damm_2024/screens/volunteer_details_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
@@ -31,7 +32,7 @@ class ApplyScreen extends ConsumerStatefulWidget {
 class ApplyScreenState extends ConsumerState<ApplyScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  
+  bool _isMapEnabled = false;
 
   late Future<List<VolunteerDetails>> _volunteers;
   late Future<bool> _areVolunteersAvailable;
@@ -69,6 +70,12 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
   Widget build(BuildContext context) {
     final firestoreController = ref.read(firestoreControllerProvider);
     final userLocation = ref.watch(userLocationProvider);
+
+    final mapEnabledAsyncValue = ref.watch(mapEnabledProvider);
+
+    mapEnabledAsyncValue.whenData((enabled) {
+      _isMapEnabled = enabled;
+    });
 
     final locationController = ref.read(locationControllerProvider);
     locationController.updateUserLocation();
@@ -121,12 +128,14 @@ class ApplyScreenState extends ConsumerState<ApplyScreen> {
                       ? ProjectIcons.searchFilledEnabled
                       : null,
                   suffixIcon: _searchController.text.isEmpty
+                      ? (_isMapEnabled
                       ? IconButton(
-                        icon: ProjectIcons.mapFilledActivated,
-                        onPressed: () {
-                          context.go(MapScreen.route);
-                        },
-                      )
+                    icon: ProjectIcons.mapFilledActivated,
+                    onPressed: () {
+                      context.go(MapScreen.route);
+                    },
+                  )
+                      : null)
                       : IconButton(
                           icon: ProjectIcons.closeFilledEnabled,
                           onPressed: () {

@@ -27,3 +27,9 @@ final shareNewsEnabledProvider = FutureProvider<bool>((ref) async {
   await remoteConfig.fetchAndActivate();
   return remoteConfig.getBool('share_news');
 });
+
+final mapEnabledProvider = FutureProvider<bool>((ref) async {
+  final remoteConfig = ref.watch(remoteConfigProvider);
+  await remoteConfig.fetchAndActivate();
+  return remoteConfig.getBool('mapa');
+});
