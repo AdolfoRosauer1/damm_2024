@@ -11,7 +11,9 @@
         <meta-data
             android:name="com.google.firebase.analytics.default_channel_id"
             android:value="default_channel_id" />
- 
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="@string/GOOGLE_MAPS_API_KEY"/>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
@@ -20,8 +22,7 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="high_importance_channel" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDcEqXtG-1trkb882NTxE2jfoQfgkhkobY"/>
+
 
         <activity
             android:name=".MainActivity"
