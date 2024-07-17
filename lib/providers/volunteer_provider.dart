@@ -81,6 +81,10 @@ class ProfileController {
     }
   }
 
+  Volunteer getCurrentUser(){
+    return _currentUser;
+  }
+
   void initUser() async {
     User? user = _firebaseAuth.currentUser;
     if (user != null) {

@@ -25,7 +25,6 @@ AuthController authController(AuthControllerRef ref) {
     ref.watch(authRepositoryProvider),
     ref.watch(profileControllerProvider),
     ref.watch(currentUserProvider.notifier),
-    ref.watch(currentUserProvider),
   );
 }
 
@@ -84,9 +83,8 @@ class AuthController {
   final AuthRepository _authRepo;
   final ProfileController _profileController;
   final CurrentUser _currentUserNotifier;
-  final Volunteer _currentUser;
   AuthController(this._authRepo, this._profileController,
-      this._currentUserNotifier, this._currentUser);
+      this._currentUserNotifier);
 
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {

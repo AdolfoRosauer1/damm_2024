@@ -2,13 +2,11 @@ import 'package:damm_2024/config/router.dart';
 import 'package:damm_2024/models/gender.dart';
 import 'package:damm_2024/models/volunteer.dart';
 import 'package:damm_2024/providers/auth_provider.dart';
-import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/screens/profile_screen.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/input_card.dart';
 import 'package:damm_2024/widgets/cells/cards/profile_picture_card.dart';
-import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/tokens/colors.dart';
 import 'package:damm_2024/widgets/tokens/fonts.dart';
@@ -19,7 +17,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 
 class PersonalDataForm extends ConsumerStatefulWidget {
@@ -33,7 +30,7 @@ class PersonalDataForm extends ConsumerStatefulWidget {
 }
 
 class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
-  bool _internet = false;
+  // bool _internet = false;
   final formKey = GlobalKey<FormBuilderState>();
   late ValueNotifier<bool> isFormValidNotifier;
   late ValueNotifier<bool> isLoadingNotifier;
@@ -73,8 +70,8 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
 
   @override
   Widget build(BuildContext context) {
-    final internetStatus = ref.watch(internetConnectionProvider);
-    _internet = internetStatus.value! == InternetStatus.connected;
+    // final internetStatus = ref.watch(internetConnectionProvider);
+    // _internet = internetStatus.value! == InternetStatus.connected;
     final profileController = ref.read(profileControllerProvider);
     final User? firebaseUser =
         ref.read(firebaseAuthenticationProvider).currentUser;
@@ -272,14 +269,14 @@ class PersonalDataFormState extends ConsumerState<PersonalDataForm> {
                             
                                 return;
                               }
-                              if (!_internet) {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return const NoInternetModal();
-                                    });
-                                return;
-                              }
+                              // if (!_internet) {
+                              //   showDialog(
+                              //       context: context,
+                              //       builder: (context) {
+                              //         return const NoInternetModal();
+                              //       });
+                              //   return;
+                              // }
                               try {
                                 if (formKey.currentState?.saveAndValidate() ??
                                     false) {

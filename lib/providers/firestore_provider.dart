@@ -16,9 +16,6 @@ class VolunteerDetailsProvider extends _$VolunteerDetailsProvider {
   @override
   Stream<VolunteerDetails?> build(String id) async* {
     final firestoreDataSource = ref.watch(firestoreDataSourceProvider);
-    final user = ref.watch(currentUserProvider);
-    final userNotifier = ref.watch(currentUserProvider.notifier);
-    final profileRepository = ref.watch(profileRepositoryProvider);
 
     await for (final snapshot in firestoreDataSource.getVolunteerByIdSnapshot(id)) {
       if (snapshot.exists) {

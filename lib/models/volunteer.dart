@@ -38,7 +38,6 @@ class Volunteer {
   }
 
   factory Volunteer.fromJson(Map<String, dynamic> data) {
-    print('-----Volunteer.fromJson: data: '+data.toString());
     return Volunteer(
       firstName: data['firstName'] as String? ?? '',
       lastName: data['lastName'] as String? ?? '',

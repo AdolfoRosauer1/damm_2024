@@ -133,7 +133,7 @@ class _NewsDetailsScreenState extends ConsumerState<NewsDetailsScreen> {
                           ],
                         );
                       },
-                      loading: () => CircularProgressIndicator(),
+                      loading: () => const CircularProgressIndicator(),
                       error: (error, stack) => Text('Error: $error'),
                     ),
                   ],

@@ -1,10 +1,8 @@
 import 'package:damm_2024/models/gender.dart';
-import 'package:damm_2024/providers/connectivity_provider.dart';
 import 'package:damm_2024/providers/volunteer_provider.dart';
 import 'package:damm_2024/widgets/atoms/icons.dart';
 import 'package:damm_2024/widgets/cells/cards/information_card.dart';
 import 'package:damm_2024/widgets/cells/forms/personal_data_form.dart';
-import 'package:damm_2024/widgets/cells/modals/no_internet_modal.dart';
 import 'package:damm_2024/widgets/cells/modals/session_modal.dart';
 import 'package:damm_2024/widgets/molecules/buttons/cta_button.dart';
 import 'package:damm_2024/widgets/molecules/buttons/short_button.dart';
@@ -15,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -34,8 +31,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final internetStatus = ref.watch(internetConnectionProvider);
-    final internet = internetStatus.value! == InternetStatus.connected;
+    // final internetStatus = ref.watch(internetConnectionProvider);
+    // final internet = internetStatus.value! == InternetStatus.connected;
 
     final volunteer = ref.watch(currentUserProvider);
     if (!volunteer.hasCompletedProfile()) {
@@ -133,14 +130,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 CtaButton(
                   enabled: true,
                   onPressed: () {
-                    if (!internet) {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const NoInternetModal();
-                          });
-                      return;
-                    }
+                    // if (!internet) {
+                    //   showDialog(
+                    //       context: context,
+                    //       builder: (context) {
+                    //         return const NoInternetModal();
+                    //       });
+                    //   return;
+                    // }
                     context.go(PersonalDataForm.completeRoute);
                   },
                   filled: true,
